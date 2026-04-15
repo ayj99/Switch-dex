@@ -62,13 +62,7 @@ export default function App() {
       });
   }, []);
 
-  // Load html2canvas dynamically
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
+
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -144,8 +138,7 @@ export default function App() {
 function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game) => void }) {
   const [filter, setFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [exportChunks, setExportChunks] = useState<any[]>([]);
-  const [isExporting, setIsExporting] = useState(false);
+  const [showPosterModal, setShowPosterModal] = useState(false);
 
   // 1. Dynamic Categories
   const allCategories = useMemo(() => {
@@ -179,77 +172,10 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
       .slice(0, 8);
   }, [games]);
 
-  // 4. XHS Export Logic (4x4 Grid)
+  // 4. Poster Modal Logic
   const handleAdminExport = () => {
-    const categoriesToExport = allCategories.filter(c => c !== 'All');
-    const chunks: any[] = [];
-    
-    categoriesToExport.forEach(cat => {
-      const gamesInCat = games.filter(g => g.category && g.category.includes(cat));
-      if (gamesInCat.length > 0) {
-        // Split into chunks of 16 (4x4)
-        for (let i = 0; i < gamesInCat.length; i += 16) {
-          chunks.push({
-            category: cat,
-            games: gamesInCat.slice(i, i + 16),
-            chunkIndex: Math.floor(i / 16) + 1
-          });
-        }
-      }
-    });
-    
-    if (chunks.length === 0) {
-      alert("当前列表没有可导出的分类游戏！");
-      return;
-    }
-    
-    setExportChunks(chunks);
-    setIsExporting(true);
+    setShowPosterModal(true);
   };
-
-  useEffect(() => {
-    if (isExporting && exportChunks.length > 0) {
-      const generatePosters = async () => {
-        const html2canvas = (window as any).html2canvas;
-        if (!html2canvas) {
-          alert("海报生成库加载中，请稍后再试...");
-          setIsExporting(false);
-          return;
-        }
-        
-        // Wait for DOM to render
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        for (let i = 0; i < exportChunks.length; i++) {
-          const el = document.getElementById(`xhs-poster-${i}`);
-          if (el) {
-            try {
-              const canvas = await html2canvas(el, { 
-                useCORS: true, 
-                scale: 2, 
-                backgroundColor: '#F4F4F6'
-              });
-              const url = canvas.toDataURL('image/png');
-              const a = document.createElement('a');
-              a.href = url;
-              
-              const catEn = exportChunks[i].category.replace(/[^a-zA-Z0-9]/g, '_') || 'misc';
-              a.download = `xhs_poster_${catEn}_${exportChunks[i].chunkIndex}.png`;
-              a.click();
-            } catch (err) {
-              console.error("Failed to generate poster", err);
-            }
-          }
-        }
-        
-        alert('🎉 小红书海报已生成完毕，请查收相册！');
-        setIsExporting(false);
-        setExportChunks([]);
-      };
-      
-      generatePosters();
-    }
-  }, [isExporting, exportChunks]);
 
   return (
     <>
@@ -455,74 +381,94 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
       <footer className="mt-4 py-8 flex justify-center border-t border-gray-100 bg-gray-50">
         <button 
           onClick={handleAdminExport}
-          disabled={isExporting}
-          className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2 disabled:opacity-50"
+          className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2"
         >
-          {isExporting ? '[ Generating Posters... ]' : '[ System Dump: XHS Grid ]'}
+          [ System Dump: XHS Grid ]
         </button>
       </footer>
 
-      {/* Hidden XHS Poster Templates (4x4 Grid) */}
-      {exportChunks.length > 0 && (
-        <div className="fixed top-[-9999px] left-[-9999px] opacity-0 pointer-events-none z-[-1]">
-          {exportChunks.map((chunk, idx) => (
+      {/* Poster Modal */}
+      <AnimatePresence>
+        {showPosterModal && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-start overflow-y-auto p-4 md:p-8"
+          >
+            {/* Close Button */}
+            <div className="w-full max-w-[800px] flex justify-end mb-4 flex-shrink-0 mt-4 md:mt-0">
+              <button 
+                onClick={() => setShowPosterModal(false)}
+                className="text-white font-black tracking-widest text-xs md:text-sm bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center gap-2"
+              >
+                ✕ CLOSE STUDIO
+              </button>
+            </div>
+
+            {/* Poster Canvas (3:4 aspect ratio constraint) */}
             <div 
-              key={idx} 
-              id={`xhs-poster-${idx}`} 
-              className="w-[1200px] h-[1600px] bg-[#F4F4F6] flex flex-col p-12 box-border"
+              className="w-full max-w-[800px] aspect-[3/4] bg-gradient-to-br from-[#e60012] to-[#8b0000] rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-10"
             >
+              {/* Texture Overlay */}
+              <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
+
               {/* Header */}
-              <div className="flex items-center justify-between mb-10">
-                <div className="flex items-center gap-4">
-                  <img src="/images/logo.png" alt="Logo" className="h-16 w-auto" onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.parentElement!.innerHTML = '<div class="w-16 h-16 bg-[#E60012] rounded-full flex items-center justify-center"><span class="text-white text-2xl font-bold">S</span></div><h1 class="text-4xl font-black tracking-tighter text-black">S<span class="text-[#E60012]">✘</span>ítčh Dé<span class="text-[#E60012]">✘</span></h1>';
-                  }} />
+              <div className="flex items-center justify-between mb-6 md:mb-8 relative z-10">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg p-1">
+                    <img src="/images/logo.png" className="w-full h-full rounded-full object-cover" alt="Logo" onError={(e) => e.currentTarget.style.display = 'none'} />
+                  </div>
+                  <h2 className="text-xl md:text-4xl font-black text-white tracking-tighter drop-shadow-md italic">
+                    S<span className="text-[#FFD700]">✘</span>ítčh Dé<span className="text-[#FFD700]">✘</span>
+                  </h2>
                 </div>
-                <h2 className="text-5xl font-black text-gray-800 tracking-tight">
-                  S<span className="text-[#E60012]">✘</span>ítčh Dé<span className="text-[#E60012]">✘</span> 精选：{chunk.category}
-                </h2>
+                <div className="text-right">
+                  <p className="text-white/95 font-black text-xs md:text-xl tracking-widest uppercase border-b-2 border-white/40 pb-1 drop-shadow-sm">
+                    {filter === 'All' ? '全站精选' : filter} 系列精选
+                  </p>
+                </div>
               </div>
-              
-              {/* Grid 4x4 */}
-              <div className="grid grid-cols-4 grid-rows-4 gap-6 flex-grow">
-                {chunk.games.map((game: Game) => (
-                  <div key={game.id} className="bg-white/80 backdrop-blur-xl rounded-3xl p-4 flex flex-col shadow-sm border border-white relative">
+
+              {/* Grid Container (Flexbox with wrap and center) */}
+              <div className="flex flex-wrap justify-center gap-2 md:gap-3 flex-grow relative z-10 content-start">
+                {filteredGames.slice(0, 16).map((game) => (
+                  <div 
+                    key={game.id} 
+                    className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(25%-6px)] md:w-[calc(25%-9px)]"
+                  >
                     {/* Condition Tag */}
-                    <div className="absolute top-3 right-3 bg-gray-800 text-white text-xs font-bold px-2 py-1 rounded-lg z-10 shadow-sm">
+                    <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
                       {game.condition}
                     </div>
                     
                     <img 
                       src={game.imageUrl} 
                       alt={game.title} 
-                      className="w-full aspect-[3/4] object-cover rounded-2xl mb-3 shadow-sm" 
-                      crossOrigin="anonymous" 
-                      referrerPolicy="no-referrer"
+                      className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
                     />
                     
-                    <h3 className="text-lg font-bold line-clamp-2 leading-tight text-gray-900 mb-2">
+                    <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
                       {game.title}
                     </h3>
                     
-                    <div className="mt-auto flex items-end justify-between">
-                      <div className="flex flex-col">
-                        {game.originalPrice && (
-                          <span className="text-gray-400 text-xs line-through font-bold mb-0.5">RM {game.originalPrice}</span>
-                        )}
-                        <p className="text-2xl font-black text-[#B91C1C] leading-none">RM {game.price}</p>
-                      </div>
-                      <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center shadow-md flex-shrink-0">
-                        <MessageCircle size={20} className="text-white" />
-                      </div>
+                    <div className="mt-auto">
+                      <p className="text-xs md:text-lg font-black text-[#E60012] leading-none">RM {game.price}</p>
                     </div>
                   </div>
                 ))}
               </div>
+              
+              {/* Footer Logo/Watermark */}
+              <div className="mt-auto pt-4 text-center relative z-10">
+                <p className="text-white/60 font-mono text-[8px] md:text-xs tracking-widest uppercase">
+                  Screenshot to share • Generated by S✘ítčh Dé✘ Studio
+                </p>
+              </div>
             </div>
-          ))}
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
