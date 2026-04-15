@@ -7,7 +7,7 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center justify-center p-6">
       {/* Brand VI */}
       <div className="flex flex-col items-center mb-12">
-        <img src="/images/logo.png" className="w-20 h-20 rounded-full object-cover border-4 border-[#e60012] mb-4 shadow-lg" alt="Logo" />
+        <img src="/images/logo.png" className="w-20 h-20 rounded-full object-cover border-4 border-[#e60012] mb-4 shadow-lg" alt="Logo" referrerPolicy="no-referrer" />
         <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-gray-900 leading-none text-center">
           S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
         </h1>
