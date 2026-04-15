@@ -37,6 +37,8 @@ interface Game {
   status: string; 
 }
 
+const PHONE_NUMBER = "601155088426"; // 请在此处留好注释让我修改。
+
 export default function App() {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -142,7 +144,6 @@ export default function App() {
 function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game) => void }) {
   const [filter, setFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [showAllFeatured, setShowAllFeatured] = useState(false);
   const [exportChunks, setExportChunks] = useState<any[]>([]);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -177,8 +178,6 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
       })
       .slice(0, 8);
   }, [games]);
-
-  const displayedFeatured = showAllFeatured ? featuredGames : featuredGames.slice(0, 4);
 
   // 4. XHS Export Logic (4x4 Grid)
   const handleAdminExport = () => {
@@ -257,11 +256,10 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
       {/* 1. Top Nav Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <img src="/images/logo.png" alt="S✘ítčh Dé✘" className="h-8 w-auto" onError={(e) => {
-            // Fallback if logo.png is missing
+          <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" onError={(e) => {
             e.currentTarget.style.display = 'none';
-            e.currentTarget.parentElement!.innerHTML = '<div class="w-8 h-8 bg-[#E60012] rounded-full flex items-center justify-center"><span class="text-white font-bold">S</span></div><h1 class="text-2xl font-black tracking-tighter text-black">S<span class="text-[#E60012]">✘</span>ítčh Dé<span class="text-[#E60012]">✘</span></h1>';
           }} />
+          <span className="text-2xl font-black italic tracking-tighter text-[#e60012]">S✘ítčh Dé✘</span>
         </div>
       </header>
 
@@ -291,7 +289,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
             PLAY ANYTIME, ANYWHERE
           </h2>
           <p className="text-sm sm:text-base font-bold tracking-widest drop-shadow-md bg-black/40 px-4 py-1.5 rounded-full backdrop-blur-sm">
-            生活不只有詩和遠方 還有眼前的游戏
+            人生不只有詩和遠方 還有玩不完的游戏
           </p>
         </div>
       </section>
@@ -302,31 +300,22 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
             <h2 className="text-lg font-black italic text-black tracking-tight">FEATURED DEALS</h2>
+            <span className="text-sm text-red-500 font-mono bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
           </div>
-          {featuredGames.length > 4 && (
-            <button 
-              onClick={() => setShowAllFeatured(!showAllFeatured)}
-              className="text-xs font-bold text-gray-500 hover:text-[#E60012] transition-colors bg-gray-100 px-3 py-1 rounded-full"
-            >
-              {showAllFeatured ? '[ SHOW LESS ]' : '[ VIEW ALL ]'}
-            </button>
-          )}
         </div>
         
-        <div className={`px-4 transition-all duration-300 ${showAllFeatured ? 'grid grid-cols-2 gap-3' : 'flex overflow-x-auto gap-4 no-scrollbar snap-x pb-4'}`}>
-          {displayedFeatured.map((game) => (
+        <div className="px-4 flex overflow-x-auto gap-4 no-scrollbar snap-x pb-4">
+          {featuredGames.map((game) => (
             <motion.div 
               key={`sale-${game.id}`}
               whileTap={{ scale: 0.95 }}
               onClick={() => onGameClick(game)}
-              className={`bg-[#F8F9FA] rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer relative flex flex-col ${showAllFeatured ? 'w-full' : 'flex-shrink-0 w-40 snap-start'}`}
+              className="bg-[#F8F9FA] rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer relative flex flex-col flex-shrink-0 w-40 snap-start"
             >
               {/* Dynamic Badge */}
-              {game.badge && (
-                <div className="absolute top-2 left-0 bg-[#E60012] text-white text-[10px] font-black px-2 py-1 rounded-r-md z-10 shadow-md">
-                  {game.badge}
-                </div>
-              )}
+              <div className="absolute top-2 left-0 bg-[#E60012] text-[#FFD700] text-[10px] font-black px-2 py-1 rounded-r-md z-10 shadow-md flex items-center gap-1">
+                ⚡ FLASH SALE
+              </div>
               
               {/* Condition Tag (Top Right) */}
               <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
@@ -553,6 +542,15 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
   const categoryTags = game.category ? game.category.split(',').map(c => c.trim()) : [];
   const isOutOfStock = game.status === '缺货';
 
+  const handleWhatsAppClick = () => {
+    const message = isOutOfStock 
+      ? `hi, i would like to reserve ${game.title}, RM ${game.price}`
+      : `hi, i'm interested with ${game.title}, RM ${game.price}`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`, '_blank');
+  };
+
   return (
     <>
       {/* Top: Video Hero (16:9) */}
@@ -718,7 +716,10 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
           </button>
 
           {/* Main Button (70%) */}
-          <button className="flex-[7] bg-[#E60012] text-white py-3 rounded-xl font-black text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#E60012]/20 active:scale-95 transition-transform">
+          <button 
+            onClick={handleWhatsAppClick}
+            className="flex-[7] bg-[#E60012] text-white py-3 rounded-xl font-black text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#E60012]/20 active:scale-95 transition-transform"
+          >
             <MessageCircle size={22} fill="white" />
             {isOutOfStock ? '联系店长补货/预订' : 'WhatsApp 购买'}
           </button>
