@@ -182,12 +182,13 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <button 
           onClick={onBackToPortal}
-          className="flex items-center gap-1 text-sm font-bold text-gray-600 hover:text-[#e60012] transition-colors w-[88px]"
+          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-24"
         >
-          <ArrowLeft size={16} />
+          <ArrowLeft size={20} />
           <span className="hidden sm:inline">返回大厅</span>
         </button>
-        <div className="flex items-center gap-2">
+        
+        <div className="flex items-center justify-center gap-2 flex-1">
           <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" referrerPolicy="no-referrer" onError={(e) => {
             e.currentTarget.style.display = 'none';
           }} />
@@ -200,7 +201,8 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
             </span>
           </div>
         </div>
-        <div className="w-[88px]"></div> {/* Spacer for centering */}
+
+        <div className="w-24"></div> {/* Spacer for centering */}
       </header>
 
       {/* 2. Video Hero (Bilingual Text) */}
