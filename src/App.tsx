@@ -139,6 +139,8 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
   const [filter, setFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showPosterModal, setShowPosterModal] = useState(false);
+  const [posterPage, setPosterPage] = useState(0);
+  const [posterType, setPosterType] = useState<'featured' | 'category'>('category');
 
   // 1. Dynamic Categories
   const allCategories = useMemo(() => {
@@ -173,9 +175,35 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
   }, [games]);
 
   // 4. Poster Modal Logic
-  const handleAdminExport = () => {
+  const handleCategoryExport = () => {
+    setPosterType('category');
+    setPosterPage(0);
     setShowPosterModal(true);
   };
+
+  const handleFeaturedExport = () => {
+    setPosterType('featured');
+    setPosterPage(0);
+    setShowPosterModal(true);
+  };
+
+  // Determine which games to show in the poster
+  const posterGames = useMemo(() => {
+    let sourceGames = [];
+    if (posterType === 'featured') {
+      // Prioritize sale items, then fill with top voted to get 12
+      const saleGames = [...games].filter(g => g.originalPrice && g.originalPrice > g.price).sort((a, b) => (b.votes || 0) - (a.votes || 0));
+      const otherGames = [...games].filter(g => !(g.originalPrice && g.originalPrice > g.price)).sort((a, b) => (b.votes || 0) - (a.votes || 0));
+      sourceGames = [...saleGames, ...otherGames].slice(0, 12);
+    } else {
+      sourceGames = filteredGames;
+    }
+    
+    const startIndex = posterPage * 12;
+    return sourceGames.slice(startIndex, startIndex + 12);
+  }, [games, filteredGames, posterType, posterPage]);
+
+  const totalPosterPages = Math.ceil((posterType === 'featured' ? 12 : filteredGames.length) / 12);
 
   return (
     <>
@@ -185,7 +213,14 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
           <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" onError={(e) => {
             e.currentTarget.style.display = 'none';
           }} />
-          <span className="text-2xl font-black italic tracking-tighter text-[#e60012]">S✘ítčh Dé✘</span>
+          <div className="flex flex-col">
+            <span className="text-2xl font-black italic tracking-tighter text-gray-900 leading-none">
+              S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
+            </span>
+            <span className="text-gray-500 text-[10px] font-bold tracking-widest mt-0.5">
+              诗和远方与Switch奇妙
+            </span>
+          </div>
         </div>
       </header>
 
@@ -221,12 +256,18 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
 
       {/* 3. Featured Deals */}
       <section className="pt-6 pb-2 bg-white">
-        <div className="px-4 mb-3 flex items-center justify-between">
+        <div className="px-4 mb-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
             <h2 className="text-lg font-black italic text-black tracking-tight">FEATURED DEALS</h2>
             <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
           </div>
+          <button 
+            onClick={handleFeaturedExport}
+            className="text-[10px] font-bold bg-[#E60012] text-white px-2 py-1 rounded shadow-sm hover:bg-red-700 transition-colors"
+          >
+            [ GENERATE FEATURED POSTER ]
+          </button>
         </div>
         
         <div className="px-4 flex overflow-x-auto gap-4 no-scrollbar snap-x pb-4">
@@ -307,7 +348,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
         </div>
 
         {/* Grid */}
-        <div className="p-4 grid grid-cols-2 gap-3">
+        <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
           {filteredGames.length === 0 ? (
             <div className="col-span-2 py-10 text-center text-gray-400 font-bold">
               No games found.
@@ -386,7 +427,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
           </button>
         ) : (
           <button 
-            onClick={handleAdminExport}
+            onClick={handleCategoryExport}
             className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2"
           >
             [ System Dump: XHS Grid ]
@@ -415,72 +456,96 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
 
             {/* Poster Canvas */}
             <div 
-              className="w-full max-w-[800px] bg-[#e60012] rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-10"
+              className="w-full max-w-[800px] bg-[#e60012] rounded-2xl md:rounded-3xl shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-4"
             >
-              {/* Texture Overlay */}
-              <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
-
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6 md:mb-8 relative z-10">
+              {/* White Header Banner */}
+              <div className="bg-white px-5 py-4 md:px-8 md:py-6 flex items-center justify-between relative z-20 border-b-4 border-gray-900">
                 <div className="flex items-center gap-2 md:gap-3">
-                  <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg p-1 flex-shrink-0">
-                    <img src="/images/logo.png" className="w-full h-full rounded-full object-cover" alt="Logo" onError={(e) => e.currentTarget.style.display = 'none'} />
-                  </div>
+                  <img src="/images/logo.png" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-[#e60012] flex-shrink-0" alt="Logo" onError={(e) => e.currentTarget.style.display = 'none'} />
                   <div className="flex flex-col">
-                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-white drop-shadow-md">
-                      S✘ítčh Dé✘
+                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-gray-900 leading-none">
+                      S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
                     </span>
-                    <span className="text-white/90 text-[10px] md:text-sm font-bold tracking-widest mt-0.5 drop-shadow-sm">
+                    <span className="text-gray-500 text-[10px] md:text-sm font-bold tracking-widest mt-0.5">
                       诗和远方与Switch奇妙
                     </span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-black text-xl md:text-2xl text-yellow-300 tracking-widest uppercase border-b-2 border-yellow-300/40 pb-1 drop-shadow-md">
-                    {filter === 'All' ? '全站精选' : filter} 系列精选
+                  <p className="font-black text-xl md:text-3xl text-[#e60012] tracking-tighter uppercase drop-shadow-sm">
+                    {posterType === 'featured' ? '限时特惠 / FEATURED DEALS' : `${filter} 系列精选`}
                   </p>
                 </div>
               </div>
 
-              {/* Grid Container (Flexbox with wrap and center) */}
-              <div className="flex flex-wrap justify-center gap-2 md:gap-3 flex-grow relative z-10 content-start">
-                {filteredGames.slice(0, 12).map((game) => (
-                  <div 
-                    key={game.id} 
-                    className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(33.333%-6px)] md:w-[calc(33.333%-8px)]"
-                  >
-                    {/* Condition Tag */}
-                    <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
-                      {game.condition}
+              {/* Red Content Area */}
+              <div className="p-5 md:p-8 relative flex-grow flex flex-col">
+                {/* Texture Overlay */}
+                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
+
+                {/* Grid Container (Flexbox with wrap and center) */}
+                <div className="flex flex-wrap justify-center gap-2 md:gap-3 relative z-10 content-start">
+                  {posterGames.map((game) => (
+                    <div 
+                      key={game.id} 
+                      className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(25%-6px)] md:w-[calc(25%-9px)]"
+                    >
+                      {/* Condition Tag */}
+                      <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
+                        {game.condition}
+                      </div>
+                      
+                      <img 
+                        src={game.imageUrl} 
+                        alt={game.title} 
+                        className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
+                      />
+                      
+                      <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
+                        {game.title}
+                      </h3>
+                      
+                      <div className="mt-auto flex items-baseline">
+                        <p className="text-xs md:text-lg font-black text-[#E60012] leading-none">RM {game.price}</p>
+                        {game.originalPrice && game.originalPrice > game.price && (
+                          <span className="text-gray-400 text-[8px] md:text-xs line-through ml-1 font-bold">RM {game.originalPrice}</span>
+                        )}
+                      </div>
                     </div>
-                    
-                    <img 
-                      src={game.imageUrl} 
-                      alt={game.title} 
-                      className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
-                    />
-                    
-                    <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
-                      {game.title}
-                    </h3>
-                    
-                    <div className="mt-auto flex items-baseline">
-                      <p className="text-xs md:text-lg font-black text-[#E60012] leading-none">RM {game.price}</p>
-                      {game.originalPrice && game.originalPrice > game.price && (
-                        <span className="text-gray-400 text-[8px] md:text-xs line-through ml-1 font-bold">RM {game.originalPrice}</span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Footer Logo/Watermark */}
-              <div className="mt-auto pt-4 text-center relative z-10">
-                <p className="text-white/60 font-mono text-[8px] md:text-xs tracking-widest uppercase">
-                  Screenshot to share • Generated by S✘ítčh Dé✘ Studio
-                </p>
+                  ))}
+                </div>
+                
+                {/* Footer Logo/Watermark */}
+                <div className="mt-auto pt-6 text-center relative z-10">
+                  <p className="text-white/80 font-mono text-[8px] md:text-xs tracking-widest uppercase">
+                    Screenshot to share • Generated by S✘ítčh Dé✘ Studio
+                  </p>
+                </div>
               </div>
             </div>
+
+            {/* Pagination Controls */}
+            {totalPosterPages > 1 && (
+              <div className="w-full max-w-[800px] flex justify-center gap-4 mb-10 flex-shrink-0">
+                <button 
+                  onClick={() => setPosterPage(p => Math.max(0, p - 1))}
+                  disabled={posterPage === 0}
+                  className="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-6 rounded-full backdrop-blur-md disabled:opacity-30 transition-all"
+                >
+                  [ Previous Page ]
+                </button>
+                <span className="text-white/60 font-mono flex items-center">
+                  Page {posterPage + 1} of {totalPosterPages}
+                </span>
+                <button 
+                  onClick={() => setPosterPage(p => Math.min(totalPosterPages - 1, p + 1))}
+                  disabled={posterPage === totalPosterPages - 1}
+                  className="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-6 rounded-full backdrop-blur-md disabled:opacity-30 transition-all"
+                >
+                  [ Next Page ]
+                </button>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
