@@ -157,7 +157,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
       const matchesFilter = filter === 'All' || (g.category && g.category.includes(filter));
       const matchesSearch = !searchQuery || g.title.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesFilter && matchesSearch;
-    });
+    }).sort((a, b) => (b.votes || 0) - (a.votes || 0));
   }, [games, filter, searchQuery]);
 
   // 3. Featured Deals Logic (originalPrice > price OR top votes, max 8)
@@ -196,7 +196,6 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
           loop 
           muted 
           playsInline 
-          crossOrigin="anonymous"
           className="h-full w-full object-cover opacity-60"
           poster="https://picsum.photos/seed/nintendo-hero/1920/1080"
           onError={(e) => {
@@ -249,7 +248,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
               </div>
               
               <div className="aspect-[3/4] w-full bg-gray-200">
-                <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" crossOrigin="anonymous" />
+                <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
               </div>
               <div className="p-3 flex flex-col flex-grow">
                 <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight mb-1">{game.title}</h3>
@@ -336,7 +335,6 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                       className="w-full h-full object-cover"
                       loading="lazy"
                       referrerPolicy="no-referrer"
-                      crossOrigin="anonymous"
                     />
                   </div>
                   <div className="p-3 flex flex-col flex-grow">
@@ -379,12 +377,21 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
 
       {/* Admin Export Footer */}
       <footer className="mt-4 py-8 flex justify-center border-t border-gray-100 bg-gray-50">
-        <button 
-          onClick={handleAdminExport}
-          className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2"
-        >
-          [ System Dump: XHS Grid ]
-        </button>
+        {filter === 'All' ? (
+          <button 
+            disabled
+            className="text-xs font-mono text-gray-400 bg-gray-200 cursor-not-allowed px-4 py-2 rounded"
+          >
+            [ 请先选择上方分类以生成海报 ]
+          </button>
+        ) : (
+          <button 
+            onClick={handleAdminExport}
+            className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2"
+          >
+            [ System Dump: XHS Grid ]
+          </button>
+        )}
       </footer>
 
       {/* Poster Modal */}
@@ -406,9 +413,9 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
               </button>
             </div>
 
-            {/* Poster Canvas (3:4 aspect ratio constraint) */}
+            {/* Poster Canvas */}
             <div 
-              className="w-full max-w-[800px] aspect-[3/4] bg-[#e60012] rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-10"
+              className="w-full max-w-[800px] bg-[#e60012] rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-10"
             >
               {/* Texture Overlay */}
               <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
@@ -416,15 +423,20 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
               {/* Header */}
               <div className="flex items-center justify-between mb-6 md:mb-8 relative z-10">
                 <div className="flex items-center gap-2 md:gap-3">
-                  <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg p-1">
+                  <div className="w-10 h-10 md:w-14 md:h-14 bg-white rounded-full flex items-center justify-center shadow-lg p-1 flex-shrink-0">
                     <img src="/images/logo.png" className="w-full h-full rounded-full object-cover" alt="Logo" onError={(e) => e.currentTarget.style.display = 'none'} />
                   </div>
-                  <h2 className="text-xl md:text-4xl font-black text-white tracking-tighter drop-shadow-md italic">
-                    Switch-dex
-                  </h2>
+                  <div className="flex flex-col">
+                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-white drop-shadow-md">
+                      S✘ítčh Dé✘
+                    </span>
+                    <span className="text-white/90 text-[10px] md:text-sm font-bold tracking-widest mt-0.5 drop-shadow-sm">
+                      诗和远方与Switch奇妙
+                    </span>
+                  </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-white/95 font-black text-xs md:text-xl tracking-widest uppercase border-b-2 border-white/40 pb-1 drop-shadow-sm">
+                  <p className="font-black text-xl md:text-2xl text-yellow-300 tracking-widest uppercase border-b-2 border-yellow-300/40 pb-1 drop-shadow-md">
                     {filter === 'All' ? '全站精选' : filter} 系列精选
                   </p>
                 </div>
@@ -432,10 +444,10 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
 
               {/* Grid Container (Flexbox with wrap and center) */}
               <div className="flex flex-wrap justify-center gap-2 md:gap-3 flex-grow relative z-10 content-start">
-                {filteredGames.slice(0, 16).map((game) => (
+                {filteredGames.slice(0, 12).map((game) => (
                   <div 
                     key={game.id} 
-                    className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(25%-6px)] md:w-[calc(25%-9px)]"
+                    className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(33.333%-6px)] md:w-[calc(33.333%-8px)]"
                   >
                     {/* Condition Tag */}
                     <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
@@ -452,8 +464,11 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                       {game.title}
                     </h3>
                     
-                    <div className="mt-auto">
+                    <div className="mt-auto flex items-baseline">
                       <p className="text-xs md:text-lg font-black text-[#E60012] leading-none">RM {game.price}</p>
+                      {game.originalPrice && game.originalPrice > game.price && (
+                        <span className="text-gray-400 text-[8px] md:text-xs line-through ml-1 font-bold">RM {game.originalPrice}</span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -515,7 +530,6 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
           loop 
           muted 
           playsInline 
-          crossOrigin="anonymous"
           className="h-full w-full object-cover opacity-80"
           poster={game.imageUrl}
           onError={(e) => {
@@ -634,7 +648,6 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
                 className="w-full aspect-[3/4] object-cover"
                 loading="lazy"
                 referrerPolicy="no-referrer"
-                crossOrigin="anonymous"
               />
               <div className="p-2">
                 <h3 className="text-[10px] font-bold line-clamp-2 h-7 leading-tight">{similarGame.title}</h3>
