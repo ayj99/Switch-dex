@@ -6,7 +6,7 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center justify-center p-6">
       {/* Brand VI */}
-      <div className="flex flex-col items-center mb-12">
+      <div className="flex flex-col items-center mb-12 text-center">
         <img src="/images/logo.png" className="w-20 h-20 rounded-full object-cover border-4 border-[#e60012] mb-4 shadow-lg" alt="Logo" referrerPolicy="no-referrer" />
         <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-gray-900 leading-none text-center">
           S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
@@ -14,6 +14,11 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
         <p className="text-gray-500 text-sm md:text-base font-bold tracking-widest mt-2">
           诗和远方与Switch奇妙
         </p>
+        
+        {/* Pikachu Greeting */}
+        <div className="text-lg md:text-xl font-bold text-yellow-500 flex items-center justify-center gap-2 mt-6 bg-yellow-50 px-6 py-2 rounded-full border border-yellow-200 shadow-sm">
+          <span>⚡️ 皮卡皮卡！今天想在 Switch 的世界里开启什么冒险呀？ 🐹</span>
+        </div>
       </div>
 
       {/* Cards */}
@@ -28,8 +33,10 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#e60012] transition-colors">
             <Gamepad2 size={40} className="text-[#e60012] group-hover:text-white transition-colors" />
           </div>
-          <h2 className="text-2xl font-black text-gray-900 mb-3">🎮 游戏续杯商城</h2>
-          <p className="text-gray-500 font-medium leading-relaxed">买断保值，高价回收<br/>一杯奶茶钱玩遍全库</p>
+          <h2 className="text-2xl font-black text-gray-900 mb-4">🛒 买 Switch 二手游戏</h2>
+          <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed">
+            涵盖亲子、动作等全分类神作！天天有闪购特价 (Featured Deals) ⚡，加上独家「高价回血」计划，怎么买都不亏！
+          </p>
         </motion.button>
 
         {/* Rental Card */}
@@ -42,8 +49,10 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
             <Package size={40} className="text-blue-600 group-hover:text-white transition-colors" />
           </div>
-          <h2 className="text-2xl font-black text-gray-900 mb-3">📦 主机租借中心</h2>
-          <p className="text-gray-500 font-medium leading-relaxed">全套配件，即租即玩<br/>派对聚会不二之选</p>
+          <h2 className="text-2xl font-black text-gray-900 mb-4">📦 租 Switch 主机与游戏</h2>
+          <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed">
+            周末聚会、情侣拍拖的破冰神器！全套神机打包带走，单租大作低至一杯奶茶钱，即租即玩嗨翻天 🎉！
+          </p>
         </motion.button>
       </div>
     </div>
