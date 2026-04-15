@@ -180,7 +180,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
   return (
     <>
       {/* 1. Top Nav Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-center">
         <div className="flex items-center gap-2">
           <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" onError={(e) => {
             e.currentTarget.style.display = 'none';
@@ -215,7 +215,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
             PLAY ANYTIME, ANYWHERE
           </h2>
           <p className="text-sm sm:text-base font-bold tracking-widest drop-shadow-md bg-black/40 px-4 py-1.5 rounded-full backdrop-blur-sm">
-            人生不只有詩和遠方 還有玩不完的游戏
+            生活不只有詩和遠方 還有眼前的游戏
           </p>
         </div>
       </section>
@@ -226,7 +226,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
             <h2 className="text-lg font-black italic text-black tracking-tight">FEATURED DEALS</h2>
-            <span className="text-sm text-red-500 font-mono bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
+            <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
           </div>
         </div>
         
@@ -408,7 +408,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
 
             {/* Poster Canvas (3:4 aspect ratio constraint) */}
             <div 
-              className="w-full max-w-[800px] aspect-[3/4] bg-gradient-to-br from-[#e60012] to-[#8b0000] rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-10"
+              className="w-full max-w-[800px] aspect-[3/4] bg-[#e60012] rounded-2xl md:rounded-3xl p-5 md:p-10 shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-10"
             >
               {/* Texture Overlay */}
               <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
@@ -420,7 +420,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                     <img src="/images/logo.png" className="w-full h-full rounded-full object-cover" alt="Logo" onError={(e) => e.currentTarget.style.display = 'none'} />
                   </div>
                   <h2 className="text-xl md:text-4xl font-black text-white tracking-tighter drop-shadow-md italic">
-                    S<span className="text-[#FFD700]">✘</span>ítčh Dé<span className="text-[#FFD700]">✘</span>
+                    Switch-dex
                   </h2>
                 </div>
                 <div className="text-right">
