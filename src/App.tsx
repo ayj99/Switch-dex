@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Search, 
@@ -15,31 +10,9 @@ import {
   Play
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Game, PHONE_NUMBER } from './types';
 
-// --- Types & Data ---
-type BadgeType = 'SALE' | 'NEW ITEM' | 'HOT SELLING';
-
-interface Game {
-  id: string;
-  title: string;
-  price: number;
-  originalPrice?: number;
-  isSale?: boolean;
-  badge?: BadgeType;
-  condition: string; 
-  imageUrl: string;
-  players: string;
-  language: string;
-  genre: string;
-  description: string;
-  category: string; 
-  votes: number;
-  status: string; 
-}
-
-const PHONE_NUMBER = "601155088426"; // 请在此处留好注释让我修改。
-
-export default function App() {
+export default function Shop({ onBackToPortal }: { onBackToPortal: () => void }) {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentView, setCurrentView] = useState<'home' | 'detail'>('home');
@@ -61,8 +34,6 @@ export default function App() {
         setIsLoading(false);
       });
   }, []);
-
-
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -105,7 +76,7 @@ export default function App() {
             transition={{ duration: 0.2 }}
             className="pb-20"
           >
-            <HomeView games={games} onGameClick={handleGameClick} />
+            <HomeView games={games} onGameClick={handleGameClick} onBackToPortal={onBackToPortal} />
           </motion.div>
         ) : (
           <motion.div 
@@ -135,7 +106,7 @@ export default function App() {
 // ==========================================
 // VIEW 1: HOME
 // ==========================================
-function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game) => void }) {
+function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGameClick: (g: Game) => void, onBackToPortal: () => void }) {
   const [filter, setFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showPosterModal, setShowPosterModal] = useState(false);
@@ -208,7 +179,14 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
   return (
     <>
       {/* 1. Top Nav Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-center">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
+        <button 
+          onClick={onBackToPortal}
+          className="flex items-center gap-1 text-sm font-bold text-gray-600 hover:text-[#e60012] transition-colors w-[88px]"
+        >
+          <ArrowLeft size={16} />
+          <span className="hidden sm:inline">返回大厅</span>
+        </button>
         <div className="flex items-center gap-2">
           <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" onError={(e) => {
             e.currentTarget.style.display = 'none';
@@ -222,6 +200,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
             </span>
           </div>
         </div>
+        <div className="w-[88px]"></div> {/* Spacer for centering */}
       </header>
 
       {/* 2. Video Hero (Bilingual Text) */}
@@ -499,6 +478,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                         src={game.imageUrl} 
                         alt={game.title} 
                         className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
+                        referrerPolicy="no-referrer"
                       />
                       
                       <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
