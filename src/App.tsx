@@ -12,13 +12,13 @@ import {
   Tag, 
   ThumbsUp, 
   MessageCircle, 
-  Play 
+  Play,
+  Gamepad2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // --- Types & Data ---
 type Condition = 'New' | 'Used' | 'Both';
-type Category = 'All' | '双人游戏' | '派对游戏' | '亲子游戏';
 type BadgeType = 'SALE' | 'NEW ITEM' | 'HOT SELLING';
 
 interface Game {
@@ -34,97 +34,8 @@ interface Game {
   languages: string;
   genre: string;
   description: string;
-  categories: Category[];
+  category: string; // Now a comma-separated string, e.g. "亲子游戏, IP游戏, 必玩神作"
 }
-
-const GAMES: Game[] = [
-  { 
-    id: '1', 
-    title: 'Legend of Zelda: Tears of the Kingdom', 
-    price: 180, 
-    originalPrice: 220,
-    isSale: true,
-    badge: 'HOT SELLING',
-    condition: 'Both', 
-    coverUrl: 'https://picsum.photos/seed/zelda/400/600', 
-    players: '1', 
-    languages: 'CN/EN/JP', 
-    genre: 'Action/RPG', 
-    description: 'An epic adventure across the land and skies of Hyrule awaits in the Legend of Zelda: Tears of the Kingdom game for the Nintendo Switch system. The adventure is yours to create in a world fueled by your imagination.',
-    categories: ['All']
-  },
-  { 
-    id: '2', 
-    title: 'Super Mario Bros. Wonder', 
-    price: 150, 
-    originalPrice: 180,
-    isSale: true,
-    badge: 'NEW ITEM',
-    condition: 'New', 
-    coverUrl: 'https://picsum.photos/seed/mario/400/600', 
-    players: '1-4', 
-    languages: 'CN/EN', 
-    genre: 'Platformer', 
-    description: 'Find wonder in the next evolution of Mario fun. Classic Mario side-scrolling gameplay is turned on its head with the addition of Wonder Flowers.',
-    categories: ['双人游戏', '亲子游戏']
-  },
-  { 
-    id: '3', 
-    title: 'Mario Kart 8 Deluxe', 
-    price: 120, 
-    originalPrice: 160,
-    isSale: true,
-    badge: 'SALE',
-    condition: 'Used', 
-    coverUrl: 'https://picsum.photos/seed/mk8/400/600', 
-    players: '1-8', 
-    languages: 'All', 
-    genre: 'Racing', 
-    description: 'Hit the road with the definitive version of Mario Kart 8 and play anytime, anywhere! Race your friends or battle them in a revised battle mode.',
-    categories: ['派对游戏', '亲子游戏', '双人游戏']
-  },
-  { 
-    id: '4', 
-    title: 'Animal Crossing: New Horizons', 
-    price: 130, 
-    originalPrice: 170,
-    condition: 'Both', 
-    coverUrl: 'https://picsum.photos/seed/acnh/400/600', 
-    players: '1-4', 
-    languages: 'CN/EN/JP', 
-    genre: 'Simulation', 
-    description: 'Escape to a deserted island and create your own paradise as you explore, create, and customize in the Animal Crossing: New Horizons game.',
-    categories: ['亲子游戏']
-  },
-  { 
-    id: '5', 
-    title: 'Super Smash Bros. Ultimate', 
-    price: 160, 
-    originalPrice: 200,
-    condition: 'Used', 
-    coverUrl: 'https://picsum.photos/seed/ssbu/400/600', 
-    players: '1-8', 
-    languages: 'All', 
-    genre: 'Fighting', 
-    description: 'Gaming icons clash in the ultimate brawl you can play anytime, anywhere! Smash rivals off the stage as new characters Simon Belmont and King K. Rool join Inkling, Ridley, and every fighter in Super Smash Bros. history.',
-    categories: ['派对游戏', '双人游戏']
-  },
-  { 
-    id: '6', 
-    title: 'It Takes Two', 
-    price: 110, 
-    originalPrice: 140,
-    isSale: true,
-    badge: 'SALE',
-    condition: 'New', 
-    coverUrl: 'https://picsum.photos/seed/itt/400/600', 
-    players: '2', 
-    languages: 'CN/EN', 
-    genre: 'Co-op Adventure', 
-    description: 'Embark on the craziest journey of your life in It Takes Two, a genre-bending platform adventure created purely for co-op.',
-    categories: ['双人游戏']
-  },
-];
 
 const CONDITION_LABELS = {
   'New': '全新',
@@ -133,8 +44,35 @@ const CONDITION_LABELS = {
 };
 
 export default function App() {
+  const [games, setGames] = useState<Game[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [currentView, setCurrentView] = useState<'home' | 'detail'>('home');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+
+  // Fetch data from static JSON
+  useEffect(() => {
+    fetch('/games.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to load games data');
+        return res.json();
+      })
+      .then(data => {
+        setGames(data);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Load html2canvas dynamically
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -151,6 +89,19 @@ export default function App() {
     setTimeout(() => setSelectedGame(null), 300); // Clear after animation
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FFFFFF] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 bg-[#E60012] rounded-full flex items-center justify-center shadow-lg animate-bounce mb-4">
+          <Gamepad2 size={28} className="text-white" />
+        </div>
+        <p className="text-xl font-black tracking-widest text-gray-800 animate-pulse">
+          Loading Dex...
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#FFFFFF] font-sans text-gray-900 overflow-x-hidden">
       <AnimatePresence mode="wait">
@@ -164,7 +115,7 @@ export default function App() {
             transition={{ duration: 0.2 }}
             className="pb-20"
           >
-            <HomeView onGameClick={handleGameClick} />
+            <HomeView games={games} onGameClick={handleGameClick} />
           </motion.div>
         ) : (
           <motion.div 
@@ -176,7 +127,7 @@ export default function App() {
             transition={{ duration: 0.2 }}
             className="pb-24 bg-[#FFFFFF] min-h-screen"
           >
-            {selectedGame && <DetailView game={selectedGame} onBack={handleBack} onGameClick={handleGameClick} />}
+            {selectedGame && <DetailView game={selectedGame} games={games} onBack={handleBack} onGameClick={handleGameClick} />}
           </motion.div>
         )}
       </AnimatePresence>
@@ -194,30 +145,112 @@ export default function App() {
 // ==========================================
 // VIEW 1: HOME
 // ==========================================
-function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
-  const [filter, setFilter] = useState<Category>('All');
-  
+function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game) => void }) {
+  const [filter, setFilter] = useState<string>('All');
+  const [exportChunks, setExportChunks] = useState<any[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
+
+  // CRITICAL: Filter using .includes() on the category string
+  const filteredGames = filter === 'All' 
+    ? games 
+    : games.filter(g => g.category && g.category.includes(filter));
+
+  const saleGames = games.filter(g => g.isSale);
+
   const handleAdminExport = () => {
-    alert(
-      "【System Dump: XHS Grid】\n\n" +
-      "将把所有游戏按 3x4 比例渲染成小红书海报。\n" +
-      "(Generating 3x4 grid images for Xiaohongshu export...)"
-    );
+    // Group current displayed games by category
+    const categoriesToExport = ['双人游戏', '派对游戏', '亲子游戏'];
+    const chunks: any[] = [];
+    
+    categoriesToExport.forEach(cat => {
+      // CRITICAL: Filter using .includes()
+      const gamesInCat = filteredGames.filter(g => g.category && g.category.includes(cat));
+      if (gamesInCat.length > 0) {
+        // Split into chunks of 12
+        for (let i = 0; i < gamesInCat.length; i += 12) {
+          chunks.push({
+            category: cat,
+            games: gamesInCat.slice(i, i + 12),
+            chunkIndex: Math.floor(i / 12) + 1
+          });
+        }
+      }
+    });
+    
+    if (chunks.length === 0) {
+      alert("当前列表没有可导出的分类游戏！");
+      return;
+    }
+    
+    setExportChunks(chunks);
+    setIsExporting(true);
   };
 
-  const filteredGames = filter === 'All' 
-    ? GAMES 
-    : GAMES.filter(g => g.categories.includes(filter) || g.categories.includes('All'));
-
-  const saleGames = GAMES.filter(g => g.isSale);
+  // Effect to handle the actual canvas generation once DOM is ready
+  useEffect(() => {
+    if (isExporting && exportChunks.length > 0) {
+      const generatePosters = async () => {
+        const html2canvas = (window as any).html2canvas;
+        if (!html2canvas) {
+          alert("海报生成库加载中，请稍后再试...");
+          setIsExporting(false);
+          return;
+        }
+        
+        // Wait for DOM to render the hidden templates and images to load
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        for (let i = 0; i < exportChunks.length; i++) {
+          const el = document.getElementById(`xhs-poster-${i}`);
+          if (el) {
+            try {
+              const canvas = await html2canvas(el, { 
+                useCORS: true, 
+                scale: 2, // High resolution
+                backgroundColor: '#F4F4F6'
+              });
+              const url = canvas.toDataURL('image/png');
+              const a = document.createElement('a');
+              a.href = url;
+              
+              // Map category to English for filename
+              const catMap: Record<string, string> = {
+                '双人游戏': 'couples',
+                '派对游戏': 'party',
+                '亲子游戏': 'family'
+              };
+              const catEn = catMap[exportChunks[i].category] || 'misc';
+              
+              a.download = `xhs_poster_${catEn}_${exportChunks[i].chunkIndex}.png`;
+              a.click();
+            } catch (err) {
+              console.error("Failed to generate poster", err);
+            }
+          }
+        }
+        
+        alert('🎉 小红书海报已生成完毕，请查收相册！');
+        setIsExporting(false);
+        setExportChunks([]);
+      };
+      
+      generatePosters();
+    }
+  }, [isExporting, exportChunks]);
 
   return (
     <>
       {/* 1. Top Nav Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-center">
-        <h1 className="text-2xl font-black tracking-tighter text-black">
-          S<span className="text-[#E60012]">✘</span>ítčh Dé<span className="text-[#E60012]">✘</span>
-        </h1>
+        <div className="flex items-center gap-2">
+          {/* Circular Logo */}
+          <div className="w-8 h-8 bg-[#E60012] rounded-full flex items-center justify-center shadow-sm">
+            <Gamepad2 size={18} className="text-white" />
+          </div>
+          <h1 className="text-2xl font-black tracking-tighter text-black">
+            S<span className="text-[#E60012]">✘</span>ítčh Dé<span className="text-[#E60012]">✘</span>
+          </h1>
+        </div>
       </header>
 
       {/* 2. Video Hero */}
@@ -252,9 +285,15 @@ function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
 
       {/* 3. Featured Deals Carousel */}
       <section className="pt-6 pb-2 bg-white">
-        <div className="px-4 mb-3 flex items-center gap-2">
-          <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
-          <h2 className="text-lg font-black italic text-black tracking-tight">FEATURED DEALS</h2>
+        <div className="px-4 mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
+            <h2 className="text-lg font-black italic text-black tracking-tight">FEATURED DEALS</h2>
+          </div>
+          {/* View All Button */}
+          <button className="text-xs font-bold text-gray-500 hover:text-[#E60012] transition-colors">
+            View All
+          </button>
         </div>
         
         <div className="flex overflow-x-auto gap-4 px-4 no-scrollbar pb-4 snap-x">
@@ -273,7 +312,7 @@ function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
               )}
               
               <div className="aspect-[3/4] w-full bg-gray-200">
-                <img src={game.coverUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" />
+                <img src={game.coverUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
               </div>
               <div className="p-3">
                 <h3 className="text-xs font-bold line-clamp-1 mb-1">{game.title}</h3>
@@ -294,7 +333,7 @@ function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
         {/* Sticky Filters & Search */}
         <div className="sticky top-[52px] z-40 bg-white/95 backdrop-blur-md py-3 px-4 flex items-center justify-between border-b border-gray-100 shadow-sm gap-3">
           <div className="flex gap-2 overflow-x-auto no-scrollbar flex-grow">
-            {(['All', '双人游戏', '派对游戏', '亲子游戏'] as Category[]).map((f) => (
+            {(['All', '双人游戏', '派对游戏', '亲子游戏']).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
@@ -315,47 +354,53 @@ function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
 
         {/* Grid */}
         <div className="p-4 grid grid-cols-2 gap-3">
-          {filteredGames.map((game) => (
-            <motion.div 
-              key={game.id}
-              whileTap={{ scale: 0.96 }}
-              onClick={() => onGameClick(game)}
-              className="bg-[#F8F9FA] rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col cursor-pointer"
-            >
-              <div className="relative aspect-[3/4] w-full bg-gray-200">
-                <img 
-                  src={game.coverUrl} 
-                  alt={game.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <div className="p-3 flex flex-col flex-grow">
-                <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight text-gray-900">
-                  {game.title}
-                </h3>
-                <div className="mt-auto pt-2 flex flex-col gap-1.5">
-                  <div className="flex items-baseline gap-1.5">
-                    <p className="text-[#E60012] font-black text-lg leading-none">
-                      RM {game.price}
-                    </p>
-                    {game.originalPrice && (
-                      <p className="text-gray-400 text-[10px] line-through font-bold">RM {game.originalPrice}</p>
-                    )}
-                  </div>
-                  
-                  {/* Category Tags instead of Condition */}
-                  <div className="flex flex-wrap gap-1">
-                    {game.categories.filter(c => c !== 'All').slice(0, 2).map(cat => (
-                      <span key={cat} className="inline-block px-1.5 py-0.5 bg-white border border-gray-200 rounded text-[10px] font-bold text-gray-600">
-                        {cat}
-                      </span>
-                    ))}
+          {filteredGames.map((game) => {
+            // Split the category string into an array for rendering tags
+            const categoryTags = game.category ? game.category.split(',').map(c => c.trim()) : [];
+            
+            return (
+              <motion.div 
+                key={game.id}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => onGameClick(game)}
+                className="bg-[#F8F9FA] rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col cursor-pointer"
+              >
+                <div className="relative aspect-[3/4] w-full bg-gray-200">
+                  <img 
+                    src={game.coverUrl} 
+                    alt={game.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div className="p-3 flex flex-col flex-grow">
+                  <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight text-gray-900">
+                    {game.title}
+                  </h3>
+                  <div className="mt-auto pt-2 flex flex-col gap-1.5">
+                    <div className="flex items-baseline gap-1.5">
+                      <p className="text-[#E60012] font-black text-lg leading-none">
+                        RM {game.price}
+                      </p>
+                      {game.originalPrice && (
+                        <p className="text-gray-400 text-[10px] line-through font-bold">RM {game.originalPrice}</p>
+                      )}
+                    </div>
+                    
+                    {/* Category Tags */}
+                    <div className="flex flex-wrap gap-1">
+                      {categoryTags.slice(0, 2).map(cat => (
+                        <span key={cat} className="inline-block px-1.5 py-0.5 bg-white border border-gray-200 rounded text-[10px] font-bold text-gray-600">
+                          {cat}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
@@ -363,11 +408,76 @@ function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
       <footer className="mt-4 py-8 flex justify-center border-t border-gray-100 bg-gray-50">
         <button 
           onClick={handleAdminExport}
-          className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2"
+          disabled={isExporting}
+          className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2 disabled:opacity-50"
         >
-          [ System Dump: XHS Grid ]
+          {isExporting ? '[ Generating Posters... ]' : '[ System Dump: XHS Grid ]'}
         </button>
       </footer>
+
+      {/* Hidden XHS Poster Templates */}
+      {exportChunks.length > 0 && (
+        <div className="fixed top-[-9999px] left-[-9999px] opacity-0 pointer-events-none z-[-1]">
+          {exportChunks.map((chunk, idx) => (
+            <div 
+              key={idx} 
+              id={`xhs-poster-${idx}`} 
+              className="w-[900px] h-[1200px] bg-[#F4F4F6] flex flex-col p-10 box-border"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-[#E60012] rounded-full flex items-center justify-center">
+                    <Gamepad2 size={28} className="text-white" />
+                  </div>
+                  <h1 className="text-3xl font-black tracking-tighter text-black">
+                    S<span className="text-[#E60012]">✘</span>ítčh Dé<span className="text-[#E60012]">✘</span>
+                  </h1>
+                </div>
+                <h2 className="text-4xl font-black text-gray-800 tracking-tight">
+                  S<span className="text-[#E60012]">✘</span>ítčh Dé<span className="text-[#E60012]">✘</span> 精选：{chunk.category}
+                </h2>
+              </div>
+              
+              {/* Grid 3x4 */}
+              <div className="grid grid-cols-3 grid-rows-4 gap-6 flex-grow">
+                {chunk.games.map((game: Game) => (
+                  <div key={game.id} className="bg-white/80 backdrop-blur-xl rounded-3xl p-5 flex flex-col shadow-sm border border-white relative">
+                    {/* Condition Tag */}
+                    <div className="absolute top-4 right-4 bg-gray-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg z-10 shadow-sm">
+                      {CONDITION_LABELS[game.condition]}
+                    </div>
+                    
+                    <img 
+                      src={game.coverUrl} 
+                      alt={game.title} 
+                      className="w-full aspect-[3/4] object-cover rounded-2xl mb-4 shadow-sm" 
+                      crossOrigin="anonymous" 
+                      referrerPolicy="no-referrer"
+                    />
+                    
+                    <h3 className="text-xl font-bold line-clamp-2 leading-tight text-gray-900 mb-2">
+                      {game.title}
+                    </h3>
+                    
+                    <div className="mt-auto flex items-end justify-between">
+                      <div className="flex flex-col">
+                        {game.originalPrice && (
+                          <span className="text-gray-400 text-sm line-through font-bold mb-0.5">RM {game.originalPrice}</span>
+                        )}
+                        <p className="text-3xl font-black text-[#B91C1C] leading-none">RM {game.price}</p>
+                      </div>
+                      <div className="w-12 h-12 bg-[#25D366] rounded-full flex items-center justify-center shadow-md flex-shrink-0">
+                        <MessageCircle size={24} className="text-white" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -375,7 +485,7 @@ function HomeView({ onGameClick }: { onGameClick: (g: Game) => void }) {
 // ==========================================
 // VIEW 2: DETAIL VIEW
 // ==========================================
-function DetailView({ game, onBack, onGameClick }: { game: Game, onBack: () => void, onGameClick: (g: Game) => void }) {
+function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: Game[], onBack: () => void, onGameClick: (g: Game) => void }) {
   const [likes, setLikes] = useState(256);
   const [liked, setLiked] = useState(false);
 
@@ -383,6 +493,9 @@ function DetailView({ game, onBack, onGameClick }: { game: Game, onBack: () => v
     setLiked(!liked);
     setLikes(prev => liked ? prev - 1 : prev + 1);
   };
+
+  // Split the category string into an array for rendering tags
+  const categoryTags = game.category ? game.category.split(',').map(c => c.trim()) : [];
 
   return (
     <>
@@ -446,7 +559,7 @@ function DetailView({ game, onBack, onGameClick }: { game: Game, onBack: () => v
             <div className="px-2 py-1 bg-[#F8F9FA] border border-gray-200 rounded text-xs font-bold text-gray-700">
               Condition: {CONDITION_LABELS[game.condition]}
             </div>
-            {game.categories.filter(c => c !== 'All').map(cat => (
+            {categoryTags.map(cat => (
               <div key={cat} className="px-2 py-1 bg-red-50 border border-red-100 rounded text-xs font-bold text-[#E60012]">
                 {cat}
               </div>
@@ -496,7 +609,7 @@ function DetailView({ game, onBack, onGameClick }: { game: Game, onBack: () => v
         </div>
         
         <div className="flex overflow-x-auto gap-3 px-5 no-scrollbar pb-2 snap-x">
-          {GAMES.filter(g => g.id !== game.id).slice(0, 4).map((similarGame) => (
+          {games.filter(g => g.id !== game.id).slice(0, 4).map((similarGame) => (
             <div 
               key={similarGame.id}
               onClick={() => onGameClick(similarGame)}
@@ -507,6 +620,7 @@ function DetailView({ game, onBack, onGameClick }: { game: Game, onBack: () => v
                 alt={similarGame.title} 
                 className="w-full aspect-[3/4] object-cover"
                 loading="lazy"
+                referrerPolicy="no-referrer"
               />
               <div className="p-2">
                 <h3 className="text-[10px] font-bold line-clamp-2 h-7 leading-tight">{similarGame.title}</h3>
