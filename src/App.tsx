@@ -18,7 +18,6 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 
 // --- Types & Data ---
-type Condition = 'New' | 'Used' | 'Both';
 type BadgeType = 'SALE' | 'NEW ITEM' | 'HOT SELLING';
 
 interface Game {
@@ -28,20 +27,16 @@ interface Game {
   originalPrice?: number;
   isSale?: boolean;
   badge?: BadgeType;
-  condition: Condition;
-  coverUrl: string;
+  condition: string; // e.g. "全新", "二手", "全新/二手"
+  imageUrl: string;
   players: string;
-  languages: string;
+  language: string;
   genre: string;
   description: string;
-  category: string; // Now a comma-separated string, e.g. "亲子游戏, IP游戏, 必玩神作"
+  category: string; // Comma-separated string, e.g. "亲子游戏, IP游戏, 必玩神作"
+  votes: number;
+  status: string; // "有货" | "缺货"
 }
-
-const CONDITION_LABELS = {
-  'New': '全新',
-  'Used': '二手',
-  'Both': '全新/二手'
-};
 
 export default function App() {
   const [games, setGames] = useState<Game[]>([]);
@@ -311,8 +306,13 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                 </div>
               )}
               
+              {/* Condition Tag (Top Right) */}
+              <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
+                {game.condition}
+              </div>
+              
               <div className="aspect-[3/4] w-full bg-gray-200">
-                <img src={game.coverUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
+                <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
               </div>
               <div className="p-3">
                 <h3 className="text-xs font-bold line-clamp-1 mb-1">{game.title}</h3>
@@ -321,6 +321,11 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                   {game.originalPrice && (
                     <p className="text-gray-400 text-[10px] line-through font-bold">RM {game.originalPrice}</p>
                   )}
+                </div>
+                {/* Players & Language */}
+                <div className="flex items-center gap-2 mt-1.5 text-[10px] text-gray-500 font-medium">
+                  <span className="flex items-center gap-0.5"><Users size={10} /> {game.players}</span>
+                  <span className="flex items-center gap-0.5"><Globe size={10} /> {game.language}</span>
                 </div>
               </div>
             </motion.div>
@@ -363,11 +368,16 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                 key={game.id}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => onGameClick(game)}
-                className="bg-[#F8F9FA] rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col cursor-pointer"
+                className="bg-[#F8F9FA] rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col cursor-pointer relative"
               >
+                {/* Condition Tag (Top Right) */}
+                <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
+                  {game.condition}
+                </div>
+
                 <div className="relative aspect-[3/4] w-full bg-gray-200">
                   <img 
-                    src={game.coverUrl} 
+                    src={game.imageUrl} 
                     alt={game.title}
                     className="w-full h-full object-cover"
                     loading="lazy"
@@ -388,8 +398,14 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                       )}
                     </div>
                     
+                    {/* Players & Language */}
+                    <div className="flex items-center gap-2 text-[10px] text-gray-500 font-medium">
+                      <span className="flex items-center gap-0.5"><Users size={10} /> {game.players}</span>
+                      <span className="flex items-center gap-0.5 truncate"><Globe size={10} /> {game.language}</span>
+                    </div>
+
                     {/* Category Tags */}
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 mt-1">
                       {categoryTags.slice(0, 2).map(cat => (
                         <span key={cat} className="inline-block px-1.5 py-0.5 bg-white border border-gray-200 rounded text-[10px] font-bold text-gray-600">
                           {cat}
@@ -445,11 +461,11 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
                   <div key={game.id} className="bg-white/80 backdrop-blur-xl rounded-3xl p-5 flex flex-col shadow-sm border border-white relative">
                     {/* Condition Tag */}
                     <div className="absolute top-4 right-4 bg-gray-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg z-10 shadow-sm">
-                      {CONDITION_LABELS[game.condition]}
+                      {game.condition}
                     </div>
                     
                     <img 
-                      src={game.coverUrl} 
+                      src={game.imageUrl} 
                       alt={game.title} 
                       className="w-full aspect-[3/4] object-cover rounded-2xl mb-4 shadow-sm" 
                       crossOrigin="anonymous" 
@@ -486,7 +502,7 @@ function HomeView({ games, onGameClick }: { games: Game[], onGameClick: (g: Game
 // VIEW 2: DETAIL VIEW
 // ==========================================
 function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: Game[], onBack: () => void, onGameClick: (g: Game) => void }) {
-  const [likes, setLikes] = useState(256);
+  const [likes, setLikes] = useState(game.votes || 0);
   const [liked, setLiked] = useState(false);
 
   const handleLike = () => {
@@ -501,13 +517,22 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
     <>
       {/* Top: Video Hero (16:9) */}
       <section className="relative aspect-video w-full overflow-hidden bg-black">
+        {/* Out of Stock Mask */}
+        {game.status === '缺货' && (
+          <div className="absolute inset-0 bg-[#E60012]/60 backdrop-blur-sm z-20 flex items-center justify-center">
+            <div className="bg-white/95 px-6 py-2 rounded-xl shadow-2xl transform -rotate-12 border-4 border-[#E60012]">
+              <span className="text-2xl font-black text-[#E60012] tracking-widest uppercase">SOLD OUT / 已预订</span>
+            </div>
+          </div>
+        )}
+
         <video 
           autoPlay 
           loop 
           muted 
           playsInline 
           className="h-full w-full object-cover opacity-80"
-          poster={game.coverUrl}
+          poster={game.imageUrl}
           onError={(e) => {
             (e.target as HTMLVideoElement).style.display = 'none';
           }}
@@ -518,19 +543,19 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
         {/* Fallback Background */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-50" 
-          style={{ backgroundImage: `url(${game.coverUrl})`, zIndex: -1 }}
+          style={{ backgroundImage: `url(${game.imageUrl})`, zIndex: -1 }}
         ></div>
 
         {/* Back Button */}
         <button 
           onClick={onBack}
-          className="absolute top-4 left-4 z-10 p-2 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-[#E60012] transition-colors"
+          className="absolute top-4 left-4 z-30 p-2 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-[#E60012] transition-colors"
         >
           <ArrowLeft size={24} />
         </button>
 
         {/* Play Icon Overlay */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
           <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/40">
             <Play className="text-white fill-white ml-1" size={28} />
           </div>
@@ -556,11 +581,11 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
           </div>
           
           <div className="flex flex-wrap gap-2">
-            <div className="px-2 py-1 bg-[#F8F9FA] border border-gray-200 rounded text-xs font-bold text-gray-700">
-              Condition: {CONDITION_LABELS[game.condition]}
+            <div className="px-2 py-1 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-md text-xs font-bold text-gray-700">
+              Condition: {game.condition}
             </div>
             {categoryTags.map(cat => (
-              <div key={cat} className="px-2 py-1 bg-red-50 border border-red-100 rounded text-xs font-bold text-[#E60012]">
+              <div key={cat} className="px-2 py-1 bg-red-50/80 backdrop-blur-sm border border-red-100 rounded-md text-xs font-bold text-[#E60012]">
                 {cat}
               </div>
             ))}
@@ -573,11 +598,11 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-[#FEE2E2] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-[#FECACA]">
             <Users size={22} className="text-[#B91C1C]" />
-            <span className="text-xs font-bold text-[#B91C1C]">{game.players} 玩家</span>
+            <span className="text-xs font-bold text-[#B91C1C]">{game.players}</span>
           </div>
           <div className="bg-[#FEE2E2] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-[#FECACA]">
             <Globe size={22} className="text-[#B91C1C]" />
-            <span className="text-xs font-bold text-[#B91C1C]">{game.languages}</span>
+            <span className="text-xs font-bold text-[#B91C1C] truncate w-full text-center">{game.language}</span>
           </div>
           <div className="bg-[#FEE2E2] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-[#FECACA]">
             <Tag size={22} className="text-[#B91C1C]" />
@@ -613,10 +638,13 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
             <div 
               key={similarGame.id}
               onClick={() => onGameClick(similarGame)}
-              className="flex-shrink-0 w-32 bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 snap-start cursor-pointer"
+              className="flex-shrink-0 w-32 bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200 snap-start cursor-pointer relative"
             >
+              <div className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm text-gray-800 text-[8px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
+                {similarGame.condition}
+              </div>
               <img 
-                src={similarGame.coverUrl} 
+                src={similarGame.imageUrl} 
                 alt={similarGame.title} 
                 className="w-full aspect-[3/4] object-cover"
                 loading="lazy"
@@ -650,7 +678,7 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
           {/* Main Button (70%) */}
           <button className="flex-[7] bg-[#E60012] text-white py-3 rounded-xl font-black text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#E60012]/20 active:scale-95 transition-transform">
             <MessageCircle size={22} fill="white" />
-            WhatsApp 购买
+            {game.status === '缺货' ? '联系店长补货/预订' : 'WhatsApp 购买'}
           </button>
         </div>
       </footer>
