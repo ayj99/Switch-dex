@@ -12,7 +12,7 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
         </h1>
         <p className="text-gray-500 text-sm md:text-base font-bold tracking-widest mt-2">
-          诗和远方与Switch奇妙
+          诗和远方与Switch奇
         </p>
         
         {/* Pikachu Greeting */}
