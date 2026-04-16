@@ -74,7 +74,9 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   };
 
   const handleGameRent = (game: Game) => {
-    const text = `Hi, I want to RENT the game: ${game.title} for RM 15/month.`;
+    const minPrice = Math.floor(game.price * 0.0667);
+    const maxPrice = Math.floor(game.price * 0.15);
+    const text = `Hi, I want to RENT ${game.title}. I saw the rental range is RM ${minPrice} - ${maxPrice}/month. Please let me know the details.`;
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -82,7 +84,15 @@ export default function Rental({ onBack }: { onBack: () => void }) {
     <div className="min-h-screen bg-white flex flex-col font-sans">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <button 
+          onClick={onBack}
+          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-24"
+        >
+          <ArrowLeft size={20} />
+          <span className="hidden sm:inline">返回大厅</span>
+        </button>
+        
+        <div className="flex items-center justify-center gap-2 flex-1">
           <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" referrerPolicy="no-referrer" />
           <div className="flex flex-col">
             <span className="text-2xl font-black italic tracking-tighter text-gray-900 leading-none">
@@ -93,13 +103,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
             </span>
           </div>
         </div>
-        <button 
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm font-bold text-gray-600 hover:text-[#e60012] transition-colors bg-gray-100 hover:bg-red-50 px-4 py-2 rounded-full"
-        >
-          <ArrowLeft size={16} />
-          <span className="hidden sm:inline">返回大厅</span>
-        </button>
+
+        <div className="w-24"></div> {/* Spacer for centering */}
       </header>
 
       {/* Console Rental Section */}
@@ -217,8 +222,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   </h3>
                   <div className="mt-auto pt-2 flex flex-col gap-1.5">
                     <div className="flex items-baseline gap-1.5">
-                      <p className="text-green-600 font-black text-lg leading-none">
-                        RM 15 <span className="text-xs font-bold text-gray-500">/ 月</span>
+                      <p className="text-green-600 font-black text-sm leading-none">
+                        RM {Math.floor(game.price * 0.0667)} - {Math.floor(game.price * 0.15)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
                       </p>
                     </div>
                     
