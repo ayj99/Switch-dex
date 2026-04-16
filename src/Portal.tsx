@@ -31,10 +31,8 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           onClick={() => onNavigate('shop')}
           className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all border border-gray-100 flex flex-col items-center text-center group"
         >
-          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-[#e60012] transition-colors">
-            <Gamepad2 size={40} className="text-[#e60012] group-hover:text-white transition-colors" />
-          </div>
-          <h2 className="text-2xl font-black text-gray-900 mb-4">🛒 买 Switch 二手游戏</h2>
+          <img src="/images/games.png" alt="Buy Games" className="w-32 h-32 mx-auto mb-4 object-contain transition-transform group-hover:scale-110 drop-shadow-xl" />
+          <h2 className="text-2xl font-black text-gray-900 mb-4">买 Switch 二手游戏</h2>
           <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed">
             涵盖全分类神作！天天有闪购特价 ⚡，配合「高价回血」计划，怎么买都不亏！
           </p>
@@ -47,10 +45,8 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           onClick={() => onNavigate('rental')}
           className="bg-white rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all border border-gray-100 flex flex-col items-center text-center group"
         >
-          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
-            <Package size={40} className="text-blue-600 group-hover:text-white transition-colors" />
-          </div>
-          <h2 className="text-2xl font-black text-gray-900 mb-4">📦 租 Switch 主机与游戏</h2>
+          <img src="/images/console.png" alt="Rent Console" className="w-32 h-32 mx-auto mb-4 object-contain transition-transform group-hover:scale-110 drop-shadow-xl" />
+          <h2 className="text-2xl font-black text-gray-900 mb-4">租 Switch 主机与游戏</h2>
           <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed">
             周末聚会、拍拖破冰神器！全套神机即租即玩，精选大作低至一杯奶茶钱 🎉！
           </p>
