@@ -91,7 +91,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
           className="absolute top-4 left-4 z-50 flex items-center gap-1 text-sm font-bold text-white/80 hover:text-white bg-black/20 hover:bg-black/40 px-3 py-2 rounded-full backdrop-blur-md transition-all"
         >
           <ArrowLeft size={20} />
-          <span>返回大厅</span>
+          <span>Back 返回大厅</span>
         </button>
 
         {/* Top Half: Console */}
@@ -144,7 +144,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
           className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-32"
         >
           <ArrowLeft size={20} />
-          <span className="hidden sm:inline">返回选择模式</span>
+          <span className="hidden sm:inline">Back 返回选择</span>
         </button>
         
         <div className="flex items-center justify-center gap-2 flex-1">
