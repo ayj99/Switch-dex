@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "price": 150,
     "title": "Super Mario Bros. Wonder (超级马力欧兄弟 惊奇)",
     "originalPrice": 180,
     "condition": "二手",
@@ -9,7 +10,6 @@
     "language": "中文/EN",
     "genre": "沙盒建造",
     "status": "有货",
-    "price": 150,
     "imageUrl": "/SXitch%20Dex%20photo/mario_wonder.jpeg",
     "videoUrl": "",
     "description": "《Super Mario Bros. Wonder》绝对是值得一玩的佳作无论是玩法还是沉浸感都让人欲罢不能强烈推荐入手体验！",
