@@ -16,7 +16,8 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
         </p>
         
         {/* Pikachu Greeting */}
-        <div className="text-lg md:text-xl font-bold text-yellow-500 flex items-center justify-center gap-2 mt-6 bg-yellow-50 px-6 py-2 rounded-full border border-yellow-200 shadow-sm">
+        <div className="text-lg md:text-xl font-bold text-yellow-500 flex items-center justify-center gap-3 mt-6 bg-yellow-50 px-6 py-3 rounded-full border border-yellow-200 shadow-sm">
+          <img src="/images/pikachu.gif" alt="Pikachu" className="w-8 h-8 object-contain" referrerPolicy="no-referrer" onError={(e) => e.currentTarget.style.display = 'none'} />
           <span>⚡️ 皮卡皮卡！今天想在 Switch 的世界里开启什么冒险呀？ 🐹</span>
         </div>
       </div>
@@ -35,7 +36,7 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           </div>
           <h2 className="text-2xl font-black text-gray-900 mb-4">🛒 买 Switch 二手游戏</h2>
           <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed">
-            涵盖亲子、动作等全分类神作！天天有闪购特价 (Featured Deals) ⚡，加上独家「高价回血」计划，怎么买都不亏！
+            涵盖全分类神作！天天有闪购特价 ⚡，配合「高价回血」计划，怎么买都不亏！
           </p>
         </motion.button>
 
@@ -51,7 +52,7 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           </div>
           <h2 className="text-2xl font-black text-gray-900 mb-4">📦 租 Switch 主机与游戏</h2>
           <p className="text-sm md:text-base text-gray-600 font-medium leading-relaxed">
-            周末聚会、情侣拍拖的破冰神器！全套神机打包带走，单租大作低至一杯奶茶钱，即租即玩嗨翻天 🎉！
+            周末聚会、拍拖破冰神器！全套神机即租即玩，精选大作低至一杯奶茶钱 🎉！
           </p>
         </motion.button>
       </div>
