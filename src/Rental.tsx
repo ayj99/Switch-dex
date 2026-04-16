@@ -24,9 +24,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   const [rentalMode, setRentalMode] = useState<'curtain' | 'console' | 'games' | 'gameDetail'>('curtain');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
-  const [model, setModel] = useState<string | null>(null);
-  const [pkg, setPkg] = useState<string | null>(null);
-  const [addons, setAddons] = useState<string[]>([]);
+  const [consoleType, setConsoleType] = useState<'switch1' | 'switch2'>('switch1');
+  const [timing, setTiming] = useState<'weekday' | 'weekend'>('weekday');
   
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,32 +46,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
       });
   }, []);
 
-  const totalPrice = useMemo(() => {
-    let total = 0;
-    if (model) total += MODELS.find(m => m.id === model)?.price || 0;
-    if (pkg) total += PACKAGES.find(p => p.id === pkg)?.price || 0;
-    addons.forEach(aId => {
-      total += ADDONS.find(a => a.id === aId)?.price || 0;
-    });
-    return total;
-  }, [model, pkg, addons]);
-
-  const toggleAddon = (id: string) => {
-    setAddons(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]);
-  };
-
-  const handleConsoleRent = () => {
-    if (!model || !pkg) {
-      alert("请先选择主机型号和套餐 / Please select a console model and package first.");
-      return;
-    }
-    const modelName = MODELS.find(m => m.id === model)?.name;
-    const pkgName = PACKAGES.find(p => p.id === pkg)?.name;
-    const addonNames = addons.length > 0 
-      ? addons.map(aId => ADDONS.find(a => a.id === aId)?.name).join(', ') 
-      : 'None';
-    
-    const text = `Hi, I want to RENT ${modelName} + ${pkgName} with [${addonNames}]. Total Rental: RM ${totalPrice}`;
+  const handleConsoleRent = (planName: string, price: number) => {
+    const text = `Hi, I want to RENT ${planName}. Total Rental: RM ${price}`;
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
@@ -164,114 +139,171 @@ export default function Rental({ onBack }: { onBack: () => void }) {
           className="flex-1"
         >
           {rentalMode === 'console' && (
-            <div className="max-w-4xl mx-auto px-4 py-8 pb-32">
+            <div className="max-w-7xl mx-auto px-4 py-8 pb-32">
               <div className="text-center mb-10">
-                <h1 className="text-3xl font-black text-gray-900 mb-2">定制你的 Switch 租赁套餐</h1>
-                <p className="text-gray-500 font-medium">只需 3 步，开启快乐周末</p>
-              </div>
-
-              <div className="space-y-8">
-                {/* Step 1: Model */}
-                <section>
-                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span>
-                    选择主机型号
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {MODELS.map(m => (
-                      <div 
-                        key={m.id}
-                        onClick={() => setModel(m.id)}
-                        className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${model === m.id ? 'border-[#e60012] bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-bold text-lg text-gray-900">{m.name}</h3>
-                            <p className="text-sm text-gray-500 mt-1">{m.desc}</p>
-                          </div>
-                          {model === m.id ? <CheckCircle2 className="text-[#e60012]" /> : <Circle className="text-gray-300" />}
-                        </div>
-                        <div className="mt-4 text-right">
-                          <span className="text-xl font-black text-[#e60012]">RM {m.price}</span>
-                          <span className="text-xs text-gray-500"> / 天</span>
-                        </div>
-                      </div>
-                    ))}
+                <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-6 tracking-tight">Choose Your Console</h1>
+                
+                {/* Toggles */}
+                <div className="flex flex-col items-center gap-4">
+                  {/* Console Type Toggle */}
+                  <div className="bg-gray-100 p-1 rounded-full inline-flex">
+                    <button 
+                      onClick={() => setConsoleType('switch1')}
+                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${consoleType === 'switch1' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                      Nintendo Switch
+                    </button>
+                    <button 
+                      onClick={() => setConsoleType('switch2')}
+                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${consoleType === 'switch2' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                      Switch 2 (Next Gen)
+                    </button>
                   </div>
-                </section>
 
-                {/* Step 2: Package */}
-                <section>
-                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span>
-                    选择手柄套餐
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {PACKAGES.map(p => (
-                      <div 
-                        key={p.id}
-                        onClick={() => setPkg(p.id)}
-                        className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${pkg === p.id ? 'border-[#e60012] bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
-                      >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-bold text-lg text-gray-900">{p.name}</h3>
-                            <p className="text-sm text-gray-500 mt-1">{p.desc}</p>
-                          </div>
-                          {pkg === p.id ? <CheckCircle2 className="text-[#e60012]" /> : <Circle className="text-gray-300" />}
-                        </div>
-                        <div className="mt-4 text-right">
-                          <span className="text-xl font-black text-[#e60012]">+ RM {p.price}</span>
-                        </div>
-                      </div>
-                    ))}
+                  {/* Timing Toggle */}
+                  <div className="bg-gray-100 p-1 rounded-full inline-flex">
+                    <button 
+                      onClick={() => setTiming('weekday')}
+                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${timing === 'weekday' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                      Weekday (Mon-Thu)
+                    </button>
+                    <button 
+                      onClick={() => setTiming('weekend')}
+                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${timing === 'weekend' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
+                    >
+                      Weekend (Fri-Sun)
+                    </button>
                   </div>
-                </section>
-
-                {/* Step 3: Addons */}
-                <section>
-                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span>
-                    加购配件 (可选)
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {ADDONS.map(a => {
-                      const isSelected = addons.includes(a.id);
-                      return (
-                        <div 
-                          key={a.id}
-                          onClick={() => toggleAddon(a.id)}
-                          className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${isSelected ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}
-                        >
-                          <div className="flex justify-between items-center">
-                            <h3 className="font-bold text-gray-900">{a.name}</h3>
-                            {isSelected ? <CheckCircle2 className="text-black" size={20} /> : <Circle className="text-gray-300" size={20} />}
-                          </div>
-                          <div className="mt-2">
-                            <span className="font-bold text-gray-900">+ RM {a.price}</span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </section>
-              </div>
-
-              {/* Bottom Action Bar */}
-              <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-safe z-40">
-                <div className="max-w-4xl mx-auto flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500 font-medium">总计预估</p>
-                    <p className="text-2xl font-black text-[#e60012]">RM {totalPrice} <span className="text-sm text-gray-500 font-normal">/ 天</span></p>
-                  </div>
-                  <button 
-                    onClick={handleConsoleRent}
-                    className="bg-[#e60012] hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-105 active:scale-95"
-                  >
-                    立即预约
-                  </button>
                 </div>
               </div>
+
+              {/* Grid */}
+              {consoleType === 'switch1' ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+                  {/* Left Card */}
+                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
+                    <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
+                      <img src="/images/switch1_basic.png" alt="Switch 1 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-xl font-black text-gray-900 mb-1">1 Day</h3>
+                      <p className="text-sm text-gray-500 font-medium mb-4">(Inducement / 诱饵)</p>
+                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Console + Basic Joy-Cons.</p>
+                      <div className="mb-6">
+                        <p className="text-3xl font-black text-gray-900">RM {timing === 'weekday' ? 30 : 40}</p>
+                      </div>
+                      <button 
+                        onClick={() => handleConsoleRent('Switch 1 - 1 Day', timing === 'weekday' ? 30 : 40)}
+                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors"
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Center Card */}
+                  <div className="bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
+                      🔥 PARTY FAVORITE / 聚会首选
+                    </div>
+                    <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
+                      <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
+                        <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" />
+                      </div>
+                      <div className="flex-1 flex flex-col">
+                        <h3 className="text-2xl font-black text-gray-900 mb-1">3 Days</h3>
+                        <p className="text-sm text-gray-500 font-medium mb-4">(Most Popular)</p>
+                        <p className="text-sm text-gray-600 mb-4 flex-1">Includes: Full Bundle + Extra Controllers + Game Cases.</p>
+                        <div className="mb-6">
+                          <p className="text-4xl font-black text-gray-900">RM {timing === 'weekday' ? 99 : 128}</p>
+                          <p className="text-sm font-bold text-green-600 mt-2 bg-green-50 inline-block px-2 py-1 rounded-md">🎓 Student Promo: RM {timing === 'weekday' ? 88 : 118} (Show ID)</p>
+                        </div>
+                        <button 
+                          onClick={() => handleConsoleRent('Switch 1 - 3 Days Party', timing === 'weekday' ? 99 : 128)}
+                          className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Card */}
+                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
+                    <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
+                      <img src="/images/switch1_pro.png" alt="Switch 1 Pro" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-xl font-black text-gray-900 mb-1">7 Days</h3>
+                      <p className="text-sm text-gray-500 font-medium mb-4">(Deep Player / 深度玩家)</p>
+                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Full Bundle + Random Premium Accessories.</p>
+                      <div className="mb-6">
+                        <p className="text-3xl font-black text-gray-900">RM {timing === 'weekday' ? 199 : 238}</p>
+                      </div>
+                      <button 
+                        onClick={() => handleConsoleRent('Switch 1 - 7 Days Pro', timing === 'weekday' ? 199 : 238)}
+                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors"
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+                  {/* Left Card */}
+                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
+                    <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
+                      <img src="/images/switch2_basic.png" alt="Switch 2 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" />
+                    </div>
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-xl font-black text-gray-900 mb-1">1 Day</h3>
+                      <p className="text-sm text-gray-500 font-medium mb-4">(Next Gen Experience)</p>
+                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Console + Basic Joy-Cons.</p>
+                      <div className="mb-6">
+                        <p className="text-3xl font-black text-gray-900">RM {timing === 'weekday' ? 60 : 80}</p>
+                      </div>
+                      <button 
+                        onClick={() => handleConsoleRent('Switch 2 - 1 Day', timing === 'weekday' ? 60 : 80)}
+                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors"
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Center Card */}
+                  <div className="bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
+                      🔥 PRE-ORDER / 稀缺体验·限量 1 台
+                    </div>
+                    <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
+                      <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
+                        <img src="/images/switch2_party.png" alt="Switch 2 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" />
+                      </div>
+                      <div className="flex-1 flex flex-col">
+                        <h3 className="text-2xl font-black text-gray-900 mb-1">3-4 Days</h3>
+                        <p className="text-sm text-gray-500 font-medium mb-4">(Limited Stock)</p>
+                        <p className="text-sm text-gray-600 mb-4 flex-1">Includes: Full Bundle + Premium Accessories.</p>
+                        <div className="mb-6">
+                          <p className="text-4xl font-black text-gray-900">RM {timing === 'weekday' ? 150 : 199}</p>
+                          <p className="text-sm font-bold text-green-600 mt-2 bg-green-50 inline-block px-2 py-1 rounded-md">🎓 Student Promo: RM {timing === 'weekday' ? 130 : 170} (Show ID)</p>
+                        </div>
+                        <button 
+                          onClick={() => handleConsoleRent('Switch 2 - 3-4 Days Pre-order', timing === 'weekday' ? 150 : 199)}
+                          className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                          Book Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
