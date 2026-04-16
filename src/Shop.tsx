@@ -130,19 +130,26 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       const matchesFilter = filter === 'All' || (g.category && g.category.includes(filter));
       const matchesSearch = !searchQuery || g.title.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesFilter && matchesSearch;
-    }).sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    }).sort((a, b) => {
+      const getDiscountRate = (g: Game) => {
+        if (g.originalPrice && g.price && g.originalPrice > g.price) {
+          return (g.originalPrice - g.price) / g.originalPrice;
+        }
+        return 0;
+      };
+      const rateA = getDiscountRate(a);
+      const rateB = getDiscountRate(b);
+      
+      if (rateA !== rateB) {
+        return rateB - rateA;
+      }
+      return (b.votes || 0) - (a.votes || 0);
+    });
   }, [games, filter, searchQuery]);
 
-  // 3. Featured Deals Logic (originalPrice > price OR top votes, max 8)
+  // 3. Featured Deals Logic (isSale === true)
   const featuredGames = useMemo(() => {
-    return [...games]
-      .sort((a, b) => {
-        const aDiscount = a.originalPrice && a.originalPrice > a.price ? 1 : 0;
-        const bDiscount = b.originalPrice && b.originalPrice > b.price ? 1 : 0;
-        if (aDiscount !== bDiscount) return bDiscount - aDiscount;
-        return (b.votes || 0) - (a.votes || 0);
-      })
-      .slice(0, 8);
+    return games.filter(g => g.isSale === true);
   }, [games]);
 
   // 4. Poster Modal Logic
@@ -182,10 +189,10 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <button 
           onClick={onBackToPortal}
-          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-24"
+          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-32"
         >
           <ArrowLeft size={20} />
-          <span className="hidden sm:inline">返回大厅</span>
+          <span className="hidden sm:inline">Back 返回大厅</span>
         </button>
         
         <div className="flex items-center justify-center gap-2 flex-1">
@@ -240,7 +247,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         <div className="px-4 mb-3 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
-            <h2 className="text-lg font-black italic text-black tracking-tight">FEATURED DEALS</h2>
+            <h2 className="text-lg font-black italic text-black tracking-tight">🌟 Featured Deals (特价精选)</h2>
             <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
           </div>
           <button 
@@ -297,8 +304,13 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       {/* 4. Main Grid with Search & Sticky Filters */}
       <section className="bg-white">
         <div className="sticky top-[52px] z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+          <div className="px-4 pt-4 pb-1">
+            <h2 className="text-lg font-black italic text-black tracking-tight">
+              🎮 All Games (全部游戏)
+            </h2>
+          </div>
           {/* Search Bar */}
-          <div className="px-4 pt-3 pb-1">
+          <div className="px-4 pt-2 pb-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
               <input 
@@ -595,9 +607,10 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
         {/* Back Button */}
         <button 
           onClick={onBack}
-          className="absolute top-4 left-4 z-30 p-2 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-[#E60012] transition-colors"
+          className="absolute top-4 left-4 z-30 px-3 py-2 bg-black/40 backdrop-blur-md rounded-full text-white hover:bg-[#E60012] transition-colors flex items-center gap-1 text-sm font-bold"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeft size={18} />
+          <span>Back 返回</span>
         </button>
 
         {/* Play Icon Overlay */}
