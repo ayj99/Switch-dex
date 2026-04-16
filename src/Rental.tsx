@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Game, PHONE_NUMBER } from './types';
 
 // Mock Data for Rental Options
@@ -21,6 +21,8 @@ const ADDONS = [
 ];
 
 export default function Rental({ onBack }: { onBack: () => void }) {
+  const [rentalMode, setRentalMode] = useState<'curtain' | 'console' | 'games'>('curtain');
+  
   const [model, setModel] = useState<string | null>(null);
   const [pkg, setPkg] = useState<string | null>(null);
   const [addons, setAddons] = useState<string[]>([]);
@@ -80,16 +82,69 @@ export default function Rental({ onBack }: { onBack: () => void }) {
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  if (rentalMode === 'curtain') {
+    return (
+      <div className="h-screen w-full flex flex-col relative font-sans overflow-hidden">
+        {/* Back Button */}
+        <button 
+          onClick={onBack}
+          className="absolute top-4 left-4 z-50 flex items-center gap-1 text-sm font-bold text-white/80 hover:text-white bg-black/20 hover:bg-black/40 px-3 py-2 rounded-full backdrop-blur-md transition-all"
+        >
+          <ArrowLeft size={20} />
+          <span>返回大厅</span>
+        </button>
+
+        {/* Top Half: Console */}
+        <div 
+          onClick={() => setRentalMode('console')}
+          className="h-1/2 w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 flex items-center justify-center cursor-pointer group relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="relative z-10 text-center"
+          >
+            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
+              📦 租 Switch 主机套餐
+            </h1>
+            <p className="text-purple-200 mt-4 text-lg md:text-xl font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+              周末聚会、拍拖破冰神器！全套神机即租即玩
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Bottom Half: Games */}
+        <div 
+          onClick={() => setRentalMode('games')}
+          className="h-1/2 w-full bg-gradient-to-tr from-red-900 via-red-800 to-black flex items-center justify-center cursor-pointer group relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            className="relative z-10 text-center"
+          >
+            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
+              🎮 单租精选游戏
+            </h1>
+            <p className="text-red-200 mt-4 text-lg md:text-xl font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+              精选大作低至一杯奶茶钱 🎉！
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <button 
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-24"
+          onClick={() => setRentalMode('curtain')}
+          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-32"
         >
           <ArrowLeft size={20} />
-          <span className="hidden sm:inline">返回大厅</span>
+          <span className="hidden sm:inline">返回选择模式</span>
         </button>
         
         <div className="flex items-center justify-center gap-2 flex-1">
@@ -98,171 +153,192 @@ export default function Rental({ onBack }: { onBack: () => void }) {
             <span className="text-2xl font-black italic tracking-tighter text-gray-900 leading-none">
               S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
             </span>
-            <span className="text-gray-500 text-[10px] font-bold tracking-widest mt-0.5">
-              诗和远方与Switch奇妙
-            </span>
           </div>
         </div>
-
-        <div className="w-24"></div> {/* Spacer for centering */}
+        
+        <div className="w-32" /> {/* Spacer for centering */}
       </header>
 
-      {/* Console Rental Section */}
-      <section className="p-5 max-w-4xl mx-auto w-full">
-        <h2 className="text-xl font-black text-gray-900 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
-          主机套餐区 <span className="text-gray-400 text-sm font-bold">/ Console Rental</span>
-        </h2>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={rentalMode}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -30 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="flex-1"
+        >
+          {rentalMode === 'console' && (
+            <div className="max-w-4xl mx-auto px-4 py-8 pb-32">
+              <div className="text-center mb-10">
+                <h1 className="text-3xl font-black text-gray-900 mb-2">定制你的 Switch 租赁套餐</h1>
+                <p className="text-gray-500 font-medium">只需 3 步，开启快乐周末</p>
+              </div>
 
-        {/* Models */}
-        <div className="mb-6">
-          <h3 className="text-sm font-bold text-gray-600 mb-3">1. 选择机型 (Pick Model)</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {MODELS.map(m => (
-              <motion.div
-                key={m.id}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setModel(m.id)}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${model === m.id ? 'border-[#E60012] bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'}`}
-              >
-                <div className="flex justify-between items-start mb-1">
-                  <span className="font-black text-gray-900">{m.name}</span>
-                  {model === m.id ? <CheckCircle2 className="text-[#E60012]" size={20} /> : <Circle className="text-gray-300" size={20} />}
-                </div>
-                <p className="text-xs text-gray-500 mb-2">{m.desc}</p>
-                <p className="text-[#E60012] font-bold">RM {m.price} <span className="text-xs text-gray-400 font-normal">/ week</span></p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Packages */}
-        <div className="mb-6">
-          <h3 className="text-sm font-bold text-gray-600 mb-3">2. 选择套餐 (Pick Package)</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {PACKAGES.map(p => (
-              <motion.div
-                key={p.id}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setPkg(p.id)}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${pkg === p.id ? 'border-[#E60012] bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'}`}
-              >
-                <div className="flex justify-between items-start mb-1">
-                  <span className="font-black text-gray-900">{p.name}</span>
-                  {pkg === p.id ? <CheckCircle2 className="text-[#E60012]" size={20} /> : <Circle className="text-gray-300" size={20} />}
-                </div>
-                <p className="text-xs text-gray-500 mb-2">{p.desc}</p>
-                <p className="text-[#E60012] font-bold">+ RM {p.price}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Addons */}
-        <div className="mb-6">
-          <h3 className="text-sm font-bold text-gray-600 mb-3">3. 附加配件 (Add-ons)</h3>
-          <div className="flex flex-col gap-2">
-            {ADDONS.map(a => {
-              const isSelected = addons.includes(a.id);
-              return (
-                <motion.div
-                  key={a.id}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => toggleAddon(a.id)}
-                  className={`p-3 rounded-xl border-2 cursor-pointer transition-all flex items-center justify-between ${isSelected ? 'border-[#E60012] bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'}`}
-                >
-                  <div className="flex items-center gap-3">
-                    {isSelected ? <CheckCircle2 className="text-[#E60012]" size={20} /> : <Circle className="text-gray-300" size={20} />}
-                    <span className="font-bold text-gray-900">{a.name}</span>
+              <div className="space-y-8">
+                {/* Step 1: Model */}
+                <section>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span>
+                    选择主机型号
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {MODELS.map(m => (
+                      <div 
+                        key={m.id}
+                        onClick={() => setModel(m.id)}
+                        className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${model === m.id ? 'border-[#e60012] bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-bold text-lg text-gray-900">{m.name}</h3>
+                            <p className="text-sm text-gray-500 mt-1">{m.desc}</p>
+                          </div>
+                          {model === m.id ? <CheckCircle2 className="text-[#e60012]" /> : <Circle className="text-gray-300" />}
+                        </div>
+                        <div className="mt-4 text-right">
+                          <span className="text-xl font-black text-[#e60012]">RM {m.price}</span>
+                          <span className="text-xs text-gray-500"> / 天</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <span className="text-[#E60012] font-bold">+ RM {a.price}</span>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+                </section>
 
-      {/* Game Rental Section */}
-      <section className="p-5 max-w-4xl mx-auto w-full bg-gray-50 border-t border-gray-100 pb-32 flex-grow">
-        <h2 className="text-xl font-black text-gray-900 mb-5 flex items-center gap-2">
-          <div className="w-1.5 h-5 bg-green-500 rounded-full"></div>
-          纯游戏租借区 <span className="text-gray-400 text-sm font-bold">/ Game Rental</span>
-        </h2>
-
-        {isLoading ? (
-          <div className="py-10 text-center text-gray-400 font-bold">Loading games...</div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {games.map(game => (
-              <motion.div 
-                key={game.id}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => handleGameRent(game)}
-                className="bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col cursor-pointer relative"
-              >
-                {/* RENTAL Badge */}
-                <div className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-black px-2 py-1 rounded-md z-10 shadow-md flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                  RENTAL
-                </div>
-
-                <div className="relative aspect-[3/4] w-full bg-gray-200">
-                  <img 
-                    src={game.imageUrl} 
-                    alt={game.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="p-3 flex flex-col flex-grow">
-                  <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight text-gray-900">
-                    {game.title}
-                  </h3>
-                  <div className="mt-auto pt-2 flex flex-col gap-1.5">
-                    <div className="flex items-baseline gap-1.5">
-                      <p className="text-green-600 font-black text-sm leading-none">
-                        RM {Math.floor(game.price * 0.0667)} - {Math.floor(game.price * 0.15)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
-                      </p>
-                    </div>
-                    
-                    {/* Players, Language, Votes */}
-                    <div className="flex items-center gap-2 text-[10px] text-gray-500 font-medium flex-wrap">
-                      <span className="flex items-center gap-0.5"><Users size={10} /> {game.players}</span>
-                      <span className="flex items-center gap-0.5 truncate"><Globe size={10} /> {game.language}</span>
-                      <span className="flex items-center gap-0.5 text-[#E60012]"><ThumbsUp size={10} /> {game.votes}</span>
-                    </div>
+                {/* Step 2: Package */}
+                <section>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span>
+                    选择手柄套餐
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {PACKAGES.map(p => (
+                      <div 
+                        key={p.id}
+                        onClick={() => setPkg(p.id)}
+                        className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${pkg === p.id ? 'border-[#e60012] bg-red-50' : 'border-gray-200 hover:border-gray-300'}`}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-bold text-lg text-gray-900">{p.name}</h3>
+                            <p className="text-sm text-gray-500 mt-1">{p.desc}</p>
+                          </div>
+                          {pkg === p.id ? <CheckCircle2 className="text-[#e60012]" /> : <Circle className="text-gray-300" />}
+                        </div>
+                        <div className="mt-4 text-right">
+                          <span className="text-xl font-black text-[#e60012]">+ RM {p.price}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </section>
+                </section>
 
-      {/* Floating Checkout Bar */}
-      <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 p-3 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex flex-col w-full sm:w-auto">
-            <div className="flex items-baseline gap-2">
-              <span className="text-sm font-bold text-gray-600">Total Rental:</span>
-              <span className="text-2xl font-black text-[#E60012]">RM {totalPrice}</span>
+                {/* Step 3: Addons */}
+                <section>
+                  <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span>
+                    加购配件 (可选)
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {ADDONS.map(a => {
+                      const isSelected = addons.includes(a.id);
+                      return (
+                        <div 
+                          key={a.id}
+                          onClick={() => toggleAddon(a.id)}
+                          className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${isSelected ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'}`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <h3 className="font-bold text-gray-900">{a.name}</h3>
+                            {isSelected ? <CheckCircle2 className="text-black" size={20} /> : <Circle className="text-gray-300" size={20} />}
+                          </div>
+                          <div className="mt-2">
+                            <span className="font-bold text-gray-900">+ RM {a.price}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              </div>
+
+              {/* Bottom Action Bar */}
+              <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-safe z-40">
+                <div className="max-w-4xl mx-auto flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-500 font-medium">总计预估</p>
+                    <p className="text-2xl font-black text-[#e60012]">RM {totalPrice} <span className="text-sm text-gray-500 font-normal">/ 天</span></p>
+                  </div>
+                  <button 
+                    onClick={handleConsoleRent}
+                    className="bg-[#e60012] hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-105 active:scale-95"
+                  >
+                    立即预约
+                  </button>
+                </div>
+              </div>
             </div>
-            <p className="text-[10px] sm:text-xs font-bold text-[#E60012] flex items-center gap-1">
-              ⚠️ 另需押金 (Deposit)，归还后 24 小时内闪电退款
-            </p>
-          </div>
-          
-          <button 
-            onClick={handleConsoleRent}
-            className="w-full sm:w-auto bg-[#E60012] text-white px-8 py-3 rounded-xl font-black text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#E60012]/20 active:scale-95 transition-transform"
-          >
-            <MessageCircle size={22} fill="white" />
-            WhatsApp 预订主机
-          </button>
-        </div>
-      </footer>
+          )}
+
+          {rentalMode === 'games' && (
+            <div className="max-w-7xl mx-auto px-4 py-8 pb-24">
+              <div className="text-center mb-10">
+                <h1 className="text-3xl font-black text-gray-900 mb-2">单租精选游戏</h1>
+                <p className="text-gray-500 font-medium">海量大作，随租随玩</p>
+              </div>
+
+              {isLoading ? (
+                <div className="flex justify-center py-20">
+                  <div className="w-10 h-10 border-4 border-gray-200 border-t-[#e60012] rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                  {games.map(game => (
+                    <div key={game.id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                        <img 
+                          src={game.imageUrl} 
+                          alt={game.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                          <Users size={10} /> {game.players}
+                        </div>
+                      </div>
+                      
+                      <div className="p-4 flex flex-col flex-1">
+                        <h3 className="font-bold text-gray-900 text-sm md:text-base line-clamp-2 mb-2 group-hover:text-[#e60012] transition-colors">
+                          {game.title}
+                        </h3>
+                        <div className="mt-auto pt-2 flex flex-col gap-1.5">
+                          <div className="flex items-baseline gap-1.5">
+                            <p className="text-green-600 font-black text-sm leading-none">
+                              RM {Math.floor(game.price * 0.0667)} - {Math.floor(game.price * 0.15)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
+                            </p>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 text-[10px] text-gray-500 font-medium mt-1">
+                            <span className="flex items-center gap-1"><ThumbsUp size={10} /> {game.votes}</span>
+                            <span className="flex items-center gap-1"><MessageCircle size={10} /> 99+</span>
+                          </div>
+
+                          <button 
+                            onClick={() => handleGameRent(game)}
+                            className="mt-3 w-full bg-gray-900 hover:bg-black text-white py-2 rounded-xl text-sm font-bold transition-colors"
+                          >
+                            我要租
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
