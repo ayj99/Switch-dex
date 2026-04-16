@@ -277,6 +277,20 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
           {rentalMode === 'games' && (
             <div className="max-w-7xl mx-auto px-4 py-8 pb-24">
+              {/* Video Header */}
+              <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border border-gray-100 bg-black aspect-video relative max-w-4xl mx-auto">
+                <video 
+                  className="w-full h-full object-cover opacity-80"
+                  controls
+                  poster="/images/rentalgames.png"
+                >
+                  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                </video>
+                <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-sm font-bold flex items-center gap-2">
+                  <span>📺 How to Rent / 租借教程</span>
+                </div>
+              </div>
+
               <div className="text-center mb-10">
                 <h1 className="text-3xl font-black text-gray-900 mb-2">单租精选游戏</h1>
                 <p className="text-gray-500 font-medium">海量大作，随租随玩</p>
@@ -289,7 +303,14 @@ export default function Rental({ onBack }: { onBack: () => void }) {
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                   {games.map(game => (
-                    <div key={game.id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
+                    <div 
+                      key={game.id} 
+                      onClick={() => {
+                        setSelectedGame(game);
+                        setRentalMode('gameDetail');
+                      }}
+                      className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col h-full"
+                    >
                       <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
                         <img 
                           src={game.imageUrl} 
@@ -297,8 +318,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           referrerPolicy="no-referrer"
                         />
-                        <div className="absolute top-2 left-2 bg-black/80 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                          <Users size={10} /> {game.players}
+                        <div className="absolute top-2 left-2 bg-[#25D366] text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md">
+                          🟢 RENT 租
                         </div>
                       </div>
                       
@@ -317,16 +338,6 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                             <span className="flex items-center gap-1"><ThumbsUp size={10} /> {game.votes}</span>
                             <span className="flex items-center gap-1"><MessageCircle size={10} /> 99+</span>
                           </div>
-
-                          <button 
-                            onClick={() => {
-                              setSelectedGame(game);
-                              setRentalMode('gameDetail');
-                            }}
-                            className="mt-3 w-full bg-gray-900 hover:bg-black text-white py-2 rounded-xl text-sm font-bold transition-colors"
-                          >
-                            我要租
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -351,14 +362,40 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 </button>
 
                 <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-                  <div className="aspect-video w-full bg-gray-100 relative">
-                    <img src={selectedGame.imageUrl} alt={selectedGame.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  <div className="aspect-video w-full bg-black relative">
+                    <video 
+                      src="https://www.w3schools.com/html/mov_bbb.mp4" 
+                      controls 
+                      poster={selectedGame.imageUrl} 
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   
                   <div className="p-6 md:p-8">
                     <h1 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight">
                       {selectedGame.title}
                     </h1>
+
+                    {/* Metadata */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <Globe size={12} /> {selectedGame.language || '中/英'}
+                      </span>
+                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                        <Users size={12} /> {selectedGame.players || '1-4'} 人
+                      </span>
+                      {selectedGame.category?.split(',').map((cat, idx) => (
+                        <span key={idx} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">
+                          {cat.trim()}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    {selectedGame.description && (
+                      <p className="text-gray-600 text-sm leading-relaxed mb-6">
+                        {selectedGame.description}
+                      </p>
+                    )}
                     
                     {/* 1. Headline Price Strategy */}
                     <div className="mb-2">
@@ -370,35 +407,66 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     {/* 2. Refined T&C Box (Scannable Visual Hierarchy) */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
                       <div className="mb-4">
-                        <h3 className="text-lg font-black text-gray-900">⚡️ Refill Plan / 续杯计划</h3>
-                        <p className="text-green-600 text-sm font-bold mt-1">The longer you play, the cheaper it gets! 玩越久，月均越便宜！</p>
+                        <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租借价格与退款</h3>
+                        <p className="text-green-600 text-sm font-bold mt-1">Pay the full price as a deposit. Get refunded based on how long you play! (支付全款作押金，退回时根据时长按比例退款！)</p>
                       </div>
                       
                       <div className="space-y-3 mb-5">
                         <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
                           <span className="w-28">📅 30 Days / 天</span>
-                          <span className="text-gray-500">Cost 15%</span>
-                          <span className="w-32 text-right">(Equals RM {max} / mo)</span>
+                          <span className="text-gray-900 font-bold">Refund 退 85%</span>
+                          <span className="w-40 text-right text-gray-500">(Avg Cost: RM {max}/mo)</span>
                         </div>
                         <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
                           <span className="w-28">📅 60 Days / 天</span>
-                          <span className="text-gray-500">Cost 25%</span>
-                          <span className="w-32 text-right">(Equals RM {mid} / mo)</span>
+                          <span className="text-gray-900 font-bold">Refund 退 75%</span>
+                          <span className="w-40 text-right text-gray-500">(Avg Cost: RM {mid}/mo)</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm font-bold text-green-800 bg-green-50 px-3 py-2 rounded-lg border border-green-100">
-                          <span className="w-28">🔥 90 Days / 天</span>
-                          <span className="text-green-600">Cost 25%</span>
-                          <span className="w-32 text-right">(Equals RM {min} / mo)</span>
+                        <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-28">📅 90 Days / 天</span>
+                          <span className="text-gray-900 font-bold">Refund 退 70%</span>
+                          <span className="w-40 text-right text-gray-500">(Avg Cost: RM {min}/mo)</span>
                         </div>
                       </div>
 
-                      <div className="space-y-1.5 mt-4 pt-4 border-t border-gray-100">
-                        <p className="text-xs text-gray-500 font-medium">
-                          * Note: 100% upfront payment required. Balance is instantly refunded upon return. (需付全款，退回即享闪电退款)
-                        </p>
-                        <p className="text-xs text-gray-500 font-medium">
-                          * RM 5 activation fee applies per game. (含 RM 5 开启费)
-                        </p>
+                      <div className="space-y-3 mt-6 pt-5 border-t border-gray-100">
+                        <ul className="space-y-3 text-sm">
+                          <li className="flex items-start gap-2 text-gray-600">
+                            <span className="mt-0.5">🛒</span>
+                            <div>
+                              <span className="font-bold text-gray-900">Deposit:</span> Full game price + RM 5 activation fee upon order. <br/>
+                              <span className="text-xs text-gray-500">(付原价作为押金 + RM5 开启服务费，下单时确认。)</span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-gray-600">
+                            <span className="mt-0.5">📦</span>
+                            <div>
+                              <span className="font-bold text-gray-900">Shipping:</span> Buyer bears return shipping costs. <br/>
+                              <span className="text-xs text-gray-500">(卡带需自行寄回，邮费由买家承担。)</span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-gray-600">
+                            <span className="mt-0.5">✅</span>
+                            <div>
+                              <span className="font-bold text-gray-900">Condition:</span> Cartridge must be in good working condition. Penalties apply for damage. <br/>
+                              <span className="text-xs text-gray-500">(卡带必须完好、正常使用；如有损坏将视情况扣除。)</span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-gray-600">
+                            <span className="mt-0.5">🕒</span>
+                            <div>
+                              <span className="font-bold text-gray-900">Timeframe:</span> Refund rate depends on the postmark date of return. <br/>
+                              <span className="text-xs text-gray-500">(退款金额取决于寄出时间。)</span>
+                            </div>
+                          </li>
+                          <li className="flex items-start gap-2 text-gray-600">
+                            <span className="mt-0.5">💰</span>
+                            <div>
+                              <span className="font-bold text-gray-900">Refund Method:</span> Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%. <br/>
+                              <span className="text-xs text-gray-500">(退款二选一：换游戏享全额比例，选现金转账将额外扣除 5%。)</span>
+                            </div>
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
