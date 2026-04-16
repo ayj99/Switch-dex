@@ -429,40 +429,40 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         </div>
                       </div>
 
-                      <div className="space-y-2 mt-6 pt-5 border-t border-gray-100">
-                        <ul className="space-y-3 text-xs text-gray-500 font-normal">
-                          <li className="flex items-start gap-2">
+                      <div className="mt-6 pt-5 border-t border-gray-100">
+                        <ul className="space-y-2 text-xs text-gray-500 font-normal">
+                          <li className="flex items-start gap-1.5">
                             <span>1.</span>
-                            <div className="flex flex-col gap-0.5">
+                            <div className="flex flex-col leading-tight">
                               <span>Deposit: Full game price + RM 5 activation fee upon order.</span>
                               <span>押金: 付原价作为押金 + RM5 开启服务费，下单时确认。</span>
                             </div>
                           </li>
-                          <li className="flex items-start gap-2">
+                          <li className="flex items-start gap-1.5">
                             <span>2.</span>
-                            <div className="flex flex-col gap-0.5">
+                            <div className="flex flex-col leading-tight">
                               <span>Shipping: Buyer bears return shipping costs.</span>
                               <span>物流: 卡带需自行寄回，邮费由买家承担。</span>
                             </div>
                           </li>
-                          <li className="flex items-start gap-2">
+                          <li className="flex items-start gap-1.5">
                             <span>3.</span>
-                            <div className="flex flex-col gap-0.5">
+                            <div className="flex flex-col leading-tight">
                               <span>Condition: Cartridge must be in good working condition. Penalties apply for damage.</span>
                               <span>卡况: 卡带必须完好、正常使用；如有损坏将视情况扣除。</span>
                             </div>
                           </li>
-                          <li className="flex items-start gap-2">
+                          <li className="flex items-start gap-1.5">
                             <span>4.</span>
-                            <div className="flex flex-col gap-0.5">
+                            <div className="flex flex-col leading-tight">
                               <span>Timeframe: Refund rate depends on the postmark date of return.</span>
                               <span>时效: 退款金额取决于寄出时间。</span>
                             </div>
                           </li>
-                          <li className="flex items-start gap-2">
+                          <li className="flex items-start gap-1.5">
                             <span>5.</span>
-                            <div className="flex flex-col gap-0.5">
-                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. (Cash refund deducts an extra 5%).</span>
+                            <div className="flex flex-col leading-tight">
+                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%.</span>
                               <span>退款: 退款方式二选一（换游戏享全额比例，选现金转账额外扣除 5%）。</span>
                             </div>
                           </li>
