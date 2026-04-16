@@ -462,7 +462,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                           <li className="flex items-start gap-2">
                             <span>5.</span>
                             <div className="flex flex-col gap-0.5">
-                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%.</span>
+                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. (Cash refund deducts an extra 5%).</span>
                               <span>退款: 退款方式二选一（换游戏享全额比例，选现金转账额外扣除 5%）。</span>
                             </div>
                           </li>
