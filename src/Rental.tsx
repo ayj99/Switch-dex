@@ -84,11 +84,11 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
   if (rentalMode === 'curtain') {
     return (
-      <div className="h-screen w-full flex flex-col relative font-sans overflow-hidden">
+      <div className="h-screen w-full flex flex-col relative font-sans overflow-hidden bg-gradient-to-b from-white via-gray-50 to-gray-100">
         {/* Back Button */}
         <button 
           onClick={onBack}
-          className="absolute top-4 left-4 z-50 flex items-center gap-1 text-sm font-bold text-white/80 hover:text-white bg-black/20 hover:bg-black/40 px-3 py-2 rounded-full backdrop-blur-md transition-all"
+          className="absolute top-4 left-4 z-50 flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors"
         >
           <ArrowLeft size={20} />
           <span>Back 返回大厅</span>
@@ -97,38 +97,32 @@ export default function Rental({ onBack }: { onBack: () => void }) {
         {/* Top Half: Console */}
         <div 
           onClick={() => setRentalMode('console')}
-          className="h-1/2 w-full bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 flex items-center justify-center cursor-pointer group relative overflow-hidden"
+          className="flex-1 w-full flex items-center justify-center cursor-pointer group relative overflow-hidden border-b border-gray-200"
         >
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+          <img src="/images/console.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" />
           <motion.div 
             whileHover={{ scale: 1.05 }}
             className="relative z-10 text-center"
           >
-            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
-              📦 租 Switch 主机套餐
+            <h1 className="text-5xl font-black text-gray-900 tracking-tighter drop-shadow-sm">
+              RENT CONSOLES
             </h1>
-            <p className="text-purple-200 mt-4 text-lg md:text-xl font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-              周末聚会、拍拖破冰神器！全套神机即租即玩
-            </p>
           </motion.div>
         </div>
 
         {/* Bottom Half: Games */}
         <div 
           onClick={() => setRentalMode('games')}
-          className="h-1/2 w-full bg-gradient-to-tr from-red-900 via-red-800 to-black flex items-center justify-center cursor-pointer group relative overflow-hidden"
+          className="flex-1 w-full flex items-center justify-center cursor-pointer group relative overflow-hidden"
         >
-          <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+          <img src="/images/rentalgames.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" />
           <motion.div 
             whileHover={{ scale: 1.05 }}
             className="relative z-10 text-center"
           >
-            <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
-              🎮 单租精选游戏
+            <h1 className="text-5xl font-black text-gray-900 tracking-tighter drop-shadow-sm">
+              RENT GAMES ONLY
             </h1>
-            <p className="text-red-200 mt-4 text-lg md:text-xl font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-              精选大作低至一杯奶茶钱 🎉！
-            </p>
           </motion.div>
         </div>
       </div>
