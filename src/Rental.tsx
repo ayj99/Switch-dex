@@ -77,8 +77,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   };
 
   const handleGameRent = (game: Game) => {
-    const minPrice = Math.floor(game.price * 0.0667);
-    const maxPrice = Math.floor(game.price * 0.15);
+    const minPrice = Math.floor(game.price * 0.07);
+    const maxPrice = Math.floor(game.price * 0.10);
     const text = `Hi, I want to RENT ${game.title}. I saw the rental range is RM ${minPrice} - ${maxPrice}/month. Please let me know the details.`;
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
   };
@@ -330,7 +330,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         <div className="mt-auto pt-2 flex flex-col gap-1.5">
                           <div className="flex items-baseline gap-1.5">
                             <p className="text-green-600 font-black text-sm leading-none">
-                              RM {Math.floor(game.price * 0.083)} - {Math.floor(game.price * 0.15)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
+                              RM {Math.floor(game.price * 0.07)} - {Math.floor(game.price * 0.10)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
                             </p>
                           </div>
                           
@@ -347,9 +347,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
             </div>
           )}
           {rentalMode === 'gameDetail' && selectedGame && (() => {
-            const min = Math.floor(selectedGame.price * 0.083);
-            const max = Math.floor(selectedGame.price * 0.15);
-            const mid = Math.floor(selectedGame.price * 0.125);
+            const min = Math.floor(selectedGame.price * 0.07);
+            const max = Math.floor(selectedGame.price * 0.10);
             
             return (
               <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
@@ -411,21 +410,31 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. Get refunded based on how long you play! 支付全款作押金，退回时根据时长按比例退款！</p>
                       </div>
                       
-                      <div className="space-y-3 mb-5">
-                        <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-28">📅 30 Days / 天</span>
-                          <span className="text-gray-900 font-bold">Refund 退 85%</span>
-                          <span className="w-40 text-right text-gray-500">(Avg Cost: RM {max}/mo)</span>
+                      <div className="space-y-2 mb-5">
+                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-32">📅 30 Days / 天</span>
+                          <span className="text-gray-800">回购退 90%</span>
+                          <span className="text-gray-500">(现金退 85%)</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-28">📅 60 Days / 天</span>
-                          <span className="text-gray-900 font-bold">Refund 退 75%</span>
-                          <span className="w-40 text-right text-gray-500">(Avg Cost: RM {mid}/mo)</span>
+                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-32">📅 60 Days / 天</span>
+                          <span className="text-gray-800">回购退 85%</span>
+                          <span className="text-gray-500">(现金退 80%)</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-28">📅 90 Days / 天</span>
-                          <span className="text-gray-900 font-bold">Refund 退 70%</span>
-                          <span className="w-40 text-right text-gray-500">(Avg Cost: RM {min}/mo)</span>
+                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-32">📅 90 Days / 天</span>
+                          <span className="text-gray-800">回购退 75%</span>
+                          <span className="text-gray-500">(现金退 70%)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-32">📅 120 Days / 天</span>
+                          <span className="text-gray-800">回购退 70%</span>
+                          <span className="text-gray-500">(现金退 65%)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-32">📅 150 Days / 天</span>
+                          <span className="text-gray-800">回购退 65%</span>
+                          <span className="text-gray-500">(现金退 60%)</span>
                         </div>
                       </div>
 
@@ -462,7 +471,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                           <li className="flex items-start gap-1.5">
                             <span>5.</span>
                             <div className="flex flex-col leading-tight">
-                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%.</span>
+                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. Cash refund deducts an extra 5%.</span>
                               <span>退款: 退款方式二选一（换游戏享全额比例，选现金转账额外扣除 5%）。</span>
                             </div>
                           </li>
