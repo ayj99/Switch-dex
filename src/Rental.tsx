@@ -21,7 +21,8 @@ const ADDONS = [
 ];
 
 export default function Rental({ onBack }: { onBack: () => void }) {
-  const [rentalMode, setRentalMode] = useState<'curtain' | 'console' | 'games'>('curtain');
+  const [rentalMode, setRentalMode] = useState<'curtain' | 'console' | 'games' | 'gameDetail'>('curtain');
+  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
   const [model, setModel] = useState<string | null>(null);
   const [pkg, setPkg] = useState<string | null>(null);
@@ -308,7 +309,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         <div className="mt-auto pt-2 flex flex-col gap-1.5">
                           <div className="flex items-baseline gap-1.5">
                             <p className="text-green-600 font-black text-sm leading-none">
-                              RM {Math.floor(game.price * 0.0667)} - {Math.floor(game.price * 0.15)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
+                              RM {Math.floor(game.price * 0.083)} - {Math.floor(game.price * 0.15)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
                             </p>
                           </div>
                           
@@ -318,7 +319,10 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                           </div>
 
                           <button 
-                            onClick={() => handleGameRent(game)}
+                            onClick={() => {
+                              setSelectedGame(game);
+                              setRentalMode('gameDetail');
+                            }}
                             className="mt-3 w-full bg-gray-900 hover:bg-black text-white py-2 rounded-xl text-sm font-bold transition-colors"
                           >
                             我要租
@@ -331,6 +335,92 @@ export default function Rental({ onBack }: { onBack: () => void }) {
               )}
             </div>
           )}
+          {rentalMode === 'gameDetail' && selectedGame && (() => {
+            const min = Math.floor(selectedGame.price * 0.083);
+            const max = Math.floor(selectedGame.price * 0.15);
+            const mid = Math.floor(selectedGame.price * 0.125);
+            
+            return (
+              <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
+                <button 
+                  onClick={() => setRentalMode('games')}
+                  className="mb-6 flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors"
+                >
+                  <ArrowLeft size={20} />
+                  <span>Back to Games</span>
+                </button>
+
+                <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
+                  <div className="aspect-video w-full bg-gray-100 relative">
+                    <img src={selectedGame.imageUrl} alt={selectedGame.title} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                  </div>
+                  
+                  <div className="p-6 md:p-8">
+                    <h1 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight">
+                      {selectedGame.title}
+                    </h1>
+                    
+                    {/* 1. Headline Price Strategy */}
+                    <div className="mb-2">
+                      <p className="text-green-600 font-black text-3xl md:text-4xl flex items-center gap-2">
+                        💎 RM {min} - {max} <span className="text-lg font-bold text-gray-500">/ month</span>
+                      </p>
+                    </div>
+
+                    {/* 2. Refined T&C Box (Scannable Visual Hierarchy) */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
+                      <div className="mb-4">
+                        <h3 className="text-lg font-black text-gray-900">⚡️ Refill Plan / 续杯计划</h3>
+                        <p className="text-green-600 text-sm font-bold mt-1">The longer you play, the cheaper it gets! 玩越久，月均越便宜！</p>
+                      </div>
+                      
+                      <div className="space-y-3 mb-5">
+                        <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-28">📅 30 Days / 天</span>
+                          <span className="text-gray-500">Cost 15%</span>
+                          <span className="w-32 text-right">(Equals RM {max} / mo)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm font-medium text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
+                          <span className="w-28">📅 60 Days / 天</span>
+                          <span className="text-gray-500">Cost 25%</span>
+                          <span className="w-32 text-right">(Equals RM {mid} / mo)</span>
+                        </div>
+                        <div className="flex items-center justify-between text-sm font-bold text-green-800 bg-green-50 px-3 py-2 rounded-lg border border-green-100">
+                          <span className="w-28">🔥 90 Days / 天</span>
+                          <span className="text-green-600">Cost 25%</span>
+                          <span className="w-32 text-right">(Equals RM {min} / mo)</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-1.5 mt-4 pt-4 border-t border-gray-100">
+                        <p className="text-xs text-gray-500 font-medium">
+                          * Note: 100% upfront payment required. Balance is instantly refunded upon return. (需付全款，退回即享闪电退款)
+                        </p>
+                        <p className="text-xs text-gray-500 font-medium">
+                          * RM 5 activation fee applies per game. (含 RM 5 开启费)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. CTA Button */}
+                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-safe z-40 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+                  <div className="max-w-2xl mx-auto">
+                    <button 
+                      onClick={() => {
+                        const text = `Hi, I want to rent ${selectedGame.title} for (RM ${min}-${max}/month range). Please let me know the total upfront payment.`;
+                        window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+                      }}
+                      className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-green-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                    >
+                      📱 Rent for RM {min}-{max} / mo - Chat Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </motion.div>
       </AnimatePresence>
     </div>
