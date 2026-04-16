@@ -379,10 +379,10 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     {/* Metadata */}
                     <div className="flex flex-wrap gap-2 mb-6">
                       <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                        <Globe size={12} /> {selectedGame.language || '中/英'}
+                        <Users size={12} /> {selectedGame.players || '1-4'} 人
                       </span>
                       <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                        <Users size={12} /> {selectedGame.players || '1-4'} 人
+                        <Globe size={12} /> {selectedGame.language || '中/英'}
                       </span>
                       {selectedGame.category?.split(',').map((cat, idx) => (
                         <span key={idx} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">
@@ -400,7 +400,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     {/* 1. Headline Price Strategy */}
                     <div className="mb-2">
                       <p className="text-green-600 font-black text-3xl md:text-4xl flex items-center gap-2">
-                        💎 RM {min} - {max} <span className="text-lg font-bold text-gray-500">/ month</span>
+                        RM {min} - {max} <span className="text-lg font-bold text-gray-500">/ month</span>
                       </p>
                     </div>
 
@@ -408,7 +408,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
                       <div className="mb-4">
                         <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租借价格与退款</h3>
-                        <p className="text-green-600 text-sm font-bold mt-1">Pay the full price as a deposit. Get refunded based on how long you play! (支付全款作押金，退回时根据时长按比例退款！)</p>
+                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. Get refunded based on how long you play! 支付全款作押金，退回时根据时长按比例退款！</p>
                       </div>
                       
                       <div className="space-y-3 mb-5">
@@ -429,42 +429,27 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         </div>
                       </div>
 
-                      <div className="space-y-3 mt-6 pt-5 border-t border-gray-100">
-                        <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-2 text-gray-600">
-                            <span className="mt-0.5">🛒</span>
-                            <div>
-                              <span className="font-bold text-gray-900">Deposit:</span> Full game price + RM 5 activation fee upon order. <br/>
-                              <span className="text-xs text-gray-500">(付原价作为押金 + RM5 开启服务费，下单时确认。)</span>
-                            </div>
+                      <div className="space-y-2 mt-6 pt-5 border-t border-gray-100">
+                        <ul className="space-y-2 text-xs text-gray-500">
+                          <li className="flex items-start gap-2">
+                            <span className="font-bold text-gray-700 min-w-[60px]">Deposit:</span>
+                            <span>Full game price + RM 5 activation fee upon order. 付原价作为押金 + RM5 开启服务费，下单时确认。</span>
                           </li>
-                          <li className="flex items-start gap-2 text-gray-600">
-                            <span className="mt-0.5">📦</span>
-                            <div>
-                              <span className="font-bold text-gray-900">Shipping:</span> Buyer bears return shipping costs. <br/>
-                              <span className="text-xs text-gray-500">(卡带需自行寄回，邮费由买家承担。)</span>
-                            </div>
+                          <li className="flex items-start gap-2">
+                            <span className="font-bold text-gray-700 min-w-[60px]">Shipping:</span>
+                            <span>Buyer bears return shipping costs. 卡带需自行寄回，邮费由买家承担。</span>
                           </li>
-                          <li className="flex items-start gap-2 text-gray-600">
-                            <span className="mt-0.5">✅</span>
-                            <div>
-                              <span className="font-bold text-gray-900">Condition:</span> Cartridge must be in good working condition. Penalties apply for damage. <br/>
-                              <span className="text-xs text-gray-500">(卡带必须完好、正常使用；如有损坏将视情况扣除。)</span>
-                            </div>
+                          <li className="flex items-start gap-2">
+                            <span className="font-bold text-gray-700 min-w-[60px]">Condition:</span>
+                            <span>Cartridge must be in good working condition. Penalties apply for damage. 卡带必须完好、正常使用；如有损坏将视情况扣除。</span>
                           </li>
-                          <li className="flex items-start gap-2 text-gray-600">
-                            <span className="mt-0.5">🕒</span>
-                            <div>
-                              <span className="font-bold text-gray-900">Timeframe:</span> Refund rate depends on the postmark date of return. <br/>
-                              <span className="text-xs text-gray-500">(退款金额取决于寄出时间。)</span>
-                            </div>
+                          <li className="flex items-start gap-2">
+                            <span className="font-bold text-gray-700 min-w-[60px]">Timeframe:</span>
+                            <span>Refund rate depends on the postmark date of return. 退款金额取决于寄出时间。</span>
                           </li>
-                          <li className="flex items-start gap-2 text-gray-600">
-                            <span className="mt-0.5">💰</span>
-                            <div>
-                              <span className="font-bold text-gray-900">Refund Method:</span> Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%. <br/>
-                              <span className="text-xs text-gray-500">(退款二选一：换游戏享全额比例，选现金转账将额外扣除 5%。)</span>
-                            </div>
+                          <li className="flex items-start gap-2">
+                            <span className="font-bold text-gray-700 min-w-[60px]">Refund:</span>
+                            <span>Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%. 退款二选一：换游戏享全额比例，选现金转账将额外扣除 5%。</span>
                           </li>
                         </ul>
                       </div>
