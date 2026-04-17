@@ -251,10 +251,16 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
             <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
           </div>
           <button 
-            onClick={handleFeaturedExport}
-            className="text-[10px] font-bold bg-[#E60012] text-white px-2 py-1 rounded shadow-sm hover:bg-red-700 transition-colors"
+            onClick={() => {
+              const el = document.getElementById('all-games-section');
+              if (el) {
+                const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top, behavior: 'smooth' });
+              }
+            }}
+            className="text-[10px] font-bold bg-gray-100 text-gray-800 px-2 py-1 rounded shadow-sm hover:bg-gray-200 transition-colors"
           >
-            [ GENERATE FEATURED POSTER ]
+            [ View All ]
           </button>
         </div>
         
@@ -302,7 +308,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       </section>
 
       {/* 4. Main Grid with Search & Sticky Filters */}
-      <section className="bg-white">
+      <section id="all-games-section" className="bg-white">
         <div className="sticky top-[52px] z-40 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
           <div className="px-4 pt-4 pb-1">
             <h2 className="text-lg font-black italic text-black tracking-tight">
