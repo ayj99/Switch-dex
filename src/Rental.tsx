@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle, Check, Minus } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle, Check, Minus, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Game, PHONE_NUMBER } from './types';
 
@@ -30,16 +30,41 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const allCategories = useMemo(() => {
+    const cats = new Set<string>();
+    games.forEach(g => {
+      if (g.category) {
+        g.category.split(',').forEach(c => {
+          const cat = c.trim();
+          if (cat !== '租借') cats.add(cat);
+        });
+      }
+    });
+    return ['All', 'Party', 'Action', 'RPG', ...Array.from(cats)].filter((v, i, a) => a.indexOf(v) === i).slice(0, 8);
+  }, [games]);
+
+  const filteredGames = useMemo(() => {
+    return games.filter(game => {
+      const matchesSearch = game.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || (game.category && game.category.includes(selectedCategory));
+      return matchesSearch && matchesCategory;
+    });
+  }, [games, searchQuery, selectedCategory]);
+
   // Poster states
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [posterPage, setPosterPage] = useState(0);
 
   const posterGames = useMemo(() => {
     const startIndex = posterPage * 12;
-    return games.slice(startIndex, startIndex + 12);
-  }, [games, posterPage]);
+    return filteredGames.slice(startIndex, startIndex + 12);
+  }, [filteredGames, posterPage]);
 
-  const totalPosterPages = Math.ceil(games.length / 12);
+  const totalPosterPages = Math.ceil(filteredGames.length / 12);
 
   useEffect(() => {
     fetch('/games.json')
@@ -381,9 +406,53 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
 
-              <div className="text-center mb-10">
-                <h1 className="text-3xl font-black text-gray-900 mb-2">单租精选游戏</h1>
-                <p className="text-gray-500 font-medium">海量大作，随租随玩</p>
+              {/* Restructured Header */}
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                <div>
+                  <h1 className="text-3xl font-black text-gray-900 mb-2">单租精选游戏</h1>
+                  <p className="text-gray-500 font-medium">海量大作，随租随玩</p>
+                </div>
+                {/* Poster Gen Button Relocated here */}
+                {!isLoading && games.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      setPosterPage(0);
+                      setShowPosterModal(true);
+                    }}
+                    className="bg-gray-900 hover:bg-black text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap"
+                  >
+                    View All Games
+                  </button>
+                )}
+              </div>
+
+              {/* Added Search & Filter UI Bar */}
+              <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+                <div className="relative w-full md:w-64 flex-shrink-0">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                  <input 
+                    type="text" 
+                    placeholder="Search games..." 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all shadow-sm"
+                  />
+                </div>
+                <div className="flex gap-2 w-full overflow-x-auto no-scrollbar pb-2 md:pb-0 hide-scrollbar-mobile">
+                  {allCategories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap flex-shrink-0 ${
+                        selectedCategory === cat 
+                          ? 'bg-gray-900 text-white' 
+                          : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
+                      } shadow-sm`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {isLoading ? (
@@ -392,13 +461,18 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                  {games.map(game => (
-                    <div 
-                      key={game.id} 
-                      onClick={() => {
-                        setSelectedGame(game);
-                        setRentalMode('gameDetail');
-                      }}
+                  {filteredGames.length === 0 ? (
+                    <div className="col-span-full py-10 text-center text-gray-400 font-bold">
+                      No games found.
+                    </div>
+                  ) : (
+                    filteredGames.map(game => (
+                      <div 
+                        key={game.id} 
+                        onClick={() => {
+                          setSelectedGame(game);
+                          setRentalMode('gameDetail');
+                        }}
                       className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col h-full"
                     >
                       <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
@@ -431,27 +505,13 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         </div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-
-              {/* View All / Generate Poster Button */}
-              {!isLoading && games.length > 0 && (
-                <div className="mt-12 flex justify-center">
-                  <button 
-                    onClick={() => {
-                      setPosterPage(0);
-                      setShowPosterModal(true);
-                    }}
-                    className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
-                  >
-                    View All Games
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-          {rentalMode === 'gameDetail' && selectedGame && (() => {
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        )}
+        {rentalMode === 'gameDetail' && selectedGame && (() => {
             const min = Math.floor(selectedGame.price * 0.07);
             const max = Math.floor(selectedGame.price * 0.10);
             
