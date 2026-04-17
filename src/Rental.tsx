@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle, Check, Minus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Game, PHONE_NUMBER } from './types';
 
@@ -75,7 +75,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
           onClick={() => setRentalMode('console')}
           className="flex-1 w-full flex items-center justify-center cursor-pointer group relative overflow-hidden border-b border-gray-200"
         >
-          <img src="/images/console.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" />
+          <img src="/images/console.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
           <motion.div 
             whileHover={{ scale: 1.05 }}
             className="relative z-10 text-center"
@@ -91,7 +91,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
           onClick={() => setRentalMode('games')}
           className="flex-1 w-full flex items-center justify-center cursor-pointer group relative overflow-hidden"
         >
-          <img src="/images/rentalgames.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" />
+          <img src="/images/rentalgames.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
           <motion.div 
             whileHover={{ scale: 1.05 }}
             className="relative z-10 text-center"
@@ -181,11 +181,12 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
               {/* Grid */}
               {consoleType === 'switch1' ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+                <div className="w-full">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
                   {/* Left Card */}
                   <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch1_basic.png" alt="Switch 1 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" />
+                      <img src="/images/switch1_basic.png" alt="Switch 1 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex-1 flex flex-col">
                       <h3 className="text-xl font-black text-gray-900 mb-1">1 Day</h3>
@@ -211,7 +212,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
                       <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
-                        <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" />
+                        <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" referrerPolicy="no-referrer" />
                       </div>
                       <div className="flex-1 flex flex-col">
                         <h3 className="text-2xl font-black text-gray-900 mb-1">3 Days</h3>
@@ -234,7 +235,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   {/* Right Card */}
                   <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch1_pro.png" alt="Switch 1 Pro" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" />
+                      <img src="/images/switch1_pro.png" alt="Switch 1 Pro" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex-1 flex flex-col">
                       <h3 className="text-xl font-black text-gray-900 mb-1">7 Days</h3>
@@ -252,12 +253,58 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     </div>
                   </div>
                 </div>
+
+                {/* Visual Feature Comparison Matrix */}
+                <div className="mt-20 max-w-5xl mx-auto">
+                  <h2 className="text-2xl font-black text-gray-900 mb-8 text-center flex items-center justify-center gap-3">
+                    <span className="text-2xl">📦</span> What's in the Box / 套餐内容对比
+                  </h2>
+                  <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto">
+                    <div className="min-w-[700px] text-sm text-gray-800">
+                      <div className="grid grid-cols-5 border-b border-gray-100 bg-gray-50/50 font-bold text-center items-center">
+                        <div className="col-span-2 p-4 text-left pl-8 text-gray-400 font-semibold text-xs tracking-wider uppercase">Item Info</div>
+                        <div className="p-4 text-gray-600">1 Day</div>
+                        <div className="p-4 bg-green-50/80 text-green-900 h-full flex items-center justify-center">3 Days (Party)</div>
+                        <div className="p-4 text-gray-600">7 Days (Pro)</div>
+                      </div>
+                      {/* Rows */}
+                      {[
+                        { img: 'thumb-console.png', text: 'Switch 主机', vals: [true, true, true] },
+                        { img: 'thumb-dock.png', text: 'Dock + HDMI (连接电视)', vals: [true, true, true] },
+                        { img: 'thumb-joycon.png', text: 'Joy-Con 控制器', vals: ['2 个', '4 个', '4 个'] },
+                        { img: 'thumb-game.png', text: '任选 1 款游戏', vals: [true, '升级 20+ 款', '升级 20+ 款'] },
+                        { img: 'thumb-games.png', text: '20+ 热门游戏 (情侣/派对)', vals: [false, true, true] },
+                        { img: 'thumb-miniacc.png', text: '小型游戏配件 (方向盘/握把)', vals: [false, true, true] },
+                        { img: 'thumb-sportsacc.png', text: '运动游戏配件', vals: [false, true, true] },
+                        { img: 'thumb-largeacc.png', text: 'Ringfit / 太鼓 (大型外设)', vals: [false, false, '免费二选一'] },
+                        { img: 'thumb-clean.png', text: '全面消毒 & 满电发出', vals: [true, true, true] },
+                      ].map((row, i) => (
+                        <div key={i} className="grid grid-cols-5 border-b border-gray-100 last:border-0 items-stretch hover:bg-gray-50/50 transition-colors">
+                          <div className="col-span-2 p-4 pl-8 flex items-center gap-4">
+                            <img src={`/images/${row.img}`} className="w-10 h-10 object-contain shrink-0" referrerPolicy="no-referrer" />
+                            <span className="font-semibold text-gray-900">{row.text}</span>
+                          </div>
+                          <div className="p-4 flex items-center justify-center text-center">
+                             {row.vals[0] === true ? <Check className="text-gray-900 w-5 h-5" /> : row.vals[0] === false ? <Minus className="text-gray-300 w-5 h-5" /> : <span className="font-semibold text-gray-600">{row.vals[0]}</span>}
+                          </div>
+                          <div className="p-4 flex items-center justify-center text-center bg-green-50/40">
+                             {row.vals[1] === true ? <Check className="text-green-600 w-6 h-6" /> : row.vals[1] === false ? <Minus className="text-green-200 w-5 h-5" /> : <span className="font-bold text-green-700">{row.vals[1]}</span>}
+                          </div>
+                          <div className="p-4 flex items-center justify-center text-center">
+                             {row.vals[2] === true ? <Check className="text-gray-900 w-5 h-5" /> : row.vals[2] === false ? <Minus className="text-gray-300 w-5 h-5" /> : <span className="font-semibold text-gray-600">{row.vals[2]}</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
                   {/* Left Card */}
                   <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch2_basic.png" alt="Switch 2 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" />
+                      <img src="/images/switch2_basic.png" alt="Switch 2 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex-1 flex flex-col">
                       <h3 className="text-xl font-black text-gray-900 mb-1">1 Day</h3>
@@ -283,7 +330,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
                       <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
-                        <img src="/images/switch2_party.png" alt="Switch 2 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" />
+                        <img src="/images/switch2_party.png" alt="Switch 2 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" referrerPolicy="no-referrer" />
                       </div>
                       <div className="flex-1 flex flex-col">
                         <h3 className="text-2xl font-black text-gray-900 mb-1">3-4 Days</h3>
@@ -316,7 +363,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   controls
                   poster="/images/rentalgames.png"
                 >
-                  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                  <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
                 </video>
                 <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-sm font-bold flex items-center gap-2">
                   <span>📺 How to Rent / 租借教程</span>
@@ -395,7 +442,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
                   <div className="aspect-video w-full bg-black relative">
                     <video 
-                      src="https://www.w3schools.com/html/mov_bbb.mp4" 
+                      src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
                       controls 
                       poster={selectedGame.imageUrl} 
                       className="w-full h-full object-cover"
