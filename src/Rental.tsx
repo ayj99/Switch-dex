@@ -225,17 +225,17 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       <img src="/images/switch1_basic.png" alt="Switch 1 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex-1 flex flex-col">
-                      <h3 className="text-xl font-black text-gray-900 mb-1">1 Day</h3>
+                      <h3 className="text-xl font-black text-gray-900 mb-1">1 Day / 单日体验</h3>
                       <p className="text-sm text-gray-500 font-medium mb-4">(Inducement / 诱饵)</p>
                       <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Console + Basic Joy-Cons.</p>
                       <div className="mb-6">
-                        <p className="text-3xl font-black text-gray-900">RM {timing === 'weekday' ? 30 : 40}</p>
+                        <p className="text-3xl font-black text-gray-900">RM 58</p>
                       </div>
                       <button 
-                        onClick={() => handleConsoleRent('Switch 1 - 1 Day', timing === 'weekday' ? 30 : 40)}
-                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors"
+                        onClick={() => handleConsoleRent('Switch 1 - 1 Day', 58)}
+                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
                       >
-                        Book Now
+                        📱 Book 1 Day - RM 58
                       </button>
                     </div>
                   </div>
@@ -243,26 +243,27 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   {/* Center Card */}
                   <div className="bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
-                      🔥 PARTY FAVORITE / 聚会首选
+                      🔥 闭眼入！只加 RM 30 多玩 4 天！
                     </div>
                     <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
                       <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
-                        <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" referrerPolicy="no-referrer" />
+                        <img src="/images/switch1_pro.png" alt="Switch 1 Pro" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" referrerPolicy="no-referrer" />
                       </div>
                       <div className="flex-1 flex flex-col">
-                        <h3 className="text-2xl font-black text-gray-900 mb-1">3 Days</h3>
-                        <p className="text-sm text-gray-500 font-medium mb-4">(Most Popular)</p>
-                        <p className="text-sm text-gray-600 mb-4 flex-1">Includes: Full Bundle + Extra Controllers + Game Cases.</p>
+                        <h3 className="text-2xl font-black text-gray-900 mb-1">7 Days / 深度玩家</h3>
+                        <p className="text-sm text-gray-500 font-medium mb-4">(Deep Player)</p>
+                        <p className="text-sm text-gray-600 mb-4 flex-1">Includes: Full Bundle + Random Premium Accessories.</p>
                         <div className="mb-6">
-                          <p className="text-4xl font-black text-gray-900">RM {timing === 'weekday' ? 99 : 128}</p>
-                          <p className="text-sm font-bold text-green-600 mt-2 bg-green-50 inline-block px-2 py-1 rounded-md">🎓 Student Promo: RM {timing === 'weekday' ? 88 : 118} (Show ID)</p>
+                          <p className="text-5xl font-black text-gray-900">RM 128</p>
+                          <p className="text-sm font-bold text-green-600 mt-2 block">(4人同玩，人均低至 RM 4.5 /天！)</p>
+                          <p className="text-sm font-bold text-gray-800 mt-2 bg-gray-100 inline-block px-2 py-1 rounded-md">🎓 学生专属价: <span className="text-[#e60012]">RM 115</span> (Show ID)</p>
                         </div>
                         <button 
-                          onClick={() => handleConsoleRent('Switch 1 - 3 Days Party', timing === 'weekday' ? 99 : 128)}
+                          onClick={() => handleConsoleRent('Switch 1 - 7 Days Pro', 128)}
                           className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
                         >
-                          Book Now
+                          📱 Book 7 Days - RM 128
                         </button>
                       </div>
                     </div>
@@ -271,23 +272,44 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   {/* Right Card */}
                   <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch1_pro.png" alt="Switch 1 Pro" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                      <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
                     <div className="flex-1 flex flex-col">
-                      <h3 className="text-xl font-black text-gray-900 mb-1">7 Days</h3>
-                      <p className="text-sm text-gray-500 font-medium mb-4">(Deep Player / 深度玩家)</p>
-                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Full Bundle + Random Premium Accessories.</p>
+                      <h3 className="text-xl font-black text-gray-900 mb-1">3 Days / 周末派对</h3>
+                      <p className="text-sm text-gray-500 font-medium mb-4">(Party Favorite)</p>
+                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Full Bundle + Extra Controllers + Game Cases.</p>
                       <div className="mb-6">
-                        <p className="text-3xl font-black text-gray-900">RM {timing === 'weekday' ? 199 : 238}</p>
+                        <p className="text-3xl font-black text-gray-900">RM 98</p>
+                        <p className="text-sm font-bold text-green-600 mt-2 block">(4人同玩，人均仅 RM 8 /天)</p>
+                        <p className="text-sm font-bold text-gray-800 mt-2 bg-gray-100 inline-block px-2 py-1 rounded-md">🎓 学生专属价: <span className="text-[#e60012]">RM 88</span> (Show ID)</p>
                       </div>
                       <button 
-                        onClick={() => handleConsoleRent('Switch 1 - 7 Days Pro', timing === 'weekday' ? 199 : 238)}
-                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors"
+                        onClick={() => handleConsoleRent('Switch 1 - 3 Days Party', 98)}
+                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
                       >
-                        Book Now
+                        📱 Book 3 Days - RM 98
                       </button>
                     </div>
                   </div>
+                </div>
+
+                {/* Monthly/Custom Banner */}
+                <div className="mt-12 max-w-6xl mx-auto">
+                    <div className="bg-gray-50 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between shadow-sm border border-gray-200 hover:border-gray-300 transition-colors">
+                      <div className="flex items-center gap-4 mb-4 md:mb-0">
+                        <div className="text-4xl bg-white p-3 rounded-full shadow-sm">🏆</div>
+                        <div>
+                          <p className="text-lg md:text-xl font-black text-gray-900 tracking-tight">Hardcore Gamer? Rent for 1 Month for only <span className="text-[#e60012]">RM 288</span>!</p>
+                          <p className="text-gray-500 font-medium mt-1">Need custom dates? Chat with us ➔</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => handleConsoleRent('Switch 1 - 1 Month Custom', 288)}
+                        className="w-full md:w-auto bg-white border-2 border-gray-900 text-gray-900 px-8 py-3 rounded-xl font-black shadow-sm hover:bg-gray-900 hover:text-white transition-all whitespace-nowrap"
+                      >
+                        📱 Contact Us
+                      </button>
+                    </div>
                 </div>
 
                 {/* Visual Feature Comparison Matrix */}
