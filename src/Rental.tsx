@@ -30,6 +30,17 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Poster states
+  const [showPosterModal, setShowPosterModal] = useState(false);
+  const [posterPage, setPosterPage] = useState(0);
+
+  const posterGames = useMemo(() => {
+    const startIndex = posterPage * 12;
+    return games.slice(startIndex, startIndex + 12);
+  }, [games, posterPage]);
+
+  const totalPosterPages = Math.ceil(games.length / 12);
+
   useEffect(() => {
     fetch('/games.json')
       .then(res => res.json())
@@ -423,6 +434,21 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   ))}
                 </div>
               )}
+
+              {/* View All / Generate Poster Button */}
+              {!isLoading && games.length > 0 && (
+                <div className="mt-12 flex justify-center">
+                  <button 
+                    onClick={() => {
+                      setPosterPage(0);
+                      setShowPosterModal(true);
+                    }}
+                    className="bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95"
+                  >
+                    View All Games
+                  </button>
+                </div>
+              )}
             </div>
           )}
           {rentalMode === 'gameDetail' && selectedGame && (() => {
@@ -578,6 +604,131 @@ export default function Rental({ onBack }: { onBack: () => void }) {
             );
           })()}
         </motion.div>
+      </AnimatePresence>
+
+      {/* Poster Modal */}
+      <AnimatePresence>
+        {showPosterModal && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-start overflow-y-auto p-4 md:p-8"
+          >
+            {/* Close Button */}
+            <div className="w-full max-w-[800px] flex justify-end mb-4 flex-shrink-0 mt-4 md:mt-0">
+              <button 
+                onClick={() => setShowPosterModal(false)}
+                className="text-white font-black tracking-widest text-xs md:text-sm bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center gap-2"
+              >
+                ✕ CLOSE STUDIO
+              </button>
+            </div>
+
+            {/* Poster Canvas */}
+            <div 
+              className="w-full max-w-[800px] bg-[#e60012] rounded-2xl md:rounded-3xl shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-4"
+            >
+              {/* White Header Banner */}
+              <div className="bg-white px-5 py-4 md:px-8 md:py-6 flex items-center justify-between relative z-20 border-b-4 border-gray-900">
+                <div className="flex items-center gap-2 md:gap-3">
+                  <img src="/images/logo.png" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-[#e60012] flex-shrink-0" alt="Logo" referrerPolicy="no-referrer" onError={(e) => e.currentTarget.style.display = 'none'} />
+                  <div className="flex flex-col">
+                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-gray-900 leading-none">
+                      S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
+                    </span>
+                    <span className="text-gray-500 text-[10px] md:text-sm font-bold tracking-widest mt-0.5">
+                      海量大作随租随玩
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-black text-xl md:text-3xl text-[#e60012] tracking-tighter uppercase drop-shadow-sm">
+                    单租系列精选
+                  </p>
+                </div>
+              </div>
+
+              {/* Black / Red Content Area */}
+              <div className="p-5 md:p-8 relative flex-grow flex flex-col">
+                {/* Texture Overlay */}
+                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
+
+                {/* Grid Container */}
+                <div className="flex flex-wrap justify-center gap-2 md:gap-3 relative z-10 content-start">
+                  {posterGames.map((game) => (
+                    <div 
+                      key={game.id} 
+                      className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(25%-6px)] md:w-[calc(25%-9px)]"
+                    >
+                      {/* Condition Tag */}
+                      <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
+                        {game.condition}
+                      </div>
+                      
+                      <img 
+                        src={game.imageUrl} 
+                        alt={game.title} 
+                        className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
+                        referrerPolicy="no-referrer"
+                      />
+                      
+                      <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
+                        {game.title}
+                      </h3>
+                      
+                      <div className="mt-auto">
+                        <div className="flex items-baseline gap-1 mt-0.5 md:mt-1 border-t border-gray-100 pt-1 md:pt-1.5">
+                          <p className="text-[#25D366] font-black text-xs md:text-base leading-none">
+                            RM {Math.floor(game.price * 0.07)}<span className="text-[8px] md:text-[10px] text-gray-500 font-bold">/月起</span>
+                          </p>
+                        </div>
+                        
+                        <div className="flex items-center gap-1 mt-1 text-[8px] md:text-[10px] text-gray-400 font-medium hidden md:flex">
+                          <span className="flex items-center gap-0.5 truncate"><Globe size={8} /> {game.language}</span>
+                          <span className="flex items-center gap-0.5 ml-auto text-[#25D366]"><ThumbsUp size={8} /> {game.votes}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 md:mt-8 flex justify-between items-end border-t border-white/20 pt-4 relative z-10">
+                  <div className="text-white">
+                    <p className="font-black text-xs md:text-sm tracking-widest opacity-90 drop-shadow-sm">SCREENSHOT TO SHARE</p>
+                    <p className="text-[8px] md:text-xs opacity-75 mt-0.5 font-medium">Capture this image to share the games list</p>
+                  </div>
+                  <div className="text-right text-white">
+                    <p className="font-black text-xs md:text-sm opacity-90 drop-shadow-sm">PAGE {posterPage + 1}/{totalPosterPages}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Pagination Controls */}
+            {totalPosterPages > 1 && (
+              <div className="flex items-center gap-4 mt-4 flex-shrink-0">
+                <button 
+                  onClick={() => setPosterPage(p => Math.max(0, p - 1))}
+                  disabled={posterPage === 0}
+                  className="bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10 text-white p-3 rounded-full backdrop-blur-md transition-all"
+                >
+                  <ArrowLeft size={24} />
+                </button>
+                <div className="text-white font-mono font-bold text-sm bg-black/50 px-4 py-2 rounded-full backdrop-blur-md">
+                  Page {posterPage + 1} of {totalPosterPages}
+                </div>
+                <button 
+                  onClick={() => setPosterPage(p => Math.min(totalPosterPages - 1, p + 1))}
+                  disabled={posterPage === totalPosterPages - 1}
+                  className="bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10 text-white p-3 rounded-full backdrop-blur-md transition-all"
+                >
+                  <ArrowLeft size={24} className="rotate-180" />
+                </button>
+              </div>
+            )}
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
