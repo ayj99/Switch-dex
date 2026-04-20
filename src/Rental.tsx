@@ -218,9 +218,9 @@ export default function Rental({ onBack }: { onBack: () => void }) {
               {/* Grid */}
               {consoleType === 'switch1' ? (
                 <div className="w-full">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
+                  <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 hide-scrollbar md:grid md:grid-cols-3 md:overflow-visible max-w-6xl mx-auto items-stretch px-4 md:px-0">
                   {/* Left Card */}
-                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
+                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
                       <img src="/images/switch1_basic.png" alt="Switch 1 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
@@ -241,7 +241,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   </div>
 
                   {/* Center Card */}
-                  <div className="bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
+                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
                       🔥 闭眼入！只加 RM 30 多玩 4 天！
                     </div>
@@ -270,7 +270,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   </div>
 
                   {/* Right Card */}
-                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
+                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
                       <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
@@ -317,13 +317,13 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   <h2 className="text-2xl font-black text-gray-900 mb-8 text-center flex items-center justify-center gap-3">
                     <span className="text-2xl">📦</span> What's in the Box / 套餐内容对比
                   </h2>
-                  <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto">
+                  <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto hide-scrollbar w-full relative">
                     <div className="min-w-[700px] text-sm text-gray-800">
                       <div className="grid grid-cols-5 border-b border-gray-100 bg-gray-50/50 font-bold text-center items-center">
-                        <div className="col-span-2 p-4 text-left pl-8 text-gray-400 font-semibold text-xs tracking-wider uppercase">Item Info</div>
-                        <div className="p-4 text-gray-600">1 Day</div>
-                        <div className="p-4 bg-green-50/80 text-green-900 h-full flex items-center justify-center">3 Days (Party)</div>
-                        <div className="p-4 text-gray-600">7 Days (Pro)</div>
+                        <div className="sticky left-0 bg-gray-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] col-span-2 p-4 text-left pl-8 text-gray-400 font-semibold text-xs tracking-wider uppercase md:min-w-auto">Item Info</div>
+                        <div className="p-4 text-gray-600 min-w-[100px]">1 Day</div>
+                        <div className="p-4 bg-green-50/80 text-green-900 h-full flex items-center justify-center min-w-[100px]">3 Days (Party)</div>
+                        <div className="p-4 text-gray-600 min-w-[100px]">7 Days (Pro)</div>
                       </div>
                       {/* Rows */}
                       {[
@@ -337,8 +337,8 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         { img: 'thumb-largeacc.png', text: 'Ringfit / 太鼓 (大型外设)', vals: [false, false, '免费二选一'] },
                         { img: 'thumb-clean.png', text: '全面消毒 & 满电发出', vals: [true, true, true] },
                       ].map((row, i) => (
-                        <div key={i} className="grid grid-cols-5 border-b border-gray-100 last:border-0 items-stretch hover:bg-gray-50/50 transition-colors">
-                          <div className="col-span-2 p-4 pl-8 flex items-center gap-4">
+                        <div key={i} className="group grid grid-cols-5 border-b border-gray-100 last:border-0 items-stretch hover:bg-gray-50 transition-colors">
+                          <div className="sticky left-0 bg-white group-hover:bg-gray-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] col-span-2 p-4 pl-8 flex items-center gap-4 transition-colors md:min-w-auto">
                             <img src={`/images/${row.img}`} className="w-10 h-10 object-contain shrink-0" referrerPolicy="no-referrer" />
                             <span className="font-semibold text-gray-900">{row.text}</span>
                           </div>
@@ -358,9 +358,9 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
+                <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 hide-scrollbar md:grid md:grid-cols-2 md:overflow-visible max-w-4xl mx-auto items-stretch px-4 md:px-0">
                   {/* Left Card */}
-                  <div className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
+                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
                     <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
                       <img src="/images/switch2_basic.png" alt="Switch 2 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
                     </div>
@@ -381,7 +381,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   </div>
 
                   {/* Center Card */}
-                  <div className="bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
+                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
                       🔥 PRE-ORDER / 稀缺体验·限量 1 台
                     </div>
