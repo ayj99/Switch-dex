@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle, Check, Minus, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import html2canvas from 'html2canvas';
+
 import { Game, PHONE_NUMBER } from './types';
 
 // Mock Data for Rental Options
@@ -57,14 +59,37 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
   // Poster states
   const [showPosterModal, setShowPosterModal] = useState(false);
-  const [posterPage, setPosterPage] = useState(0);
+  const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
+  const [posterImage, setPosterImage] = useState<string | null>(null);
 
   const posterGames = useMemo(() => {
-    const startIndex = posterPage * 12;
-    return filteredGames.slice(startIndex, startIndex + 12);
-  }, [filteredGames, posterPage]);
+    return filteredGames.slice(0, 12);
+  }, [filteredGames]);
 
-  const totalPosterPages = Math.ceil(filteredGames.length / 12);
+  const handleFeaturedExport = () => {
+    const templateIndex = Math.floor(Math.random() * 3);
+    setGeneratingPosterDesign(templateIndex);
+
+    setTimeout(async () => {
+      const element = document.getElementById('capture-rental-poster');
+      if (element) {
+        try {
+          const canvas = await html2canvas(element, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: null,
+          });
+          const imgData = canvas.toDataURL('image/png');
+          setPosterImage(imgData);
+          setGeneratingPosterDesign(null);
+          setShowPosterModal(true);
+        } catch (err) {
+          console.error('Failed to generate poster:', err);
+          setGeneratingPosterDesign(null);
+        }
+      }
+    }, 100);
+  };
 
   useEffect(() => {
     fetch('/games.json')
@@ -437,13 +462,18 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 {/* Poster Gen Button Relocated here */}
                 {!isLoading && games.length > 0 && (
                   <button 
-                    onClick={() => {
-                      setPosterPage(0);
-                      setShowPosterModal(true);
-                    }}
-                    className="bg-gray-900 hover:bg-black text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap"
+                    onClick={handleFeaturedExport}
+                    disabled={generatingPosterDesign !== null}
+                    className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
                   >
-                    View All Games
+                    {generatingPosterDesign !== null ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      'View All Games'
+                    )}
                   </button>
                 )}
               </div>
@@ -690,7 +720,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
       {/* Poster Modal */}
       <AnimatePresence>
-        {showPosterModal && (
+        {showPosterModal && posterImage && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -703,115 +733,115 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 onClick={() => setShowPosterModal(false)}
                 className="text-white font-black tracking-widest text-xs md:text-sm bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center gap-2"
               >
-                ✕ CLOSE STUDIO
+                ✕ CLOSE
               </button>
             </div>
 
-            {/* Poster Canvas */}
-            <div 
-              className="w-full max-w-[800px] bg-[#e60012] rounded-2xl md:rounded-3xl shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-4"
-            >
-              {/* White Header Banner */}
-              <div className="bg-white px-5 py-4 md:px-8 md:py-6 flex items-center justify-between relative z-20 border-b-4 border-gray-900">
-                <div className="flex items-center gap-2 md:gap-3">
-                  <img src="/images/logo.png" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-[#e60012] flex-shrink-0" alt="Logo" referrerPolicy="no-referrer" onError={(e) => e.currentTarget.style.display = 'none'} />
-                  <div className="flex flex-col">
-                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-gray-900 leading-none">
-                      S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
-                    </span>
-                    <span className="text-gray-500 text-[10px] md:text-sm font-bold tracking-widest mt-0.5">
-                      海量大作随租随玩
-                    </span>
+            {/* Poster Image */}
+            <div className="w-full max-w-[400px] md:max-w-[500px] flex flex-col relative flex-shrink-0 mb-4">
+              <img src={posterImage} alt="Generated Poster" className="w-full h-auto rounded-xl shadow-2xl object-contain" />
+              <p className="text-white/60 text-center mt-4 text-sm font-medium">Long press image to save and share!</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Hidden Capture Area */}
+      {generatingPosterDesign !== null && (
+        <div className="fixed top-[200vh] left-[200vw] z-[-1] pointer-events-none">
+          <div id="capture-rental-poster" className="w-[800px] bg-white flex flex-col">
+            {/* Template 0: Default Grid */}
+            {generatingPosterDesign === 0 && (
+              <div className="bg-[#e60012] p-8 flex flex-col relative overflow-hidden">
+                <div className="bg-white px-8 py-6 flex items-center justify-between relative z-20 border-b-4 border-gray-900 rounded-t-3xl">
+                  <div className="flex items-center gap-3">
+                    <img src="/images/logo.png" className="w-14 h-14 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" referrerPolicy="no-referrer" />
+                    <div className="flex flex-col">
+                      <span className="text-4xl font-black italic tracking-tighter text-gray-900 leading-none">
+                        S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
+                      </span>
+                      <span className="text-gray-500 text-sm font-bold tracking-widest mt-0.5">海量大作随租随玩</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-black text-3xl text-[#e60012] tracking-tighter uppercase drop-shadow-sm">Classic Rentals</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-black text-xl md:text-3xl text-[#e60012] tracking-tighter uppercase drop-shadow-sm">
-                    单租系列精选
-                  </p>
+                <div className="p-8 relative flex-grow bg-gray-900 rounded-b-3xl">
+                  <div className="grid grid-cols-3 gap-6 relative z-10">
+                    {posterGames.slice(0, 9).map((game) => (
+                      <div key={game.id} className="bg-white rounded-xl p-4 flex flex-col shadow-xl">
+                        <img src={game.imageUrl} className="w-full aspect-[3/4] object-cover rounded-lg mb-3 shadow-sm" referrerPolicy="no-referrer" />
+                        <h3 className="text-base font-black truncate text-gray-900 mb-1">{game.title}</h3>
+                        <p className="text-[#25D366] font-black text-xl mt-auto">RM {Math.floor(game.price * 0.07)}/月起</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+            )}
 
-              {/* Black / Red Content Area */}
-              <div className="p-5 md:p-8 relative flex-grow flex flex-col">
-                {/* Texture Overlay */}
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
-
-                {/* Grid Container */}
-                <div className="flex flex-wrap justify-center gap-2 md:gap-3 relative z-10 content-start">
-                  {posterGames.map((game) => (
-                    <div 
-                      key={game.id} 
-                      className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(25%-6px)] md:w-[calc(25%-9px)]"
-                    >
-                      {/* Condition Tag */}
-                      <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
-                        {game.condition}
-                      </div>
-                      
-                      <img 
-                        src={game.imageUrl} 
-                        alt={game.title} 
-                        className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
-                        referrerPolicy="no-referrer"
-                      />
-                      
-                      <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
-                        {game.title}
-                      </h3>
-                      
-                      <div className="mt-auto">
-                        <div className="flex items-baseline gap-1 mt-0.5 md:mt-1 border-t border-gray-100 pt-1 md:pt-1.5">
-                          <p className="text-[#25D366] font-black text-xs md:text-base leading-none">
-                            RM {Math.floor(game.price * 0.07)}<span className="text-[8px] md:text-[10px] text-gray-500 font-bold">/月起</span>
-                          </p>
-                        </div>
-                        
-                        <div className="flex items-center gap-1 mt-1 text-[8px] md:text-[10px] text-gray-400 font-medium hidden md:flex">
-                          <span className="flex items-center gap-0.5 truncate"><Globe size={8} /> {game.language}</span>
-                          <span className="flex items-center gap-0.5 ml-auto text-[#25D366]"><ThumbsUp size={8} /> {game.votes}</span>
-                        </div>
+            {/* Template 1: Magazine Style */}
+            {generatingPosterDesign === 1 && posterGames.length > 0 && (
+              <div className="bg-white flex flex-col relative">
+                <div className="pt-12 px-10 pb-6 flex justify-between items-end border-b-8 border-black">
+                  <h1 className="text-7xl font-black tracking-tighter uppercase leading-none">Top<br/>Picks</h1>
+                  <span className="text-2xl font-bold bg-black text-white px-4 py-2 align-bottom">Switch Dex</span>
+                </div>
+                <div className="p-10 flex gap-8 border-b-4 border-gray-200">
+                  <img src={posterGames[0].imageUrl} className="w-1/2 rounded-2xl shadow-2xl object-cover aspect-square" referrerPolicy="no-referrer" />
+                  <div className="w-1/2 flex flex-col justify-center">
+                    <div className="bg-red-600 text-white font-black px-3 py-1 rounded inline-block w-max mb-4">FEATURED</div>
+                    <h2 className="text-5xl font-black leading-tight mb-4">{posterGames[0].title}</h2>
+                    <p className="text-3xl font-bold text-gray-500">From RM {Math.floor(posterGames[0].price * 0.07)}/mo</p>
+                  </div>
+                </div>
+                <div className="p-10 grid grid-cols-2 gap-x-8 gap-y-12">
+                  {posterGames.slice(1, 7).map((game, i) => (
+                    <div key={game.id} className="flex gap-4 items-center">
+                      <span className="text-5xl font-black text-gray-200 w-12">{i+2}</span>
+                      <img src={game.imageUrl} className="w-24 h-32 object-cover rounded shadow" referrerPolicy="no-referrer" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-xl font-bold leading-tight mb-1 truncate">{game.title}</h3>
+                        <p className="text-red-500 font-bold">RM {Math.floor(game.price * 0.07)} /mo</p>
                       </div>
                     </div>
                   ))}
                 </div>
-
-                <div className="mt-6 md:mt-8 flex justify-between items-end border-t border-white/20 pt-4 relative z-10">
-                  <div className="text-white">
-                    <p className="font-black text-xs md:text-sm tracking-widest opacity-90 drop-shadow-sm">SCREENSHOT TO SHARE</p>
-                    <p className="text-[8px] md:text-xs opacity-75 mt-0.5 font-medium">Capture this image to share the games list</p>
-                  </div>
-                  <div className="text-right text-white">
-                    <p className="font-black text-xs md:text-sm opacity-90 drop-shadow-sm">PAGE {posterPage + 1}/{totalPosterPages}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Pagination Controls */}
-            {totalPosterPages > 1 && (
-              <div className="flex items-center gap-4 mt-4 flex-shrink-0">
-                <button 
-                  onClick={() => setPosterPage(p => Math.max(0, p - 1))}
-                  disabled={posterPage === 0}
-                  className="bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10 text-white p-3 rounded-full backdrop-blur-md transition-all"
-                >
-                  <ArrowLeft size={24} />
-                </button>
-                <div className="text-white font-mono font-bold text-sm bg-black/50 px-4 py-2 rounded-full backdrop-blur-md">
-                  Page {posterPage + 1} of {totalPosterPages}
-                </div>
-                <button 
-                  onClick={() => setPosterPage(p => Math.min(totalPosterPages - 1, p + 1))}
-                  disabled={posterPage === totalPosterPages - 1}
-                  className="bg-white/10 hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10 text-white p-3 rounded-full backdrop-blur-md transition-all"
-                >
-                  <ArrowLeft size={24} className="rotate-180" />
-                </button>
               </div>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+            {/* Template 2: Dark Neon */}
+            {generatingPosterDesign === 2 && (
+              <div className="bg-[#0a0a0c] flex flex-col p-12 text-white relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/30 blur-[100px] rounded-full"></div>
+                <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-600/30 blur-[100px] rounded-full"></div>
+                <div className="flex justify-between items-center z-10 mb-16">
+                  <h1 className="text-5xl font-black tracking-widest bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
+                    RENTAL DROP
+                  </h1>
+                  <img src="/images/logo.png" className="w-16 h-16 rounded-full border-2 border-cyan-400" referrerPolicy="no-referrer" />
+                </div>
+                <div className="grid grid-cols-2 gap-8 z-10">
+                  {posterGames.slice(0, 4).map(game => (
+                    <div key={game.id} className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-sm">
+                      <img src={game.imageUrl} className="w-full aspect-square object-cover rounded-2xl mb-6 shadow-[0_0_30px_rgba(34,211,238,0.2)]" referrerPolicy="no-referrer" />
+                      <h3 className="text-2xl font-bold truncate mb-2">{game.title}</h3>
+                      <div className="flex justify-between items-center mt-4">
+                        <span className="bg-cyan-500/20 text-cyan-300 font-bold px-3 py-1 rounded-full text-sm">
+                          RENT NOW
+                        </span>
+                        <span className="text-3xl font-black text-white">RM {Math.floor(game.price * 0.07)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="w-full mt-10 text-center text-white/50 text-xl tracking-widest">SCREENSHOT TO SHARE</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
