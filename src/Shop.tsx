@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Game, PHONE_NUMBER } from './types';
+import PosterGenerator from './components/PosterGenerator';
 
 export default function Shop({ onBackToPortal }: { onBackToPortal: () => void }) {
   const [games, setGames] = useState<Game[]>([]);
@@ -109,9 +110,12 @@ export default function Shop({ onBackToPortal }: { onBackToPortal: () => void })
 function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGameClick: (g: Game) => void, onBackToPortal: () => void }) {
   const [filter, setFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  
+  // Poster State
   const [showPosterModal, setShowPosterModal] = useState(false);
-  const [posterPage, setPosterPage] = useState(0);
-  const [posterType, setPosterType] = useState<'featured' | 'category'>('category');
+  const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
+  const [posterImage, setPosterImage] = useState<string | null>(null);
+  const [posterSourceGames, setPosterSourceGames] = useState<Game[]>([]);
 
   // 1. Dynamic Categories
   const allCategories = useMemo(() => {
@@ -154,34 +158,29 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
   // 4. Poster Modal Logic
   const handleCategoryExport = () => {
-    setPosterType('category');
-    setPosterPage(0);
-    setShowPosterModal(true);
+    setPosterSourceGames(filteredGames);
+    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
   };
 
   const handleFeaturedExport = () => {
-    setPosterType('featured');
-    setPosterPage(0);
+    // Prioritize sale items, then fill with top voted to get 12
+    const saleGames = [...games].filter(g => g.originalPrice && g.originalPrice > g.price).sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    const otherGames = [...games].filter(g => !(g.originalPrice && g.originalPrice > g.price)).sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    const sourceGames = [...saleGames, ...otherGames].slice(0, 12);
+    setPosterSourceGames(sourceGames);
+    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
+  };
+
+  const handlePosterGenerated = (imgUrl: string) => {
+    setPosterImage(imgUrl);
+    setGeneratingPosterDesign(null);
     setShowPosterModal(true);
   };
 
-  // Determine which games to show in the poster
-  const posterGames = useMemo(() => {
-    let sourceGames = [];
-    if (posterType === 'featured') {
-      // Prioritize sale items, then fill with top voted to get 12
-      const saleGames = [...games].filter(g => g.originalPrice && g.originalPrice > g.price).sort((a, b) => (b.votes || 0) - (a.votes || 0));
-      const otherGames = [...games].filter(g => !(g.originalPrice && g.originalPrice > g.price)).sort((a, b) => (b.votes || 0) - (a.votes || 0));
-      sourceGames = [...saleGames, ...otherGames].slice(0, 12);
-    } else {
-      sourceGames = filteredGames;
-    }
-    
-    const startIndex = posterPage * 12;
-    return sourceGames.slice(startIndex, startIndex + 12);
-  }, [games, filteredGames, posterType, posterPage]);
-
-  const totalPosterPages = Math.ceil((posterType === 'featured' ? 12 : filteredGames.length) / 12);
+  const handlePosterError = (err: any) => {
+    console.error('Failed to generate poster:', err);
+    setGeneratingPosterDesign(null);
+  };
 
   return (
     <>
@@ -420,23 +419,31 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         {filter === 'All' ? (
           <button 
             disabled
-            className="text-xs font-mono text-gray-400 bg-gray-200 cursor-not-allowed px-4 py-2 rounded"
+            className="text-xs font-mono text-gray-400 bg-gray-200 cursor-not-allowed px-4 py-2 rounded flex items-center gap-2"
           >
             [ 请先选择上方分类以生成海报 ]
           </button>
         ) : (
           <button 
             onClick={handleCategoryExport}
-            className="text-xs font-mono text-gray-400 hover:text-gray-600 transition-colors px-4 py-2"
+            disabled={generatingPosterDesign !== null}
+            className="text-xs font-mono text-gray-400 hover:text-gray-600 disabled:opacity-50 transition-colors px-4 py-2 flex items-center gap-2"
           >
-            [ System Dump: XHS Grid ]
+            {generatingPosterDesign !== null ? (
+              <>
+                <div className="w-3 h-3 border border-gray-400 border-t-gray-600 rounded-full animate-spin" />
+                Generating...
+              </>
+            ) : (
+              '[ System Dump: XHS Grid ]'
+            )}
           </button>
         )}
       </footer>
 
       {/* Poster Modal */}
       <AnimatePresence>
-        {showPosterModal && (
+        {showPosterModal && posterImage && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -449,106 +456,26 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                 onClick={() => setShowPosterModal(false)}
                 className="text-white font-black tracking-widest text-xs md:text-sm bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center gap-2"
               >
-                ✕ CLOSE STUDIO
+                ✕ CLOSE
               </button>
             </div>
 
-            {/* Poster Canvas */}
-            <div 
-              className="w-full max-w-[800px] bg-[#e60012] rounded-2xl md:rounded-3xl shadow-2xl flex flex-col relative overflow-hidden flex-shrink-0 mb-4"
-            >
-              {/* White Header Banner */}
-              <div className="bg-white px-5 py-4 md:px-8 md:py-6 flex items-center justify-between relative z-20 border-b-4 border-gray-900">
-                <div className="flex items-center gap-2 md:gap-3">
-                  <img src="/images/logo.png" className="w-10 h-10 md:w-14 md:h-14 rounded-full object-cover border-2 border-[#e60012] flex-shrink-0" alt="Logo" referrerPolicy="no-referrer" onError={(e) => e.currentTarget.style.display = 'none'} />
-                  <div className="flex flex-col">
-                    <span className="text-2xl md:text-4xl font-black italic tracking-tighter text-gray-900 leading-none">
-                      S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
-                    </span>
-                    <span className="text-gray-500 text-[10px] md:text-sm font-bold tracking-widest mt-0.5">
-                      诗和远方与Switch奇妙
-                    </span>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-black text-xl md:text-3xl text-[#e60012] tracking-tighter uppercase drop-shadow-sm">
-                    {posterType === 'featured' ? '限时特惠 / FEATURED DEALS' : `${filter} 系列精选`}
-                  </p>
-                </div>
-              </div>
-
-              {/* Red Content Area */}
-              <div className="p-5 md:p-8 relative flex-grow flex flex-col">
-                {/* Texture Overlay */}
-                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none mix-blend-overlay"></div>
-
-                {/* Grid Container (Flexbox with wrap and center) */}
-                <div className="flex flex-wrap justify-center gap-2 md:gap-3 relative z-10 content-start">
-                  {posterGames.map((game) => (
-                    <div 
-                      key={game.id} 
-                      className="bg-white rounded-xl p-1.5 md:p-3 flex flex-col shadow-xl relative w-[calc(25%-6px)] md:w-[calc(25%-9px)]"
-                    >
-                      {/* Condition Tag */}
-                      <div className="absolute top-1 right-1 md:top-2 md:right-2 bg-gray-900 text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 rounded z-10 shadow-sm">
-                        {game.condition}
-                      </div>
-                      
-                      <img 
-                        src={game.imageUrl} 
-                        alt={game.title} 
-                        className="w-full aspect-[3/4] object-cover rounded-lg mb-1.5 md:mb-2 shadow-sm" 
-                        referrerPolicy="no-referrer"
-                      />
-                      
-                      <h3 className="text-[9px] md:text-xs font-bold truncate text-gray-900 mb-0.5 md:mb-1">
-                        {game.title}
-                      </h3>
-                      
-                      <div className="mt-auto flex items-baseline">
-                        <p className="text-xs md:text-lg font-black text-[#E60012] leading-none">RM {game.price}</p>
-                        {game.originalPrice && game.originalPrice > game.price && (
-                          <span className="text-gray-400 text-[8px] md:text-xs line-through ml-1 font-bold">RM {game.originalPrice}</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                {/* Footer Logo/Watermark */}
-                <div className="mt-auto pt-6 text-center relative z-10">
-                  <p className="text-white/80 font-mono text-[8px] md:text-xs tracking-widest uppercase">
-                    Screenshot to share • Generated by S✘ítčh Dé✘ Studio
-                  </p>
-                </div>
-              </div>
+            {/* Poster Image */}
+            <div className="w-full max-w-[400px] md:max-w-[500px] flex flex-col relative flex-shrink-0 mb-4">
+              <img src={posterImage} alt="Generated Poster" className="w-full h-auto rounded-xl shadow-2xl object-contain" />
+              <p className="text-white/60 text-center mt-4 text-sm font-medium">Long press image to save and share!</p>
             </div>
-
-            {/* Pagination Controls */}
-            {totalPosterPages > 1 && (
-              <div className="w-full max-w-[800px] flex justify-center gap-4 mb-10 flex-shrink-0">
-                <button 
-                  onClick={() => setPosterPage(p => Math.max(0, p - 1))}
-                  disabled={posterPage === 0}
-                  className="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-6 rounded-full backdrop-blur-md disabled:opacity-30 transition-all"
-                >
-                  [ Previous Page ]
-                </button>
-                <span className="text-white/60 font-mono flex items-center">
-                  Page {posterPage + 1} of {totalPosterPages}
-                </span>
-                <button 
-                  onClick={() => setPosterPage(p => Math.min(totalPosterPages - 1, p + 1))}
-                  disabled={posterPage === totalPosterPages - 1}
-                  className="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-6 rounded-full backdrop-blur-md disabled:opacity-30 transition-all"
-                >
-                  [ Next Page ]
-                </button>
-              </div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
+
+      <PosterGenerator 
+        games={posterSourceGames} 
+        type="shop" 
+        triggerId={generatingPosterDesign} 
+        onGenerated={handlePosterGenerated}
+        onError={handlePosterError}
+      />
     </>
   );
 }
