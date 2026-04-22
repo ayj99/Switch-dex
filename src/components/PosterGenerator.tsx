@@ -10,14 +10,15 @@ export interface PosterGeneratorProps {
 }
 
 export default function PosterGenerator({ games, type, triggerId, onGenerated, onError }: PosterGeneratorProps) {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (triggerId !== null) {
-      // Small timeout to ensure DOM is fully painted
+      // Small timeout to ensure DOM is fully painted and images are loaded
       const timer = setTimeout(async () => {
-        const element = document.getElementById('capture-poster-container');
-        if (element) {
+        if (containerRef.current) {
           try {
-            const canvas = await html2canvas(element, {
+            const canvas = await html2canvas(containerRef.current, {
               scale: 2,
               useCORS: true,
               backgroundColor: '#ffffff',
@@ -29,7 +30,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
             if (onError) onError(err);
           }
         }
-      }, 300); // Wait slightly longer for images to load if needed
+      }, 600); // Wait 600ms for images and layout to settle
       return () => clearTimeout(timer);
     }
   }, [triggerId, games, type, onGenerated, onError]);
@@ -42,8 +43,8 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const unitText = isRental ? '/mo' : '';
 
   return (
-    <div className="fixed top-0 -left-[10000px] w-[800px] z-[-1] bg-white">
-      <div id="capture-poster-container" className="w-[800px] bg-white flex flex-col">
+    <div className="fixed top-0 left-[200vw] w-[800px] z-[-1] bg-white pointer-events-none">
+      <div ref={containerRef} className="w-[800px] bg-white flex flex-col pt-[1px] pb-[1px]">
         {/* Template 0: Default Grid */}
         {triggerId === 0 && (
           <div className="bg-[#e60012] p-8 flex flex-col relative overflow-hidden">
