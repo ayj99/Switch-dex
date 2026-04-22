@@ -44,7 +44,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
         // 4. Capture using html-to-image which natively relies on browser rendering (avoids oklch parser bugs)
         const imgData = await toPng(containerRef.current, {
           pixelRatio: 2,
-          backgroundColor: '#ffffff',
+          backgroundColor: '#FFFFFF',
           style: { opacity: '1', transform: 'none' }, // Ensure no hidden styles affect render
         });
 
@@ -82,25 +82,24 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
   return (
     <div className="fixed top-0 left-0 w-[800px] z-[-50] opacity-0 pointer-events-none">
-      <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#ffffff' }}>
+      <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#FFFFFF' }}>
         {triggerId === 1 && (
           <div className="p-10 flex flex-col w-full h-full">
             {/* Header */}
             <div className="flex justify-between items-end mb-10 pb-6" style={{ borderBottomWidth: 2, borderBottomStyle: 'solid', borderColor: '#f3f4f6' }}>
-              <div className="text-4xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#0f172a' }}>
-                S<span style={{ color: '#dc2626' }}>x</span>ítčh D<span style={{ color: '#0f172a' }}>é</span><span style={{ color: '#dc2626' }}>x</span>
+              <div className="text-4xl font-black italic tracking-tighter text-slate-900 font-sans select-none">
+                S<span className="text-red-600">x</span>ítčh D<span className="text-slate-900">é</span><span className="text-red-600">x</span>
               </div>
               <div className="px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm" style={{ backgroundColor: '#dc2626', color: '#ffffff' }}>
                 {labelText} SELECTION
               </div>
             </div>
 
-            {/* Grid layout replaced by rigid Flexbox calculation */}
-            <div className="flex flex-wrap gap-6 justify-between flex-grow z-10 relative">
+            <div className="flex flex-wrap gap-6 justify-between flex-grow">
               {posterGames.slice(0, 9).map((game) => {
                 const price = isRental ? Math.floor(game.price * 0.06) : game.price;
                 return (
-                  <div key={game.id} className="w-[calc(33.333%-16px)] rounded-xl p-4 flex flex-col" style={{ backgroundColor: '#ffffff', borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }}>
+                  <div key={game.id} className="w-[calc(33.333%-16px)] rounded-xl p-4 flex flex-col" style={{ backgroundColor: '#FFFFFF', borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }}>
                     <img src={getSafeImageUrl(game.imageUrl)} className="w-full aspect-[3/4] object-cover rounded-lg mb-4" style={{ borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }} crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                     <h3 className="text-lg font-bold truncate mb-2" style={{ color: '#111827' }}>{game.title}</h3>
                     <div className="mt-auto">
