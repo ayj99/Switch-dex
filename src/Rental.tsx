@@ -426,10 +426,10 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 {!isLoading && games.length > 0 && (
                   <button 
                     onClick={handleFeaturedExport}
-                    disabled={generatingPosterDesign !== null}
+                    disabled={isGenerating}
                     className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
                   >
-                    {generatingPosterDesign !== null ? (
+                    {isGenerating ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
                         Generating...
@@ -717,14 +717,6 @@ export default function Rental({ onBack }: { onBack: () => void }) {
         onGenerated={handlePosterGenerated}
         onError={handlePosterError}
       />
-
-      {/* Global Generating Overlay */}
-      {isGenerating && (
-        <div className="fixed inset-0 bg-black/80 z-[200] flex flex-col items-center justify-center text-white backdrop-blur-sm">
-          <div className="animate-spin text-6xl mb-4">⚙️</div>
-          <h2 className="text-2xl font-bold">正在生成海报...</h2>
-        </div>
-      )}
     </div>
   );
 }
