@@ -23,7 +23,7 @@ const ADDONS = [
 ];
 
 export default function Rental({ onBack }: { onBack: () => void }) {
-  const [rentalMode, setRentalMode] = useState<'curtain' | 'console' | 'games' | 'gameDetail'>('curtain');
+  const [rentalMode, setRentalMode] = useState<'games' | 'console'>('games');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
   const [consoleType, setConsoleType] = useState<'switch1' | 'switch2'>('switch1');
@@ -112,63 +112,16 @@ export default function Rental({ onBack }: { onBack: () => void }) {
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  if (rentalMode === 'curtain') {
-    return (
-      <div className="h-screen w-full flex flex-col relative font-sans overflow-hidden bg-gradient-to-b from-white via-gray-50 to-gray-100">
-        {/* Back Button */}
-        <button 
-          onClick={onBack}
-          className="absolute top-4 left-4 z-50 flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors"
-        >
-          <ArrowLeft size={20} />
-          <span>Back 返回大厅</span>
-        </button>
-
-        {/* Top Half: Console */}
-        <div 
-          onClick={() => setRentalMode('console')}
-          className="flex-1 w-full flex items-center justify-center cursor-pointer group relative overflow-hidden border-b border-gray-200"
-        >
-          <img src="/images/console.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="relative z-10 text-center"
-          >
-            <h1 className="text-5xl font-black text-gray-900 tracking-tighter drop-shadow-sm">
-              RENT CONSOLES
-            </h1>
-          </motion.div>
-        </div>
-
-        {/* Bottom Half: Games */}
-        <div 
-          onClick={() => setRentalMode('games')}
-          className="flex-1 w-full flex items-center justify-center cursor-pointer group relative overflow-hidden"
-        >
-          <img src="/images/rentalgames.png" className="absolute inset-0 w-full h-full object-cover opacity-10 transition-transform duration-700 group-hover:scale-105" referrerPolicy="no-referrer" />
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className="relative z-10 text-center"
-          >
-            <h1 className="text-5xl font-black text-gray-900 tracking-tighter drop-shadow-sm">
-              RENT GAMES ONLY
-            </h1>
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
         <button 
-          onClick={() => setRentalMode('curtain')}
+          onClick={onBack}
           className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-32"
         >
           <ArrowLeft size={20} />
-          <span className="hidden sm:inline">Back 返回选择</span>
+          <span className="hidden sm:inline">Back 返回大厅</span>
         </button>
         
         <div className="flex items-center justify-center gap-2 flex-1">
@@ -182,6 +135,25 @@ export default function Rental({ onBack }: { onBack: () => void }) {
         
         <div className="w-32" /> {/* Spacer for centering */}
       </header>
+
+      {/* Animated Segmented Control */}
+      <div className="relative flex w-full max-w-md mx-auto bg-gray-100/80 backdrop-blur-md rounded-full p-1.5 shadow-inner mt-6 mb-8">
+        <div 
+          className={`absolute top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-out ${rentalMode === 'console' ? 'translate-x-full' : 'translate-x-0'}`} 
+        />
+        <button 
+          onClick={() => setRentalMode('games')}
+          className={`relative z-10 flex-1 flex items-center justify-center py-3 text-base md:text-lg font-bold transition-colors duration-300 ${rentalMode === 'games' ? 'text-gray-900' : 'text-gray-500'}`}
+        >
+          🎮 租游戏
+        </button>
+        <button 
+          onClick={() => setRentalMode('console')}
+          className={`relative z-10 flex-1 flex items-center justify-center py-3 text-base md:text-lg font-bold transition-colors duration-300 ${rentalMode === 'console' ? 'text-gray-900' : 'text-gray-500'}`}
+        >
+          🚀 租主机
+        </button>
+      </div>
 
       <AnimatePresence mode="wait">
         <motion.div
