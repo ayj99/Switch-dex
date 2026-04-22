@@ -98,7 +98,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
             {/* Grid layout replaced by rigid Flexbox calculation */}
             <div className="flex flex-wrap gap-6 justify-between flex-grow z-10 relative">
               {posterGames.slice(0, 9).map((game) => {
-                const price = isRental ? Math.floor(game.price * 0.07) : game.price;
+                const price = isRental ? Math.floor(game.price * 0.06) : game.price;
                 return (
                   <div key={game.id} className="w-[calc(33.333%-16px)] rounded-xl p-4 flex flex-col" style={{ backgroundColor: '#ffffff', borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }}>
                     <img src={getSafeImageUrl(game.imageUrl)} className="w-full aspect-[3/4] object-cover rounded-lg mb-4" style={{ borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }} crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
