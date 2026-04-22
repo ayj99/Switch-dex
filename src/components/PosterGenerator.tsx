@@ -81,7 +81,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
           <div className="bg-white p-10 flex flex-col w-full text-gray-900 border-[16px] border-gray-100 min-h-[800px]">
             <div className="flex items-center justify-between border-b-2 border-gray-200 pb-6 mb-8">
               <div className="flex items-center gap-4">
-                <img src="/images/logo.png" className="w-16 h-16 rounded-full border border-gray-300" referrerPolicy="no-referrer" alt="Logo" />
+                <img src="/images/logo.png" className="w-16 h-16 rounded-full border border-gray-300" crossOrigin="anonymous" referrerPolicy="no-referrer" alt="Logo" />
                 <div>
                   <h1 className="text-4xl font-black tracking-tight text-gray-900 leading-none">Switch Dex</h1>
                   <p className="text-gray-500 font-medium tracking-widest uppercase text-sm mt-1">Official Collection</p>
@@ -97,7 +97,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
                   <div key={game.id} className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col shadow-sm">
-                    <img src={game.imageUrl} className="w-full aspect-[3/4] object-cover rounded-lg mb-4 border border-gray-100" referrerPolicy="no-referrer" />
+                    <img src={game.imageUrl} className="w-full aspect-[3/4] object-cover rounded-lg mb-4 border border-gray-100" crossOrigin="anonymous" referrerPolicy="no-referrer" />
                     <h3 className="text-lg font-bold truncate text-gray-900 mb-2">{game.title}</h3>
                     <p className="text-gray-900 font-black text-2xl mt-auto">RM {price}<span className="text-sm font-normal text-gray-500">{unitText}</span></p>
                   </div>
@@ -120,7 +120,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                     CYBER<br/>{labelText}
                   </h1>
                 </div>
-                <img src="/images/logo.png" className="w-16 h-16 rounded-2xl border-2 border-cyan-500 shadow-[0_0_20px_rgba(34,211,238,0.4)]" referrerPolicy="no-referrer" alt="Logo" />
+                <img src="/images/logo.png" className="w-16 h-16 rounded-2xl border-2 border-cyan-500 shadow-[0_0_20px_rgba(34,211,238,0.4)]" crossOrigin="anonymous" referrerPolicy="no-referrer" alt="Logo" />
              </div>
 
              <div className="grid grid-cols-2 gap-6 relative z-10">
@@ -128,7 +128,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                  const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                  return (
                    <div key={game.id} className="bg-slate-800/80 backdrop-blur border border-cyan-500/30 rounded-xl p-4 flex gap-4 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
-                     <img src={game.imageUrl} className="w-24 h-32 object-cover rounded shadow-md border border-cyan-900" referrerPolicy="no-referrer" />
+                     <img src={game.imageUrl} className="w-24 h-32 object-cover rounded shadow-md border border-cyan-900" crossOrigin="anonymous" referrerPolicy="no-referrer" />
                      <div className="flex flex-col justify-center flex-1 min-w-0">
                        <h3 className="text-lg font-bold leading-tight mb-2 truncate text-slate-100">{game.title}</h3>
                        <p className="text-cyan-400 font-black text-2xl drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
@@ -151,7 +151,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
             <div className="flex justify-between items-center z-10 mb-12">
               <div className="flex items-center gap-4">
-                <img src="/images/logo.png" className="w-16 h-16 rounded-3xl border-2 border-white/50 shadow-xl bg-white" referrerPolicy="no-referrer" alt="Logo" />
+                <img src="/images/logo.png" className="w-16 h-16 rounded-3xl border-2 border-white/50 shadow-xl bg-white" crossOrigin="anonymous" referrerPolicy="no-referrer" alt="Logo" />
                 <h1 className="text-5xl font-black tracking-tight text-white drop-shadow-md">
                   Trending<br/>Now
                 </h1>
@@ -166,7 +166,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
                   <div key={game.id} className="bg-white/20 backdrop-blur-md border border-white/30 rounded-3xl p-6 flex flex-col shadow-2xl">
-                    <img src={game.imageUrl} className="w-full aspect-[4/3] object-cover rounded-2xl mb-6 shadow-inner" referrerPolicy="no-referrer" />
+                    <img src={game.imageUrl} className="w-full aspect-[4/3] object-cover rounded-2xl mb-6 shadow-inner" crossOrigin="anonymous" referrerPolicy="no-referrer" />
                     <h3 className="text-2xl font-bold truncate mb-2 text-white drop-shadow-md">{game.title}</h3>
                     <div className="flex justify-between items-center mt-auto pt-4">
                       <span className="text-white/80 font-bold uppercase tracking-widest text-sm">
