@@ -116,6 +116,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
   const [posterImage, setPosterImage] = useState<string | null>(null);
   const [posterSourceGames, setPosterSourceGames] = useState<Game[]>([]);
+  const [recentDesign, setRecentDesign] = useState(-1);
 
   // 1. Dynamic Categories
   const allCategories = useMemo(() => {
@@ -158,8 +159,14 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
   // 4. Poster Modal Logic
   const handleCategoryExport = () => {
+    let templateIndex;
+    do {
+      templateIndex = Math.floor(Math.random() * 3);
+    } while (templateIndex === recentDesign);
+    
+    setRecentDesign(templateIndex);
     setPosterSourceGames(filteredGames);
-    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
+    setGeneratingPosterDesign(templateIndex);
   };
 
   const handleFeaturedExport = () => {
@@ -167,8 +174,15 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
     const saleGames = [...games].filter(g => g.originalPrice && g.originalPrice > g.price).sort((a, b) => (b.votes || 0) - (a.votes || 0));
     const otherGames = [...games].filter(g => !(g.originalPrice && g.originalPrice > g.price)).sort((a, b) => (b.votes || 0) - (a.votes || 0));
     const sourceGames = [...saleGames, ...otherGames].slice(0, 12);
+    
+    let templateIndex;
+    do {
+      templateIndex = Math.floor(Math.random() * 3);
+    } while (templateIndex === recentDesign);
+    
+    setRecentDesign(templateIndex);
     setPosterSourceGames(sourceGames);
-    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
+    setGeneratingPosterDesign(templateIndex);
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
