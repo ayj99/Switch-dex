@@ -83,7 +83,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   };
 
   return (
-    <div className="fixed top-0 left-0 w-[800px] z-[-50] opacity-0 pointer-events-none">
+    <div className="absolute top-0 -left-[9999px] z-[-50]" style={{ width: '800px' }}>
       <div ref={containerRef} className="w-[800px] flex flex-col">
         
         {/* Template 0: Classic (Clean, White, Gray Borders) */}
@@ -102,14 +102,14 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
               </div>
             </div>
             
-            <div className="flex flex-wrap gap-6 justify-between flex-grow">
+            <div style={{ display: 'block', width: '100%', fontSize: 0 }}>
               {posterGames.slice(0, 9).map((game) => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                  <div key={game.id} style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', width: 'calc(33.333% - 16px)' }} className="border rounded-xl p-4 flex flex-col shadow-sm">
+                  <div key={game.id} style={{ display: 'inline-block', width: '210px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: '#ffffff', borderColor: '#e5e7eb' }} className="border rounded-xl p-4 shadow-sm">
                     <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#f3f4f6' }} className="w-full h-48 object-cover rounded-lg mb-4 border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                     <h3 style={{ color: '#111827' }} className="text-lg font-bold truncate mb-2">{game.title}</h3>
-                    <p style={{ color: '#111827' }} className="font-black text-2xl mt-auto">RM {price}<span style={{ color: '#6b7280' }} className="text-sm font-normal">{unitText}</span></p>
+                    <p style={{ color: '#111827' }} className="font-black text-2xl mt-4">RM {price}<span style={{ color: '#6b7280' }} className="text-sm font-normal">{unitText}</span></p>
                   </div>
                 );
               })}
@@ -133,17 +133,19 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 <img src="/images/logo.png" style={{ borderColor: '#06b6d4' }} className="w-16 h-16 rounded-2xl border-2 shadow-[0_0_20px_rgba(34,211,238,0.4)]" alt="Logo" />
              </div>
 
-             <div className="flex flex-wrap gap-6 justify-between relative z-10">
+             <div style={{ display: 'block', width: '100%', fontSize: 0 }} className="relative z-10">
                {posterGames.slice(0, 6).map((game) => {
                  const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                  return (
-                   <div key={game.id} style={{ backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: 'rgba(6, 182, 212, 0.3)', width: 'calc(50% - 12px)' }} className="backdrop-blur border rounded-xl p-4 flex gap-4 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
-                     <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#164e63' }} className="w-24 h-32 object-cover rounded shadow-md border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
-                     <div className="flex flex-col justify-center flex-1 min-w-0">
-                       <h3 style={{ color: '#f1f5f9' }} className="text-lg font-bold leading-tight mb-2 truncate">{game.title}</h3>
-                       <p style={{ color: '#22d3ee' }} className="font-black text-2xl drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
-                         <span style={{ color: '#0e7490' }} className="text-sm mr-1">RM</span>{price}{unitText}
-                       </p>
+                   <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: 'rgba(6, 182, 212, 0.3)' }} className="backdrop-blur border rounded-xl p-4 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
+                     <div className="flex gap-4">
+                       <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#164e63' }} className="w-24 h-32 object-cover rounded shadow-md border flex-shrink-0" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                       <div className="flex flex-col justify-center min-w-0">
+                         <h3 style={{ color: '#f1f5f9' }} className="text-lg font-bold leading-tight mb-2 line-clamp-2">{game.title}</h3>
+                         <p style={{ color: '#22d3ee' }} className="font-black text-2xl drop-shadow-[0_0_8px_rgba(34,211,238,0.4)] mt-auto">
+                           <span style={{ color: '#0e7490' }} className="text-sm mr-1">RM</span>{price}{unitText}
+                         </p>
+                       </div>
                      </div>
                    </div>
                  );
@@ -171,14 +173,14 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-8 justify-between z-10 flex-grow">
+            <div style={{ display: 'block', width: '100%', fontSize: 0 }} className="relative z-10">
               {posterGames.slice(0, 4).map(game => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                  <div key={game.id} style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', width: 'calc(50% - 16px)' }} className="backdrop-blur-md border rounded-3xl p-6 flex flex-col shadow-2xl">
+                  <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)' }} className="backdrop-blur-md border rounded-3xl p-6 shadow-2xl">
                     <img src={getSafeImageUrl(game.imageUrl)} className="w-full h-56 object-cover rounded-2xl mb-6 shadow-inner" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                     <h3 style={{ color: '#ffffff' }} className="text-2xl font-bold truncate mb-2 drop-shadow-md">{game.title}</h3>
-                    <div className="flex justify-between items-center mt-auto pt-4">
+                    <div className="flex justify-between items-center pt-4 border-t border-white/20 mt-4">
                       <span style={{ color: 'rgba(255, 255, 255, 0.8)' }} className="font-bold uppercase tracking-widest text-sm">
                         RM
                       </span>
