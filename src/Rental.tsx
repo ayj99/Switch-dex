@@ -61,20 +61,25 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
   const [posterImage, setPosterImage] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleFeaturedExport = () => {
+    setIsGenerating(true);
     setGeneratingPosterDesign(Math.floor(Math.random() * 3));
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
+    setIsGenerating(false);
     setPosterImage(imgUrl);
     setGeneratingPosterDesign(null);
     setShowPosterModal(true);
   };
 
   const handlePosterError = (err: any) => {
+    setIsGenerating(false);
     console.error('Failed to generate poster:', err);
     setGeneratingPosterDesign(null);
+    alert('海报生成失败，请重试！(Error: ' + (err?.message || 'Unknown Error') + ')');
   };
 
   useEffect(() => {
@@ -712,6 +717,14 @@ export default function Rental({ onBack }: { onBack: () => void }) {
         onGenerated={handlePosterGenerated}
         onError={handlePosterError}
       />
+
+      {/* Global Generating Overlay */}
+      {isGenerating && (
+        <div className="fixed inset-0 bg-black/80 z-[200] flex flex-col items-center justify-center text-white backdrop-blur-sm">
+          <div className="animate-spin text-6xl mb-4">⚙️</div>
+          <h2 className="text-2xl font-bold">正在生成海报...</h2>
+        </div>
+      )}
     </div>
   );
 }
