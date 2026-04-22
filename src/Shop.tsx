@@ -117,6 +117,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
   const [posterImage, setPosterImage] = useState<string | null>(null);
   const [posterSourceGames, setPosterSourceGames] = useState<Game[]>([]);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // 1. Dynamic Categories
   const allCategories = useMemo(() => {
@@ -159,19 +160,23 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
   // 4. Poster Modal Logic
   const handleCategoryExport = () => {
+    setIsGenerating(true);
     setPosterSourceGames(filteredGames);
     setGeneratingPosterDesign(Math.floor(Math.random() * 3));
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
+    setIsGenerating(false);
     setPosterImage(imgUrl);
     setGeneratingPosterDesign(null);
     setShowPosterModal(true);
   };
 
   const handlePosterError = (err: any) => {
+    setIsGenerating(false);
     console.error('Failed to generate poster:', err);
     setGeneratingPosterDesign(null);
+    alert('海报生成失败，请重试！(Error: ' + (err?.message || 'Unknown Error') + ')');
   };
 
   return (
@@ -487,6 +492,14 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         onGenerated={handlePosterGenerated}
         onError={handlePosterError}
       />
+
+      {/* Global Generating Overlay */}
+      {isGenerating && (
+        <div className="fixed inset-0 bg-black/80 z-[200] flex flex-col items-center justify-center text-white backdrop-blur-sm">
+          <div className="animate-spin text-6xl mb-4">⚙️</div>
+          <h2 className="text-2xl font-bold">正在生成海报...</h2>
+        </div>
+      )}
     </>
   );
 }
