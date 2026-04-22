@@ -58,19 +58,13 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   }, [games, searchQuery, selectedCategory]);
 
   // Poster states
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
   const [posterImage, setPosterImage] = useState<string | null>(null);
-  const [recentDesign, setRecentDesign] = useState(-1);
 
   const handleFeaturedExport = () => {
-    let templateIndex;
-    do {
-      templateIndex = Math.floor(Math.random() * 3);
-    } while (templateIndex === recentDesign);
-    
-    setRecentDesign(templateIndex);
-    setGeneratingPosterDesign(templateIndex);
+    setShowThemeSelector(true);
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
