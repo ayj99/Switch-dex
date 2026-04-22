@@ -451,14 +451,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
             disabled={isGenerating}
             className="text-xs font-mono text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 flex items-center gap-2 transition-colors rounded disabled:opacity-50"
           >
-            {isGenerating ? (
-              <>
-                <div className="w-3 h-3 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
-                Generating...
-              </>
-            ) : (
-              '[ System Dump: Generate Poster ]'
-            )}
+            [ System Dump: Generate Poster ]
           </button>
         )}
       </footer>
@@ -500,6 +493,23 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         onGenerated={handlePosterGenerated}
         onError={handlePosterError}
       />
+
+      {isGenerating && (
+        <div className="fixed inset-0 z-[200] bg-[#FFFFFF] flex flex-col items-center justify-center">
+          <div className="w-12 h-12 bg-[#E60012] rounded-full flex items-center justify-center shadow-lg animate-bounce mb-4">
+            <img 
+              src="/images/logo.png" 
+              alt="Loading" 
+              className="h-6 w-auto brightness-0 invert" 
+              onError={(e) => e.currentTarget.style.display = 'none'} 
+              referrerPolicy="no-referrer" 
+            />
+          </div>
+          <p className="text-xl font-black tracking-widest text-gray-800 animate-pulse uppercase">
+            Generating Poster...
+          </p>
+        </div>
+      )}
     </>
   );
 }
