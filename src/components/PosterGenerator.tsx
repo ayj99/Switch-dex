@@ -81,7 +81,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
   return (
     {/* 彻底移出屏幕，防止被浏览器折叠导致白屏 */}
-    <div className="fixed top-0 z-[[-9999]] pointer-events-none" style={{ left: '-10000px' }}>
+    <div className="fixed top-0 z-[-9999] pointer-events-none" style={{ left: '-10000px' }}>
       {/* 强行注入纯正的任天堂红背景 */}
       <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px] p-10" style={{ backgroundColor: '#E60012' }}>
         
