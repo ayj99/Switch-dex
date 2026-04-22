@@ -97,7 +97,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                   <p style={{ color: '#6b7280' }} className="font-medium tracking-widest uppercase text-sm mt-1">Official Collection</p>
                 </div>
               </div>
-              <div style={{ backgroundColor: '#111827', color: '#ffffff' }} className="px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm shadow-md">
+              <div style={{ backgroundColor: '#111827', color: '#ffffff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)' }} className="px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm">
                 {labelText} SELECTION
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
               {posterGames.slice(0, 9).map((game) => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                  <div key={game.id} style={{ display: 'inline-block', width: '210px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: '#ffffff', borderColor: '#e5e7eb' }} className="border rounded-xl p-4 shadow-sm">
+                  <div key={game.id} style={{ display: 'inline-block', width: '210px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: '#ffffff', borderColor: '#e5e7eb', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }} className="border rounded-xl p-4">
                     <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#f3f4f6' }} className="w-full h-48 object-cover rounded-lg mb-4 border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                     <h3 style={{ color: '#111827' }} className="text-lg font-bold truncate mb-2">{game.title}</h3>
                     <p style={{ color: '#111827' }} className="font-black text-2xl mt-4">RM {price}<span style={{ color: '#6b7280' }} className="text-sm font-normal">{unitText}</span></p>
@@ -126,23 +126,23 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
              
              <div style={{ borderColor: '#164e63' }} className="flex justify-between items-end mb-10 relative z-10 border-b pb-6">
                 <div>
-                  <h1 style={{ color: '#22d3ee' }} className="text-6xl font-black tracking-tighter uppercase drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
+                  <h1 style={{ color: '#22d3ee', filter: 'drop-shadow(0 0 15px rgba(34,211,238,0.5))' }} className="text-6xl font-black tracking-tighter uppercase">
                     CYBER<br/>{labelText}
                   </h1>
                 </div>
-                <img src="/images/logo.png" style={{ borderColor: '#06b6d4' }} className="w-16 h-16 rounded-2xl border-2 shadow-[0_0_20px_rgba(34,211,238,0.4)]" alt="Logo" />
+                <img src="/images/logo.png" style={{ borderColor: '#06b6d4', boxShadow: '0 0 20px rgba(34,211,238,0.4)' }} className="w-16 h-16 rounded-2xl border-2" alt="Logo" />
              </div>
 
              <div style={{ display: 'block', width: '100%', fontSize: 0 }} className="relative z-10">
                {posterGames.slice(0, 6).map((game) => {
                  const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                  return (
-                   <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: 'rgba(6, 182, 212, 0.3)' }} className="backdrop-blur border rounded-xl p-4 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
+                   <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: 'rgba(6, 182, 212, 0.3)', boxShadow: '0 0 20px rgba(34,211,238,0.1)' }} className="backdrop-blur border rounded-xl p-4">
                      <div className="flex gap-4">
-                       <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#164e63' }} className="w-24 h-32 object-cover rounded shadow-md border flex-shrink-0" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                       <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#164e63', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)' }} className="w-24 h-32 object-cover rounded border flex-shrink-0" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                        <div className="flex flex-col justify-center min-w-0">
                          <h3 style={{ color: '#f1f5f9' }} className="text-lg font-bold leading-tight mb-2 line-clamp-2">{game.title}</h3>
-                         <p style={{ color: '#22d3ee' }} className="font-black text-2xl drop-shadow-[0_0_8px_rgba(34,211,238,0.4)] mt-auto">
+                         <p style={{ color: '#22d3ee', filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.4))' }} className="font-black text-2xl mt-auto">
                            <span style={{ color: '#0e7490' }} className="text-sm mr-1">RM</span>{price}{unitText}
                          </p>
                        </div>
@@ -163,12 +163,12 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
             <div className="flex justify-between items-center z-10 mb-12">
               <div className="flex items-center gap-4">
-                <img src="/images/logo.png" style={{ borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: '#ffffff' }} className="w-16 h-16 rounded-3xl border-2 shadow-xl" alt="Logo" />
-                <h1 style={{ color: '#ffffff' }} className="text-5xl font-black tracking-tight drop-shadow-md">
+                <img src="/images/logo.png" style={{ borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: '#ffffff', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }} className="w-16 h-16 rounded-3xl border-2" alt="Logo" />
+                <h1 style={{ color: '#ffffff', filter: 'drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06))' }} className="text-5xl font-black tracking-tight">
                   Trending<br/>Now
                 </h1>
               </div>
-              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff' }} className="backdrop-blur-md border px-6 py-3 rounded-2xl font-black text-xl tracking-widest shadow-xl">
+              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }} className="backdrop-blur-md border px-6 py-3 rounded-2xl font-black text-xl tracking-widest">
                 {labelText}
               </div>
             </div>
@@ -177,14 +177,14 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
               {posterGames.slice(0, 4).map(game => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                  <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)' }} className="backdrop-blur-md border rounded-3xl p-6 shadow-2xl">
-                    <img src={getSafeImageUrl(game.imageUrl)} className="w-full h-56 object-cover rounded-2xl mb-6 shadow-inner" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
-                    <h3 style={{ color: '#ffffff' }} className="text-2xl font-bold truncate mb-2 drop-shadow-md">{game.title}</h3>
+                  <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }} className="backdrop-blur-md border rounded-3xl p-6">
+                    <img src={getSafeImageUrl(game.imageUrl)} style={{ boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)' }} className="w-full h-56 object-cover rounded-2xl mb-6" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                    <h3 style={{ color: '#ffffff', filter: 'drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06))' }} className="text-2xl font-bold truncate mb-2">{game.title}</h3>
                     <div className="flex justify-between items-center pt-4 border-t border-white/20 mt-4">
                       <span style={{ color: 'rgba(255, 255, 255, 0.8)' }} className="font-bold uppercase tracking-widest text-sm">
                         RM
                       </span>
-                      <span style={{ color: '#ffffff' }} className="text-4xl font-black drop-shadow-lg">{price}{unitText}</span>
+                      <span style={{ color: '#ffffff', filter: 'drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1))' }} className="text-4xl font-black">{price}{unitText}</span>
                     </div>
                   </div>
                 );
