@@ -73,6 +73,15 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const labelText = isRental ? 'RENT' : 'BUY';
   const unitText = isRental ? '/mo' : '';
 
+  // Helper to force external URLs through a CORS-enabled proxy
+  const getSafeImageUrl = (url: string | undefined) => {
+    if (!url) return '';
+    if (url.startsWith('http')) {
+      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`;
+    }
+    return url;
+  };
+
   return (
     <div className="fixed top-0 left-0 w-[800px] z-[-50] opacity-0 pointer-events-none">
       <div ref={containerRef} className="w-[800px] flex flex-col">
@@ -98,7 +107,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
                   <div key={game.id} style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', width: 'calc(33.333% - 16px)' }} className="border rounded-xl p-4 flex flex-col shadow-sm">
-                    <img src={game.imageUrl} style={{ borderColor: '#f3f4f6' }} className="w-full h-48 object-cover rounded-lg mb-4 border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                    <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#f3f4f6' }} className="w-full h-48 object-cover rounded-lg mb-4 border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                     <h3 style={{ color: '#111827' }} className="text-lg font-bold truncate mb-2">{game.title}</h3>
                     <p style={{ color: '#111827' }} className="font-black text-2xl mt-auto">RM {price}<span style={{ color: '#6b7280' }} className="text-sm font-normal">{unitText}</span></p>
                   </div>
@@ -129,7 +138,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                  const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                  return (
                    <div key={game.id} style={{ backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: 'rgba(6, 182, 212, 0.3)', width: 'calc(50% - 12px)' }} className="backdrop-blur border rounded-xl p-4 flex gap-4 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
-                     <img src={game.imageUrl} style={{ borderColor: '#164e63' }} className="w-24 h-32 object-cover rounded shadow-md border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                     <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#164e63' }} className="w-24 h-32 object-cover rounded shadow-md border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                      <div className="flex flex-col justify-center flex-1 min-w-0">
                        <h3 style={{ color: '#f1f5f9' }} className="text-lg font-bold leading-tight mb-2 truncate">{game.title}</h3>
                        <p style={{ color: '#22d3ee' }} className="font-black text-2xl drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
@@ -167,7 +176,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
                   <div key={game.id} style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', width: 'calc(50% - 16px)' }} className="backdrop-blur-md border rounded-3xl p-6 flex flex-col shadow-2xl">
-                    <img src={game.imageUrl} className="w-full h-56 object-cover rounded-2xl mb-6 shadow-inner" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                    <img src={getSafeImageUrl(game.imageUrl)} className="w-full h-56 object-cover rounded-2xl mb-6 shadow-inner" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
                     <h3 style={{ color: '#ffffff' }} className="text-2xl font-bold truncate mb-2 drop-shadow-md">{game.title}</h3>
                     <div className="flex justify-between items-center mt-auto pt-4">
                       <span style={{ color: 'rgba(255, 255, 255, 0.8)' }} className="font-bold uppercase tracking-widest text-sm">
