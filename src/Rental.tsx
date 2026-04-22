@@ -429,14 +429,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     disabled={isGenerating}
                     className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
                   >
-                    {isGenerating ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-                        Generating...
-                      </>
-                    ) : (
-                      'View All Games'
-                    )}
+                    View All Games
                   </button>
                 )}
               </div>
@@ -717,6 +710,23 @@ export default function Rental({ onBack }: { onBack: () => void }) {
         onGenerated={handlePosterGenerated}
         onError={handlePosterError}
       />
+
+      {isGenerating && (
+        <div className="fixed inset-0 z-[200] bg-[#FFFFFF] flex flex-col items-center justify-center">
+          <div className="w-12 h-12 bg-[#E60012] rounded-full flex items-center justify-center shadow-lg animate-bounce mb-4">
+            <img 
+              src="/images/logo.png" 
+              alt="Loading" 
+              className="h-6 w-auto brightness-0 invert" 
+              onError={(e) => e.currentTarget.style.display = 'none'} 
+              referrerPolicy="no-referrer" 
+            />
+          </div>
+          <p className="text-xl font-black tracking-widest text-gray-800 animate-pulse uppercase">
+            Generating Poster...
+          </p>
+        </div>
+      )}
     </div>
   );
 }
