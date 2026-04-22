@@ -108,6 +108,7 @@ export default function Shop({ onBackToPortal }: { onBackToPortal: () => void })
 // VIEW 1: HOME
 // ==========================================
 function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGameClick: (g: Game) => void, onBackToPortal: () => void }) {
+  const [shopMode, setShopMode] = useState<'games' | 'accessories'>('games');
   const [filter, setFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
@@ -225,8 +226,33 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         <div className="w-24"></div> {/* Spacer for centering */}
       </header>
 
-      {/* 2. Video Hero (Bilingual Text) */}
-      <section className="relative h-[35vh] w-full overflow-hidden bg-black">
+      {/* Animated Segmented Control */}
+      <div className="relative flex w-full max-w-md mx-auto bg-gray-100/80 backdrop-blur-md rounded-full p-1.5 shadow-inner mt-6 mb-8">
+        <div 
+          className={`absolute top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-out ${shopMode === 'accessories' ? 'translate-x-full' : 'translate-x-0'}`} 
+        />
+        <button 
+          onClick={() => setShopMode('games')}
+          className={`relative z-10 flex-1 flex items-center justify-center py-3 text-base md:text-lg font-bold transition-colors duration-300 ${shopMode === 'games' ? 'text-gray-900' : 'text-gray-500'}`}
+        >
+          🛒 买游戏
+        </button>
+        <button 
+          onClick={() => setShopMode('accessories')}
+          className={`relative z-10 flex-1 flex items-center justify-center py-3 text-base md:text-lg font-bold transition-colors duration-300 ${shopMode === 'accessories' ? 'text-gray-900' : 'text-gray-500'}`}
+        >
+          🎧 买配件
+        </button>
+      </div>
+
+      {shopMode === 'accessories' ? (
+        <div className="text-center py-32 text-gray-400 font-bold tracking-widest uppercase">
+          Accessories coming soon...
+        </div>
+      ) : (
+        <>
+          {/* 2. Video Hero (Bilingual Text) */}
+          <section className="relative h-[35vh] w-full overflow-hidden bg-black">
         <video 
           autoPlay 
           loop 
@@ -454,6 +480,8 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
           </button>
         )}
       </footer>
+      </>
+      )}
 
       {/* Poster Modal */}
       <AnimatePresence>
