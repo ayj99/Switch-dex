@@ -588,27 +588,27 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
                           <span className="w-28 font-bold text-red-900">📅 30 Days / 天</span>
                           <span className="text-red-800 font-bold">退回 90%:</span>
-                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.1).toFixed(2)}</span>
+                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.1/30).toFixed(2)} / 天</span>
                         </div>
                         <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
                           <span className="w-28 font-bold text-red-900">📅 60 Days / 天</span>
                           <span className="text-red-800 font-bold">退回 85%:</span>
-                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.15).toFixed(2)}</span>
+                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.15/30).toFixed(2)} / 天</span>
                         </div>
                         <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
                           <span className="w-28 font-bold text-red-900">📅 90 Days / 天</span>
                           <span className="text-red-800 font-bold">退回 75%:</span>
-                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.25).toFixed(2)}</span>
+                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.25/30).toFixed(2)} / 天</span>
                         </div>
                         <div className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border border-transparent">
                           <span className="w-28 text-gray-500 font-medium">📅 120 Days / 天</span>
                           <span className="text-gray-400 font-medium">退回 70%:</span>
-                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.30).toFixed(2)}</span>
+                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.30/30).toFixed(2)} / 天</span>
                         </div>
                         <div className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border border-transparent">
                           <span className="w-28 text-gray-500 font-medium">📅 150 Days / 天</span>
                           <span className="text-gray-400 font-medium">退回 65%:</span>
-                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.35).toFixed(2)}</span>
+                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.35/30).toFixed(2)} / 天</span>
                         </div>
                       </div>
 
