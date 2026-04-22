@@ -13,39 +13,39 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // 1. Only run AFTER the template ID state has successfully updated the React DOM
     if (triggerId === null || !containerRef.current) return;
 
     let isCancelled = false;
 
     const capture = async () => {
       try {
-        // 强制等待 DOM 重绘
+        // 2. Force the DOM to strictly repaint before capture
         await new Promise(resolve => requestAnimationFrame(resolve));
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 50)); // Small buffer for CSS variables/fonts to apply
 
         if (isCancelled || !containerRef.current) return;
 
-        // 确保图片加载完成
+        // 3. Guarantee all images within the new template are fully resolved before capture
         const images = Array.from(containerRef.current.querySelectorAll('img'));
         await Promise.all(
           images.map((img) => {
             if (img.complete) return Promise.resolve();
             return new Promise((resolve) => {
               img.onload = resolve;
-              img.onerror = resolve;
+              img.onerror = resolve; // Resolve anyway to avoid infinite hang on broken/cors images
             });
           })
         );
 
         if (isCancelled || !containerRef.current) return;
 
-        // 修复 html2canvas 配置，增加准确的窗口系数量
+        // 4. Capture with backgroundColor: null to preserve Tailwind backgrounds (Gradients/Neon)
         const canvas = await html2canvas(containerRef.current, {
           scale: 2,
           useCORS: true,
-          backgroundColor: null,
+          backgroundColor: null, // CRITICAL FIX for Dark Mode / Gradients overriding
           logging: false,
-          width: 800, // 强制锁定画布宽度
         });
 
         const imgData = canvas.toDataURL('image/png');
@@ -64,6 +64,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     };
   }, [triggerId, games, type, onGenerated, onError]);
 
+  // Completely wipe from DOM if not active
   if (triggerId === null) return null;
 
   const posterGames = games.slice(0, 12);
@@ -72,24 +73,21 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const unitText = isRental ? '/mo' : '';
 
   return (
-    // 【修复定位】使用 absolute 和 -left-[9999px] 确保在真实 DOM 文档流外，且不会引起视口错误
-    <div className="absolute top-0 -left-[9999px] w-[800px] pointer-events-none z-[-50]">
+    <div className="fixed top-0 left-[200vw] w-[800px] z-[-1] pointer-events-none">
       <div ref={containerRef} className="w-[800px] flex flex-col">
         
-        {/* Template 0: 极简官方风 (纯白底，灰边框，截图 100% 成功) */}
+        {/* Template 0: Classic (Clean, White, Gray Borders) */}
         {triggerId === 0 && (
           <div className="bg-white p-10 flex flex-col w-full text-gray-900 border-[16px] border-gray-100 min-h-[800px]">
             <div className="flex items-center justify-between border-b-2 border-gray-200 pb-6 mb-8">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full border-2 border-gray-900 flex items-center justify-center font-black text-2xl bg-white">
-                  SD
-                </div>
+                <img src="/images/logo.png" className="w-16 h-16 rounded-full border border-gray-300" referrerPolicy="no-referrer" alt="Logo" />
                 <div>
                   <h1 className="text-4xl font-black tracking-tight text-gray-900 leading-none">Switch Dex</h1>
-                  <p className="text-gray-500 font-bold tracking-widest uppercase text-sm mt-1">Official Collection</p>
+                  <p className="text-gray-500 font-medium tracking-widest uppercase text-sm mt-1">Official Collection</p>
                 </div>
               </div>
-              <div className="bg-gray-900 text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm">
+              <div className="bg-gray-900 text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm shadow-md">
                 {labelText} SELECTION
               </div>
             </div>
@@ -98,8 +96,8 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
               {posterGames.slice(0, 9).map((game) => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                  <div key={game.id} className="bg-white border-2 border-gray-200 rounded-xl p-4 flex flex-col">
-                    <img src={game.imageUrl} className="w-full aspect-[3/4] object-cover rounded-lg mb-4" referrerPolicy="no-referrer" />
+                  <div key={game.id} className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col shadow-sm">
+                    <img src={game.imageUrl} className="w-full aspect-[3/4] object-cover rounded-lg mb-4 border border-gray-100" referrerPolicy="no-referrer" />
                     <h3 className="text-lg font-bold truncate text-gray-900 mb-2">{game.title}</h3>
                     <p className="text-gray-900 font-black text-2xl mt-auto">RM {price}<span className="text-sm font-normal text-gray-500">{unitText}</span></p>
                   </div>
@@ -109,30 +107,32 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
           </div>
         )}
 
-        {/* Template 1: 深邃极客风 (彻底摒弃 blur 滤镜，改用实打实的深色背景和青色实线边框) */}
+        {/* Template 1: Neon/Cyber (Dark Mode, Glowing Text, Neon Borders) */}
         {triggerId === 1 && posterGames.length > 0 && (
-          <div className="bg-slate-900 p-10 flex flex-col w-full text-white border-8 border-cyan-500 min-h-[800px]">
-             <div className="flex justify-between items-end mb-10 border-b-2 border-cyan-900 pb-6">
+          <div className="bg-slate-900 p-10 flex flex-col w-full text-white border-4 border-cyan-800 relative overflow-hidden min-h-[800px]">
+             {/* Neon Orbs Component */}
+             <div className="absolute -top-20 -left-20 w-96 h-96 bg-cyan-600/30 blur-[100px] rounded-full pointer-events-none"></div>
+             <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-purple-600/30 blur-[100px] rounded-full pointer-events-none"></div>
+             
+             <div className="flex justify-between items-end mb-10 relative z-10 border-b border-cyan-900 pb-6">
                 <div>
-                  <h1 className="text-6xl font-black tracking-tighter uppercase text-cyan-400">
+                  <h1 className="text-6xl font-black tracking-tighter uppercase text-cyan-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
                     CYBER<br/>{labelText}
                   </h1>
                 </div>
-                <div className="w-16 h-16 rounded-xl border-4 border-cyan-500 flex items-center justify-center font-black text-2xl bg-slate-800 text-cyan-400">
-                  SD
-                </div>
+                <img src="/images/logo.png" className="w-16 h-16 rounded-2xl border-2 border-cyan-500 shadow-[0_0_20px_rgba(34,211,238,0.4)]" referrerPolicy="no-referrer" alt="Logo" />
              </div>
 
-             <div className="grid grid-cols-2 gap-6">
+             <div className="grid grid-cols-2 gap-6 relative z-10">
                {posterGames.slice(0, 6).map((game) => {
                  const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                  return (
-                   <div key={game.id} className="bg-slate-800 border-2 border-cyan-700 rounded-xl p-4 flex gap-4">
-                     <img src={game.imageUrl} className="w-24 h-32 object-cover rounded border-2 border-slate-700" referrerPolicy="no-referrer" />
+                   <div key={game.id} className="bg-slate-800/80 backdrop-blur border border-cyan-500/30 rounded-xl p-4 flex gap-4 shadow-[0_0_20px_rgba(34,211,238,0.1)]">
+                     <img src={game.imageUrl} className="w-24 h-32 object-cover rounded shadow-md border border-cyan-900" referrerPolicy="no-referrer" />
                      <div className="flex flex-col justify-center flex-1 min-w-0">
-                       <h3 className="text-lg font-bold leading-tight mb-2 text-slate-100">{game.title}</h3>
-                       <p className="text-cyan-400 font-black text-3xl">
-                         <span className="text-sm text-cyan-600 mr-1">RM</span>{price}{unitText}
+                       <h3 className="text-lg font-bold leading-tight mb-2 truncate text-slate-100">{game.title}</h3>
+                       <p className="text-cyan-400 font-black text-2xl drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
+                         <span className="text-sm text-cyan-700 mr-1">RM</span>{price}{unitText}
                        </p>
                      </div>
                    </div>
@@ -142,43 +142,44 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
           </div>
         )}
 
-        {/* Template 2: 活力紫电风 (摒弃毛玻璃，使用高饱和纯紫色背景和白色卡片对比) */}
+        {/* Template 2: Vibrant/Gradient (Glassmorphism, Vivid Colors) */}
         {triggerId === 2 && (
-          <div className="bg-indigo-600 p-12 flex flex-col w-full min-h-[800px]">
-            <div className="flex justify-between items-center mb-12">
+          <div className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-12 flex flex-col w-full min-h-[800px] relative overflow-hidden">
+            {/* Dynamic abstract shapes for gradient */}
+            <div className="absolute top-10 right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-10 left-10 w-80 h-80 bg-orange-400/20 rounded-full blur-3xl"></div>
+
+            <div className="flex justify-between items-center z-10 mb-12">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-3xl border-4 border-white flex items-center justify-center font-black text-2xl bg-indigo-500 text-white">
-                  SD
-                </div>
-                <h1 className="text-5xl font-black tracking-tight text-white leading-tight">
+                <img src="/images/logo.png" className="w-16 h-16 rounded-3xl border-2 border-white/50 shadow-xl bg-white" referrerPolicy="no-referrer" alt="Logo" />
+                <h1 className="text-5xl font-black tracking-tight text-white drop-shadow-md">
                   Trending<br/>Now
                 </h1>
               </div>
-              <div className="bg-white text-indigo-700 px-6 py-3 rounded-2xl font-black text-xl tracking-widest shadow-lg">
+              <div className="bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-3 rounded-2xl font-black text-xl tracking-widest shadow-xl">
                 {labelText}
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 flex-grow">
+            <div className="grid grid-cols-2 gap-8 z-10 flex-grow">
               {posterGames.slice(0, 4).map(game => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                   // 卡片改用实心白色，抛弃容易截图失败的 backdrop-blur 半透明效果
-                  <div key={game.id} className="bg-white rounded-3xl p-6 flex flex-col shadow-xl border-4 border-indigo-400">
-                    <img src={game.imageUrl} className="w-full aspect-[4/3] object-cover rounded-2xl mb-6 border-2 border-gray-100" referrerPolicy="no-referrer" />
-                    <h3 className="text-2xl font-bold mb-2 text-gray-900">{game.title}</h3>
+                  <div key={game.id} className="bg-white/20 backdrop-blur-md border border-white/30 rounded-3xl p-6 flex flex-col shadow-2xl">
+                    <img src={game.imageUrl} className="w-full aspect-[4/3] object-cover rounded-2xl mb-6 shadow-inner" referrerPolicy="no-referrer" />
+                    <h3 className="text-2xl font-bold truncate mb-2 text-white drop-shadow-md">{game.title}</h3>
                     <div className="flex justify-between items-center mt-auto pt-4">
-                      <span className="text-gray-500 font-bold uppercase tracking-widest text-sm">
+                      <span className="text-white/80 font-bold uppercase tracking-widest text-sm">
                         RM
                       </span>
-                      <span className="text-4xl font-black text-indigo-600">{price}{unitText}</span>
+                      <span className="text-4xl font-black text-white drop-shadow-lg">{price}{unitText}</span>
                     </div>
                   </div>
                 );
               })}
             </div>
             
-            <div className="w-full mt-10 text-center text-white font-bold tracking-[0.2em] uppercase">
+            <div className="w-full mt-10 text-center text-white/70 text-sm tracking-[0.3em] font-medium uppercase z-10">
               Generated by Switch Dex Studio
             </div>
           </div>
