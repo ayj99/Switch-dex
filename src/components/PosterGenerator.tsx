@@ -83,115 +83,38 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   };
 
   return (
-    <div className="absolute top-0 -left-[9999px] z-[-50]" style={{ width: '800px' }}>
-      <div ref={containerRef} className="w-[800px] flex flex-col">
-        
-        {/* Template 0: Classic (Clean, White, Gray Borders) */}
-        {triggerId === 0 && (
-          <div style={{ backgroundColor: '#ffffff', borderColor: '#f3f4f6', color: '#111827' }} className="p-10 flex flex-col w-full border-[16px] min-h-[800px]">
-            <div style={{ borderColor: '#e5e7eb' }} className="flex items-center justify-between border-b-2 pb-6 mb-8">
-              <div className="flex items-center gap-4">
-                <img src="/images/logo.png" style={{ borderColor: '#d1d5db' }} className="w-16 h-16 rounded-full border" alt="Logo" />
-                <div>
-                  <h1 style={{ color: '#111827' }} className="text-4xl font-black tracking-tight leading-none">Switch Dex</h1>
-                  <p style={{ color: '#6b7280' }} className="font-medium tracking-widest uppercase text-sm mt-1">Official Collection</p>
-                </div>
+    <div className="fixed top-0 left-0 w-[800px] z-[-50] opacity-0 pointer-events-none">
+      <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#ffffff' }}>
+        {triggerId === 1 && (
+          <div className="p-10 flex flex-col w-full h-full">
+            {/* Header */}
+            <div className="flex justify-between items-end mb-10 pb-6" style={{ borderBottomWidth: 2, borderBottomStyle: 'solid', borderColor: '#f3f4f6' }}>
+              <div className="text-4xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#0f172a' }}>
+                S<span style={{ color: '#dc2626' }}>x</span>ítčh D<span style={{ color: '#0f172a' }}>é</span><span style={{ color: '#dc2626' }}>x</span>
               </div>
-              <div style={{ backgroundColor: '#111827', color: '#ffffff', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)' }} className="px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm">
+              <div className="px-6 py-2 rounded-full font-bold uppercase tracking-widest text-sm" style={{ backgroundColor: '#dc2626', color: '#ffffff' }}>
                 {labelText} SELECTION
               </div>
             </div>
-            
-            <div style={{ display: 'block', width: '100%', fontSize: 0 }}>
+
+            {/* Grid layout replaced by rigid Flexbox calculation */}
+            <div className="flex flex-wrap gap-6 justify-between flex-grow z-10 relative">
               {posterGames.slice(0, 9).map((game) => {
                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
                 return (
-                  <div key={game.id} style={{ display: 'inline-block', width: '210px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: '#ffffff', borderColor: '#e5e7eb', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }} className="border rounded-xl p-4">
-                    <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#f3f4f6' }} className="w-full h-48 object-cover rounded-lg mb-4 border" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
-                    <h3 style={{ color: '#111827' }} className="text-lg font-bold truncate mb-2">{game.title}</h3>
-                    <p style={{ color: '#111827' }} className="font-black text-2xl mt-4">RM {price}<span style={{ color: '#6b7280' }} className="text-sm font-normal">{unitText}</span></p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* Template 1: Neon/Cyber (Dark Mode, Glowing Text, Neon Borders) */}
-        {triggerId === 1 && posterGames.length > 0 && (
-          <div style={{ backgroundColor: '#0f172a', borderColor: '#155e75', color: '#ffffff' }} className="p-10 flex flex-col w-full border-4 relative overflow-hidden min-h-[800px]">
-             {/* Neon Orbs Component */}
-             <div style={{ backgroundColor: 'rgba(8, 145, 178, 0.3)' }} className="absolute -top-20 -left-20 w-96 h-96 blur-[100px] rounded-full pointer-events-none"></div>
-             <div style={{ backgroundColor: 'rgba(147, 51, 234, 0.3)' }} className="absolute -bottom-20 -right-20 w-96 h-96 blur-[100px] rounded-full pointer-events-none"></div>
-             
-             <div style={{ borderColor: '#164e63' }} className="flex justify-between items-end mb-10 relative z-10 border-b pb-6">
-                <div>
-                  <h1 style={{ color: '#22d3ee', filter: 'drop-shadow(0 0 15px rgba(34,211,238,0.5))' }} className="text-6xl font-black tracking-tighter uppercase">
-                    CYBER<br/>{labelText}
-                  </h1>
-                </div>
-                <img src="/images/logo.png" style={{ borderColor: '#06b6d4', boxShadow: '0 0 20px rgba(34,211,238,0.4)' }} className="w-16 h-16 rounded-2xl border-2" alt="Logo" />
-             </div>
-
-             <div style={{ display: 'block', width: '100%', fontSize: 0 }} className="relative z-10">
-               {posterGames.slice(0, 6).map((game) => {
-                 const price = isRental ? Math.floor(game.price * 0.07) : game.price;
-                 return (
-                   <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(30, 41, 59, 0.8)', borderColor: 'rgba(6, 182, 212, 0.3)', boxShadow: '0 0 20px rgba(34,211,238,0.1)' }} className="backdrop-blur border rounded-xl p-4">
-                     <div className="flex gap-4">
-                       <img src={getSafeImageUrl(game.imageUrl)} style={{ borderColor: '#164e63', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)' }} className="w-24 h-32 object-cover rounded border flex-shrink-0" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
-                       <div className="flex flex-col justify-center min-w-0">
-                         <h3 style={{ color: '#f1f5f9' }} className="text-lg font-bold leading-tight mb-2 line-clamp-2">{game.title}</h3>
-                         <p style={{ color: '#22d3ee', filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.4))' }} className="font-black text-2xl mt-auto">
-                           <span style={{ color: '#0e7490' }} className="text-sm mr-1">RM</span>{price}{unitText}
-                         </p>
-                       </div>
-                     </div>
-                   </div>
-                 );
-               })}
-             </div>
-          </div>
-        )}
-
-        {/* Template 2: Vibrant/Gradient (Glassmorphism, Vivid Colors) */}
-        {triggerId === 2 && (
-          <div style={{ background: 'linear-gradient(to bottom right, #6366f1, #a855f7, #ec4899)' }} className="p-12 flex flex-col w-full min-h-[800px] relative overflow-hidden">
-            {/* Dynamic abstract shapes for gradient */}
-            <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }} className="absolute top-10 right-10 w-64 h-64 rounded-full blur-3xl"></div>
-            <div style={{ backgroundColor: 'rgba(251, 146, 60, 0.2)' }} className="absolute bottom-10 left-10 w-80 h-80 rounded-full blur-3xl"></div>
-
-            <div className="flex justify-between items-center z-10 mb-12">
-              <div className="flex items-center gap-4">
-                <img src="/images/logo.png" style={{ borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: '#ffffff', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }} className="w-16 h-16 rounded-3xl border-2" alt="Logo" />
-                <h1 style={{ color: '#ffffff', filter: 'drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06))' }} className="text-5xl font-black tracking-tight">
-                  Trending<br/>Now
-                </h1>
-              </div>
-              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', color: '#ffffff', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)' }} className="backdrop-blur-md border px-6 py-3 rounded-2xl font-black text-xl tracking-widest">
-                {labelText}
-              </div>
-            </div>
-
-            <div style={{ display: 'block', width: '100%', fontSize: 0 }} className="relative z-10">
-              {posterGames.slice(0, 4).map(game => {
-                const price = isRental ? Math.floor(game.price * 0.07) : game.price;
-                return (
-                  <div key={game.id} style={{ display: 'inline-block', width: '315px', margin: '0 15px 30px 15px', verticalAlign: 'top', fontSize: '16px', backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: 'rgba(255, 255, 255, 0.3)', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }} className="backdrop-blur-md border rounded-3xl p-6">
-                    <img src={getSafeImageUrl(game.imageUrl)} style={{ boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)' }} className="w-full h-56 object-cover rounded-2xl mb-6" crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
-                    <h3 style={{ color: '#ffffff', filter: 'drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06))' }} className="text-2xl font-bold truncate mb-2">{game.title}</h3>
-                    <div className="flex justify-between items-center pt-4 border-t border-white/20 mt-4">
-                      <span style={{ color: 'rgba(255, 255, 255, 0.8)' }} className="font-bold uppercase tracking-widest text-sm">
-                        RM
-                      </span>
-                      <span style={{ color: '#ffffff', filter: 'drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1))' }} className="text-4xl font-black">{price}{unitText}</span>
+                  <div key={game.id} className="w-[calc(33.333%-16px)] rounded-xl p-4 flex flex-col" style={{ backgroundColor: '#ffffff', borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }}>
+                    <img src={getSafeImageUrl(game.imageUrl)} className="w-full aspect-[3/4] object-cover rounded-lg mb-4" style={{ borderColor: '#f3f4f6', borderWidth: 1, borderStyle: 'solid' }} crossOrigin={game.imageUrl?.startsWith('http') ? "anonymous" : undefined} referrerPolicy="no-referrer" />
+                    <h3 className="text-lg font-bold truncate mb-2" style={{ color: '#111827' }}>{game.title}</h3>
+                    <div className="mt-auto">
+                      <p className="font-black text-2xl" style={{ color: '#dc2626' }}>RM {price}<span className="text-sm font-normal ml-1" style={{ color: '#6b7280' }}>{unitText}</span></p>
                     </div>
                   </div>
                 );
               })}
             </div>
-            
-            <div style={{ color: 'rgba(255, 255, 255, 0.7)' }} className="w-full mt-10 text-center text-sm tracking-[0.3em] font-medium uppercase z-10">
+
+            {/* Footer */}
+            <div className="w-full mt-10 text-center text-xs tracking-[0.3em] font-bold uppercase" style={{ color: '#d1d5db' }}>
               Generated by Switch Dex Studio
             </div>
           </div>
