@@ -58,13 +58,12 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   }, [games, searchQuery, selectedCategory]);
 
   // Poster states
-  const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
   const [posterImage, setPosterImage] = useState<string | null>(null);
 
   const handleFeaturedExport = () => {
-    setShowThemeSelector(true);
+    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
