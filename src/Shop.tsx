@@ -113,11 +113,11 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   // Poster State
+  const [showThemeSelector, setShowThemeSelector] = useState(false);
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
   const [posterImage, setPosterImage] = useState<string | null>(null);
   const [posterSourceGames, setPosterSourceGames] = useState<Game[]>([]);
-  const [recentDesign, setRecentDesign] = useState(-1);
 
   // 1. Dynamic Categories
   const allCategories = useMemo(() => {
@@ -160,30 +160,8 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
   // 4. Poster Modal Logic
   const handleCategoryExport = () => {
-    let templateIndex;
-    do {
-      templateIndex = Math.floor(Math.random() * 3);
-    } while (templateIndex === recentDesign);
-    
-    setRecentDesign(templateIndex);
     setPosterSourceGames(filteredGames);
-    setGeneratingPosterDesign(templateIndex);
-  };
-
-  const handleFeaturedExport = () => {
-    // Prioritize sale items, then fill with top voted to get 12
-    const saleGames = [...games].filter(g => g.originalPrice && g.originalPrice > g.price).sort((a, b) => (b.votes || 0) - (a.votes || 0));
-    const otherGames = [...games].filter(g => !(g.originalPrice && g.originalPrice > g.price)).sort((a, b) => (b.votes || 0) - (a.votes || 0));
-    const sourceGames = [...saleGames, ...otherGames].slice(0, 12);
-    
-    let templateIndex;
-    do {
-      templateIndex = Math.floor(Math.random() * 3);
-    } while (templateIndex === recentDesign);
-    
-    setRecentDesign(templateIndex);
-    setPosterSourceGames(sourceGames);
-    setGeneratingPosterDesign(templateIndex);
+    setShowThemeSelector(true);
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
@@ -466,21 +444,44 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         ) : (
           <button 
             onClick={handleCategoryExport}
-            disabled={generatingPosterDesign !== null}
-            className="text-xs font-mono text-gray-400 hover:text-gray-600 disabled:opacity-50 transition-colors px-4 py-2 flex items-center gap-2"
+            className="text-xs font-mono text-gray-400 hover:text-gray-600 px-4 py-2 flex items-center gap-2 transition-colors"
           >
-            {generatingPosterDesign !== null ? (
-              <>
-                <div className="w-3 h-3 border border-gray-400 border-t-gray-600 rounded-full animate-spin" />
-                Generating...
-              </>
-            ) : (
-              '[ System Dump: XHS Grid ]'
-            )}
+            [ System Dump: Generate Poster ]
           </button>
         )}
       </footer>
       </>
+      )}
+
+      {/* Theme Selector Modal */}
+      {showThemeSelector && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl transform transition-all flex flex-col">
+            <h3 className="text-xl font-black text-gray-900 text-center mb-6">选择海报风格</h3>
+            <div className="flex flex-col gap-4">
+              <button 
+                onClick={() => { setGeneratingPosterDesign(0); setShowThemeSelector(false); }} 
+                className="bg-gray-50 text-gray-900 py-4 rounded-xl font-bold border-2 border-gray-200 hover:border-gray-900 transition-colors flex items-center justify-center gap-2">
+                ⚪️ 极简官方风
+              </button>
+              <button 
+                onClick={() => { setGeneratingPosterDesign(1); setShowThemeSelector(false); }} 
+                className="bg-slate-900 text-cyan-400 py-4 rounded-xl font-bold border-2 border-cyan-500 hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                🌌 赛博极客风
+              </button>
+              <button 
+                onClick={() => { setGeneratingPosterDesign(2); setShowThemeSelector(false); }} 
+                className="bg-indigo-500 text-white py-4 rounded-xl font-bold border-2 border-indigo-400 hover:bg-indigo-600 transition-colors flex items-center justify-center gap-2">
+                🔮 活力渐变风
+              </button>
+            </div>
+            <button 
+              onClick={() => setShowThemeSelector(false)} 
+              className="mt-6 w-full text-center text-gray-500 font-bold hover:text-gray-900">
+              取消 (Cancel)
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Poster Modal */}
