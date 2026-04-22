@@ -162,7 +162,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
   const handleCategoryExport = () => {
     setIsGenerating(true);
     setPosterSourceGames(filteredGames);
-    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
+    setGeneratingPosterDesign(1);
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
