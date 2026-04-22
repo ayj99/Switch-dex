@@ -104,7 +104,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   };
 
   const handleGameRent = (game: Game) => {
-    const minPrice = Math.floor(game.price * 0.07);
+    const minPrice = Math.floor(game.price * 0.06);
     const maxPrice = Math.floor(game.price * 0.10);
     const text = `Hi, I want to RENT ${game.title}. I saw the rental range is RM ${minPrice} - ${maxPrice}/month. Please let me know the details.`;
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
@@ -502,7 +502,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         <div className="mt-auto pt-2 flex flex-col gap-1.5">
                           <div className="flex items-baseline gap-1.5">
                             <p className="text-green-600 font-black text-sm leading-none">
-                              RM {Math.floor(game.price * 0.07)} - {Math.floor(game.price * 0.10)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
+                              RM {Math.floor(game.price * 0.06)} - {Math.floor(game.price * 0.10)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
                             </p>
                           </div>
                           
@@ -520,8 +520,9 @@ export default function Rental({ onBack }: { onBack: () => void }) {
           </div>
         )}
         {rentalMode === 'gameDetail' && selectedGame && (() => {
-            const min = Math.floor(selectedGame.price * 0.07);
+            const min = Math.floor(selectedGame.price * 0.06);
             const max = Math.floor(selectedGame.price * 0.10);
+            const discountedPrice = selectedGame.price;
             
             return (
               <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
@@ -579,35 +580,35 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     {/* 2. Refined T&C Box (Scannable Visual Hierarchy) */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
                       <div className="mb-4">
-                        <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租借价格与退款</h3>
-                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. Get refunded based on how long you play! 支付全款作押金，退回时根据时长按比例退款！</p>
+                        <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租换价目表</h3>
+                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. The costs below are deducted based on playtime! (支付全款作押金，换租/退回时按以下折旧扣除)</p>
                       </div>
                       
                       <div className="space-y-2 mb-5">
-                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-32">📅 30 Days / 天</span>
-                          <span className="text-gray-800">回购退 90%</span>
-                          <span className="text-gray-500">(现金退 85%)</span>
+                        <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
+                          <span className="w-28 font-bold text-red-900">📅 30 Days / 天</span>
+                          <span className="text-red-800 font-bold">折旧费/实际花费:</span>
+                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.1).toFixed(2)}</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-32">📅 60 Days / 天</span>
-                          <span className="text-gray-800">回购退 85%</span>
-                          <span className="text-gray-500">(现金退 80%)</span>
+                        <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
+                          <span className="w-28 font-bold text-red-900">📅 60 Days / 天</span>
+                          <span className="text-red-800 font-bold">折旧费/实际花费:</span>
+                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.15).toFixed(2)}</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-32">📅 90 Days / 天</span>
-                          <span className="text-gray-800">回购退 75%</span>
-                          <span className="text-gray-500">(现金退 70%)</span>
+                        <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
+                          <span className="w-28 font-bold text-red-900">📅 90 Days / 天</span>
+                          <span className="text-red-800 font-bold">折旧费/实际花费:</span>
+                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.20).toFixed(2)}</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-32">📅 120 Days / 天</span>
-                          <span className="text-gray-800">回购退 70%</span>
-                          <span className="text-gray-500">(现金退 65%)</span>
+                        <div className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border border-transparent">
+                          <span className="w-28 text-gray-500 font-medium">📅 120 Days / 天</span>
+                          <span className="text-gray-400 font-medium">折旧费/实际花费:</span>
+                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.25).toFixed(2)}</span>
                         </div>
-                        <div className="flex items-center justify-between text-sm text-gray-700 bg-gray-50 px-3 py-2 rounded-lg">
-                          <span className="w-32">📅 150 Days / 天</span>
-                          <span className="text-gray-800">回购退 65%</span>
-                          <span className="text-gray-500">(现金退 60%)</span>
+                        <div className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border border-transparent">
+                          <span className="w-28 text-gray-500 font-medium">📅 150 Days / 天</span>
+                          <span className="text-gray-400 font-medium">折旧费/实际花费:</span>
+                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.30).toFixed(2)}</span>
                         </div>
                       </div>
 
