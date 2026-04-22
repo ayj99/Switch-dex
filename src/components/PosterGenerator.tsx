@@ -86,25 +86,36 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
       <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#E60012' }}>
         
         {/* 1. 恢复白色区间 Header */}
-        <div className="w-full bg-white p-10 flex flex-col items-center justify-center border-b-8" style={{ borderColor: '#111827' }}>
+        <div className="w-full bg-white p-10 flex flex-col justify-center border-b-8 relative" style={{ borderColor: '#111827' }}>
           
-          <div className="flex items-center gap-4 mb-2">
-            {/* 2. 恢复你的图片 Logo */}
-            <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" crossOrigin="anonymous" />
+          <div className="flex items-center justify-between w-full">
             
-            {/* 红黑文字 Logo */}
-            <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
-              S<span style={{ color: '#E60012' }}>x</span>ítčh D<span style={{ color: '#111827' }}>é</span><span style={{ color: '#E60012' }}>x</span>
+            {/* Header 左侧：Logo 组合 */}
+            <div className="flex items-center gap-4">
+              {/* 2. 恢复你的图片 Logo */}
+              <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" crossOrigin="anonymous" />
+              
+              {/* 红黑文字 Logo */}
+              <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
+                S<span style={{ color: '#E60012' }}>x</span>ítčh D<span style={{ color: '#111827' }}>é</span><span style={{ color: '#E60012' }}>x</span>
+              </div>
+            </div>
+
+            {/* Header 右侧：Slogan 与 Category */}
+            <div className="flex flex-col items-end">
+              {/* 3. 恢复中文 Slogan */}
+              <p className="text-2xl font-black tracking-widest" style={{ color: '#374151' }}>
+                诗和远方，和 Switch 奇
+              </p>
+              {/* 醒目的 Category */}
+              <p className="text-xl font-black mt-1" style={{ color: '#eab308' }}>
+                亲子游戏 系列精选
+              </p>
             </div>
           </div>
 
-          {/* 3. 恢复中文 Slogan */}
-          <p className="text-2xl font-black tracking-widest mt-2" style={{ color: '#374151' }}>
-            诗和远方，和 Switch 奇
-          </p>
-
-          {/* 右上角的角标 */}
-          <div className="absolute top-10 right-10 px-6 py-2 rounded-full font-black uppercase tracking-widest text-sm" style={{ backgroundColor: '#E60012', color: '#ffffff' }}>
+          {/* 右下角的 RENT/BUY 角标，改为绝对定位使其不干扰基础流 */}
+          <div className="absolute bottom-[-18px] right-10 px-6 py-2 border-4 rounded-full font-black uppercase tracking-widest text-sm z-10" style={{ backgroundColor: '#111827', color: '#ffffff', borderColor: '#E60012' }}>
             {labelText} SELECTION
           </div>
         </div>
