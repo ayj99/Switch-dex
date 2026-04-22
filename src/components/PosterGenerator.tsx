@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 
 export interface PosterGeneratorProps {
   games: any[];
@@ -41,15 +41,13 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
         if (isCancelled || !containerRef.current) return;
 
-        // 4. Capture with backgroundColor: null to preserve Tailwind backgrounds (Gradients/Neon)
-        const canvas = await html2canvas(containerRef.current, {
-          scale: 2,
-          useCORS: true,
-          backgroundColor: null, // CRITICAL FIX for Dark Mode / Gradients overriding
-          logging: false,
+        // 4. Capture using html-to-image which natively relies on browser rendering (avoids oklch parser bugs)
+        const imgData = await toPng(containerRef.current, {
+          pixelRatio: 2,
+          backgroundColor: '#ffffff',
+          style: { opacity: '1', transform: 'none' }, // Ensure no hidden styles affect render
         });
 
-        const imgData = canvas.toDataURL('image/png');
         if (!isCancelled) onGenerated(imgData);
 
       } catch (err) {
