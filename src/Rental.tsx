@@ -65,7 +65,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
   const handleFeaturedExport = () => {
     setIsGenerating(true);
-    setGeneratingPosterDesign(Math.floor(Math.random() * 3));
+    setGeneratingPosterDesign(1);
   };
 
   const handlePosterGenerated = (imgUrl: string) => {
