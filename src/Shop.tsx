@@ -448,9 +448,17 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         ) : (
           <button 
             onClick={handleCategoryExport}
-            className="text-xs font-mono text-gray-400 hover:text-gray-600 px-4 py-2 flex items-center gap-2 transition-colors"
+            disabled={isGenerating}
+            className="text-xs font-mono text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 flex items-center gap-2 transition-colors rounded disabled:opacity-50"
           >
-            [ System Dump: Generate Poster ]
+            {isGenerating ? (
+              <>
+                <div className="w-3 h-3 border-2 border-gray-400 border-t-gray-600 rounded-full animate-spin" />
+                Generating...
+              </>
+            ) : (
+              '[ System Dump: Generate Poster ]'
+            )}
           </button>
         )}
       </footer>
@@ -492,14 +500,6 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         onGenerated={handlePosterGenerated}
         onError={handlePosterError}
       />
-
-      {/* Global Generating Overlay */}
-      {isGenerating && (
-        <div className="fixed inset-0 bg-black/80 z-[200] flex flex-col items-center justify-center text-white backdrop-blur-sm">
-          <div className="animate-spin text-6xl mb-4">⚙️</div>
-          <h2 className="text-2xl font-bold">正在生成海报...</h2>
-        </div>
-      )}
     </>
   );
 }
