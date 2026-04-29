@@ -267,7 +267,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       </div>
                       <ul className="space-y-3 mb-6 text-gray-800 font-bold text-sm">
                         <li className="flex items-start gap-2"><span className="text-lg leading-tight">✅</span> <span>Switch OLED 顶配主机全套 (随时切换主机/TV模式)</span></li>
-                        <li className="flex items-start gap-2"><span className="text-lg leading-tight">✅</span> <span>4 个 原装 Joy-Con 手柄 (直接解锁4人派对！)</span></li>
+                        <li className="flex items-start gap-2"><span className="text-lg leading-tight">✅</span> <span>4 个 原装 Joy-Con 手柄 + Pro手柄 (直接解锁4-5人派对！)</span></li>
                         <li className="flex items-start gap-2"><span className="text-lg leading-tight">✅</span> <span>30+ 款 热门大作任你畅玩</span></li>
                         <li className="flex items-start gap-2"><span className="text-lg leading-tight">✅</span> <span>运动配件大礼包</span></li>
                         <li className="flex items-start gap-2"><span className="text-lg leading-tight">✅</span> <span>重磅外设： 健身环大冒险 / 1:1 太鼓达人鼓 (二选一)</span></li>
