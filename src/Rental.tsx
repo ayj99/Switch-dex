@@ -206,78 +206,89 @@ export default function Rental({ onBack }: { onBack: () => void }) {
               {/* Grid */}
               {consoleType === 'switch1' ? (
                 <div className="w-full">
-                  <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 hide-scrollbar md:grid md:grid-cols-3 md:overflow-visible max-w-6xl mx-auto items-stretch px-4 md:px-0">
-                  {/* Left Card */}
-                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
-                    <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch1_basic.png" alt="Switch 1 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                    </div>
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="text-xl font-black text-gray-900 mb-1">1 Day / 单日体验</h3>
-                      <p className="text-sm text-gray-500 font-medium mb-4">(Inducement / 诱饵)</p>
-                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Console + Basic Joy-Cons.</p>
-                      <div className="mb-6">
-                        <p className="text-3xl font-black text-gray-900">RM 58</p>
+                  <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-6xl mx-auto px-4 md:px-0 items-stretch">
+                  {/* Left Card - Option 1 */}
+                  <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">📅 尝试一下</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-black text-gray-900">RM 50</span>
+                        <span className="text-gray-500 font-medium">/ 1天</span>
                       </div>
-                      <button 
-                        onClick={() => handleConsoleRent('Switch 1 - 1 Day', 58)}
-                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
-                      >
-                        📱 Book 1 Day - RM 58
-                      </button>
                     </div>
+                    
+                    <ul className="space-y-3 mb-8 flex-1 text-gray-700 font-medium text-sm">
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch Console</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 2x Joy-Cons (1 Pair)</li>
+                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Extra Controllers</li>
+                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Premium Accessories</li>
+                    </ul>
+
+                    <button 
+                      onClick={() => handleConsoleRent('Switch 1 - 1 Day', 50)}
+                      className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
+                    >
+                      📱 Book 1 Day - RM 50
+                    </button>
                   </div>
 
-                  {/* Center Card */}
-                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
-                      🔥 闭眼入！只加 RM 30 多玩 4 天！
-                    </div>
-                    <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
-                      <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
-                        <img src="/images/switch1_pro.png" alt="Switch 1 Pro" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" referrerPolicy="no-referrer" />
+                  {/* Center Card - Option 2 */}
+                  <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">📅 周末之王</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-black text-gray-900">RM 88</span>
+                        <span className="text-gray-500 font-medium">/ 3天</span>
                       </div>
-                      <div className="flex-1 flex flex-col">
-                        <h3 className="text-2xl font-black text-gray-900 mb-1">7 Days / 深度玩家</h3>
-                        <p className="text-sm text-gray-500 font-medium mb-4">(Deep Player)</p>
-                        <p className="text-sm text-gray-600 mb-4 flex-1">Includes: Full Bundle + Random Premium Accessories.</p>
-                        <div className="mb-6">
-                          <p className="text-5xl font-black text-gray-900">RM 128</p>
-                          <p className="text-sm font-bold text-green-600 mt-2 block">(4人同玩，人均低至 RM 4.5 /天！)</p>
-                          <p className="text-sm font-bold text-gray-800 mt-2 bg-gray-100 inline-block px-2 py-1 rounded-md">🎓 学生专属价: <span className="text-[#e60012]">RM 115</span> (Show ID)</p>
-                        </div>
-                        <button 
-                          onClick={() => handleConsoleRent('Switch 1 - 7 Days Pro', 128)}
-                          className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                          📱 Book 7 Days - RM 128
-                        </button>
-                      </div>
+                      <p className="text-xs font-bold text-green-600 mt-2 bg-green-50 inline-block px-2 py-1 rounded-md">仅 RM 29.3 /天</p>
                     </div>
+
+                    <ul className="space-y-3 mb-8 flex-1 text-gray-700 font-medium text-sm">
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch Console</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 4x Joy-Cons (2 Pairs)</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 2x Game Cases</li>
+                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Premium Accessories</li>
+                    </ul>
+
+                    <button 
+                      onClick={() => handleConsoleRent('Switch 1 - 3 Days', 88)}
+                      className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
+                    >
+                      📱 Book 3 Days - RM 88
+                    </button>
                   </div>
 
-                  {/* Right Card */}
-                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
-                    <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch1_party.png" alt="Switch 1 Party" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
+                  {/* Right Card - Option 3 (Highlighted!) */}
+                  <div className="flex-1 border-2 border-red-500 bg-red-50/30 rounded-2xl p-6 relative shadow-md transform md:-translate-y-2 flex flex-col">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-xs font-black tracking-widest shadow-sm whitespace-nowrap">
+                      最推荐 / 性价比之王
                     </div>
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="text-xl font-black text-gray-900 mb-1">3 Days / 周末派对</h3>
-                      <p className="text-sm text-gray-500 font-medium mb-4">(Party Favorite)</p>
-                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Full Bundle + Extra Controllers + Game Cases.</p>
-                      <div className="mb-6">
-                        <p className="text-3xl font-black text-gray-900">RM 98</p>
-                        <p className="text-sm font-bold text-green-600 mt-2 block">(4人同玩，人均仅 RM 8 /天)</p>
-                        <p className="text-sm font-bold text-gray-800 mt-2 bg-gray-100 inline-block px-2 py-1 rounded-md">🎓 学生专属价: <span className="text-[#e60012]">RM 88</span> (Show ID)</p>
+                    
+                    <div className="mb-6 mt-2">
+                      <h3 className="text-2xl font-black text-gray-900 mb-2">📅 深度畅玩</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-5xl font-black text-red-600">RM 128</span>
+                        <span className="text-gray-600 font-medium tracking-tight">/ 7天</span>
                       </div>
-                      <button 
-                        onClick={() => handleConsoleRent('Switch 1 - 3 Days Party', 98)}
-                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
-                      >
-                        📱 Book 3 Days - RM 98
-                      </button>
+                      <div className="flex flex-col items-start gap-1 mt-2">
+                        <p className="text-xs font-bold text-green-600 bg-green-50 inline-block px-2 py-1 rounded-md">4人同玩，人均低至 RM 4.5 /天！</p>
+                        <p className="text-xs font-bold text-gray-800 bg-white border border-gray-200 inline-block px-2 py-1 rounded-md shadow-sm">🎓 学生价: <span className="text-red-600">RM 115</span> (Show ID)</p>
+                      </div>
                     </div>
+
+                    <ul className="space-y-3 mb-8 flex-1 text-gray-800 font-bold text-sm">
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch Console</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 4x Joy-Cons (2 Pairs)</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Select any Party Games</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Premium Accessories Bundle</li>
+                    </ul>
+
+                    <button 
+                      onClick={() => handleConsoleRent('Switch 1 - 7 Days', 128)}
+                      className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      📱 Book 7 Days - RM 128
+                    </button>
                   </div>
                 </div>
 
@@ -346,54 +357,63 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                 </div>
               </div>
               ) : (
-                <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-6 hide-scrollbar md:grid md:grid-cols-2 md:overflow-visible max-w-4xl mx-auto items-stretch px-4 md:px-0">
+                <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-5xl mx-auto px-4 md:px-0 items-stretch">
                   {/* Left Card */}
-                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
-                    <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                      <img src="/images/switch2_basic.png" alt="Switch 2 Basic" className="w-full h-full object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500" referrerPolicy="no-referrer" />
-                    </div>
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="text-xl font-black text-gray-900 mb-1">1 Day</h3>
-                      <p className="text-sm text-gray-500 font-medium mb-4">(Next Gen Experience)</p>
-                      <p className="text-sm text-gray-600 mb-6 flex-1">Includes: Console + Basic Joy-Cons.</p>
-                      <div className="mb-6">
-                        <p className="text-3xl font-black text-gray-900">RM {timing === 'weekday' ? 60 : 80}</p>
+                  <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">1 Day 尝鲜体验</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-black text-gray-900">RM {timing === 'weekday' ? 60 : 80}</span>
+                        <span className="text-gray-500 font-medium">/ 1天</span>
                       </div>
-                      <button 
-                        onClick={() => handleConsoleRent('Switch 2 - 1 Day', timing === 'weekday' ? 60 : 80)}
-                        className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors"
-                      >
-                        Book Now
-                      </button>
+                      <p className="text-xs font-bold text-gray-500 mt-2">Next Gen Experience</p>
                     </div>
+
+                    <ul className="space-y-3 mb-8 flex-1 text-gray-700 font-medium text-sm">
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch OLED Console</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 2x Joy-Cons (1 Pair)</li>
+                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Extra Controllers</li>
+                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Premium Accessories</li>
+                    </ul>
+
+                    <button 
+                      onClick={() => handleConsoleRent('Switch 2 - 1 Day', timing === 'weekday' ? 60 : 80)}
+                      className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
+                    >
+                      📱 Book 1 Day - RM {timing === 'weekday' ? 60 : 80}
+                    </button>
                   </div>
 
-                  {/* Center Card */}
-                  <div className="min-w-[85vw] sm:min-w-[300px] md:min-w-0 flex-shrink-0 snap-center bg-white rounded-3xl p-1 border border-gray-200 shadow-2xl relative transform md:-translate-y-4 flex flex-col h-full z-10 ring-4 ring-gray-900/5">
-                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-black tracking-wider whitespace-nowrap shadow-lg z-20">
-                      🔥 PRE-ORDER / 稀缺体验·限量 1 台
+                  {/* Right Card (Highlighted!) */}
+                  <div className="flex-1 border-2 border-red-500 bg-red-50/30 rounded-2xl p-6 relative shadow-md transform md:-translate-y-2 flex flex-col">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-xs font-black tracking-widest shadow-sm whitespace-nowrap">
+                      🔥 PRE-ORDER / 限量体验
                     </div>
-                    <div className="bg-white rounded-[22px] p-6 flex flex-col h-full">
-                      <div className="aspect-square relative mb-6 rounded-2xl flex items-center justify-center p-4">
-                        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-50/50 rounded-2xl"></div>
-                        <img src="/images/switch2_party.png" alt="Switch 2 Party" className="w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500 relative z-10" referrerPolicy="no-referrer" />
+                    
+                    <div className="mb-6 mt-2">
+                      <h3 className="text-2xl font-black text-gray-900 mb-2">3-4 Days 深度体验</h3>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-5xl font-black text-red-600">RM {timing === 'weekday' ? 150 : 199}</span>
+                        <span className="text-gray-600 font-medium tracking-tight">/ 3-4天</span>
                       </div>
-                      <div className="flex-1 flex flex-col">
-                        <h3 className="text-2xl font-black text-gray-900 mb-1">3-4 Days</h3>
-                        <p className="text-sm text-gray-500 font-medium mb-4">(Limited Stock)</p>
-                        <p className="text-sm text-gray-600 mb-4 flex-1">Includes: Full Bundle + Premium Accessories.</p>
-                        <div className="mb-6">
-                          <p className="text-4xl font-black text-gray-900">RM {timing === 'weekday' ? 150 : 199}</p>
-                          <p className="text-sm font-bold text-green-600 mt-2 bg-green-50 inline-block px-2 py-1 rounded-md">🎓 Student Promo: RM {timing === 'weekday' ? 130 : 170} (Show ID)</p>
-                        </div>
-                        <button 
-                          onClick={() => handleConsoleRent('Switch 2 - 3-4 Days Pre-order', timing === 'weekday' ? 150 : 199)}
-                          className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                          Book Now
-                        </button>
+                      <div className="flex flex-col items-start gap-1 mt-2">
+                        <p className="text-xs font-bold text-gray-800 bg-white border border-gray-200 inline-block px-2 py-1 rounded-md shadow-sm">🎓 凭学生证优惠: <span className="text-red-600">RM {timing === 'weekday' ? 130 : 170}</span></p>
                       </div>
                     </div>
+
+                    <ul className="space-y-3 mb-8 flex-1 text-gray-800 font-bold text-sm">
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch OLED Console</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 4x Joy-Cons (2 Pairs)</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Select any Games</li>
+                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Premium Accessories</li>
+                    </ul>
+
+                    <button 
+                      onClick={() => handleConsoleRent('Switch 2 - 3-4 Days Pre-order', timing === 'weekday' ? 150 : 199)}
+                      className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      📱 Pre-Order - RM {timing === 'weekday' ? 150 : 199}
+                    </button>
                   </div>
                 </div>
               )}
@@ -584,31 +604,63 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. The costs below are deducted based on playtime! (支付全款作押金，换租/退回时按以下折旧扣除)</p>
                       </div>
                       
-                      <div className="space-y-2 mb-5">
-                        <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
-                          <span className="w-28 font-bold text-red-900">📅 30 Days / 天</span>
-                          <span className="text-red-800 font-bold">退回 90%:</span>
-                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.1/30).toFixed(2)} / 天</span>
+                      <div className="flex flex-col space-y-3 mt-4 mb-5">
+                        {/* 30 Days */}
+                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">🔥</span>
+                            <div className="text-base font-bold text-gray-800">30天内</div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-red-600 font-black text-lg">折旧 RM {(discountedPrice * 0.1).toFixed(2)}</span>
+                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 90% (RM {(discountedPrice * 0.9).toFixed(2)})</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
-                          <span className="w-28 font-bold text-red-900">📅 60 Days / 天</span>
-                          <span className="text-red-800 font-bold">退回 85%:</span>
-                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.15/30).toFixed(2)} / 天</span>
+
+                        {/* 60 Days */}
+                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">🔥</span>
+                            <div className="text-base font-bold text-gray-800">60天内</div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-red-600 font-black text-lg">折旧 RM {(discountedPrice * 0.15).toFixed(2)}</span>
+                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 85% (RM {(discountedPrice * 0.85).toFixed(2)})</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-sm bg-red-50/50 px-3 py-2 rounded-lg border border-red-100">
-                          <span className="w-28 font-bold text-red-900">📅 90 Days / 天</span>
-                          <span className="text-red-800 font-bold">退回 75%:</span>
-                          <span className="text-red-600 font-black text-base">RM {(discountedPrice * 0.25/30).toFixed(2)} / 天</span>
+
+                        {/* 90 Days */}
+                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xl">🔥</span>
+                            <div className="text-base font-bold text-gray-800">90天内</div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-red-600 font-black text-lg">折旧 RM {(discountedPrice * 0.25).toFixed(2)}</span>
+                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 75% (RM {(discountedPrice * 0.75).toFixed(2)})</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border border-transparent">
-                          <span className="w-28 text-gray-500 font-medium">📅 120 Days / 天</span>
-                          <span className="text-gray-400 font-medium">退回 70%:</span>
-                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.30/30).toFixed(2)} / 天</span>
+
+                        {/* 120 Days */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 transition-all">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base font-bold text-gray-600 pl-7">120天内</span>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-gray-500 font-medium text-base">折旧 RM {(discountedPrice * 0.30).toFixed(2)}</span>
+                            <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 70% (RM {(discountedPrice * 0.7).toFixed(2)})</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between text-sm bg-gray-50 px-3 py-2 rounded-lg border border-transparent">
-                          <span className="w-28 text-gray-500 font-medium">📅 150 Days / 天</span>
-                          <span className="text-gray-400 font-medium">退回 65%:</span>
-                          <span className="text-gray-400 font-medium">RM {(discountedPrice * 0.35/30).toFixed(2)} / 天</span>
+
+                        {/* 150 Days */}
+                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 transition-all">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base font-bold text-gray-600 pl-7">150天内</span>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-gray-500 font-medium text-base">折旧 RM {(discountedPrice * 0.35).toFixed(2)}</span>
+                            <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 65% (RM {(discountedPrice * 0.65).toFixed(2)})</span>
+                          </div>
                         </div>
                       </div>
 
