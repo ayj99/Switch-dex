@@ -1,709 +1,161 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { ArrowLeft, CheckCircle2, Circle, Users, Globe, ThumbsUp, MessageCircle, Check, Minus, Search } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useEffect, useRef } from 'react';
+import { toPng } from 'html-to-image';
 
-import { Game, PHONE_NUMBER } from './types';
-import PosterGenerator from './components/PosterGenerator';
+export interface PosterGeneratorProps {
+  games: any[];
+  type: 'rental' | 'shop';
+  triggerId: number | null;
+  onGenerated: (imgUrl: string) => void;
+  onError?: (err: any) => void;
+}
 
-// Mock Data for Rental Options
-const MODELS = [
-  { id: 'v2', name: 'Switch V2', desc: '高性价比', price: 50 },
-  { id: 'oled', name: 'Switch OLED', desc: '派对神机', price: 80 }
-];
-
-const PACKAGES = [
-  { id: 'couple', name: '情侣双人套餐', desc: '2手柄', price: 20 },
-  { id: 'party', name: '四人派对套餐', desc: '4手柄', price: 40 }
-];
-
-const ADDONS = [
-  { id: 'pro', name: 'Pro 手柄', price: 15 },
-  { id: 'ringfit', name: '健身环 (Ring Fit)', price: 25 },
-  { id: 'bag', name: '旅行收纳包', price: 10 }
-];
-
-export default function Rental({ onBack }: { onBack: () => void }) {
-  const [rentalMode, setRentalMode] = useState<'games' | 'console'>('games');
-  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
-  
-  const [consoleType, setConsoleType] = useState<'switch1' | 'switch2'>('switch1');
-  
-  const [games, setGames] = useState<Game[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Filter States
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-
-  const allCategories = useMemo(() => {
-    const cats = new Set<string>();
-    games.forEach(g => {
-      if (g.category) {
-        g.category.split(',').forEach(c => {
-          const cat = c.trim();
-          if (cat !== '租借') cats.add(cat);
-        });
-      }
-    });
-    return ['All', 'Party', 'Action', 'RPG', ...Array.from(cats)].filter((v, i, a) => a.indexOf(v) === i).slice(0, 8);
-  }, [games]);
-
-  const filteredGames = useMemo(() => {
-    return games.filter(game => {
-      const matchesSearch = game.title.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'All' || (game.category && game.category.includes(selectedCategory));
-      return matchesSearch && matchesCategory;
-    });
-  }, [games, searchQuery, selectedCategory]);
-
-  // Poster states
-  const [showPosterModal, setShowPosterModal] = useState(false);
-  const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
-  const [posterImage, setPosterImage] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  const handleFeaturedExport = () => {
-    setIsGenerating(true);
-    setGeneratingPosterDesign(1);
-  };
-
-  const handlePosterGenerated = (imgUrl: string) => {
-    setIsGenerating(false);
-    setPosterImage(imgUrl);
-    setGeneratingPosterDesign(null);
-    setShowPosterModal(true);
-  };
-
-  const handlePosterError = (err: any) => {
-    setIsGenerating(false);
-    console.error('Failed to generate poster:', err);
-    setGeneratingPosterDesign(null);
-    alert('海报生成失败，请重试！(Error: ' + (err?.message || 'Unknown Error') + ')');
-  };
+export default function PosterGenerator({ games, type, triggerId, onGenerated, onError }: PosterGeneratorProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch('/games.json')
-      .then(res => res.json())
-      .then((data: Game[]) => {
-        const rentalGames = data
-          .filter(g => g.category && g.category.includes('租借'))
-          .sort((a, b) => (b.votes || 0) - (a.votes || 0));
-        setGames(rentalGames);
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setIsLoading(false);
-      });
-  }, []);
+    // 终极防御 1：如果没有任何游戏数据，直接拦截，防止 Shop 报错！
+    if (triggerId === null || !containerRef.current || !games || games.length === 0) return;
 
-  const handleConsoleRent = (planName: string, price: number) => {
-    const text = `Hi, I want to RENT ${planName}. Total Rental: RM ${price}`;
-    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
-  };
+    let isCancelled = false;
 
-  const handleGameRent = (game: Game) => {
-    const minPrice = Math.floor(game.price * 0.06);
-    const maxPrice = Math.floor(game.price * 0.10);
-    const text = `Hi, I want to RENT ${game.title}. I saw the rental range is RM ${minPrice} - ${maxPrice}/month. Please let me know the details.`;
-    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+    const capture = async () => {
+      try {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        await new Promise(resolve => setTimeout(resolve, 100)); // 稍微多等一下字体加载
+
+        if (isCancelled || !containerRef.current) return;
+
+        const images = Array.from(containerRef.current.querySelectorAll('img'));
+        await Promise.all(
+          images.map((img) => {
+            if (img.complete || !img.src) return Promise.resolve();
+            return new Promise((resolve) => {
+              const timeout = setTimeout(resolve, 3000); 
+              img.onload = () => { clearTimeout(timeout); resolve(null); };
+              // 终极防御 2：图片坏了直接替换为 Logo，绝不让截图引擎自爆
+              img.onerror = () => { 
+                clearTimeout(timeout); 
+                img.src = '/images/logo.png'; 
+                resolve(null); 
+              }; 
+            });
+          })
+        );
+
+        if (isCancelled || !containerRef.current) return;
+
+        const imgData = await toPng(containerRef.current, {
+          pixelRatio: 2,
+          backgroundColor: '#E60012', // 整体底色保持任天堂红
+          style: { transform: 'none' },
+        });
+
+        if (!isCancelled) onGenerated(imgData);
+
+      } catch (err) {
+        console.error('Failed to generate poster:', err);
+        if (!isCancelled && onError) onError(err);
+      }
+    };
+
+    capture();
+
+    return () => { isCancelled = true; };
+  }, [triggerId, games, type, onGenerated, onError]);
+
+  if (triggerId === null || !games || games.length === 0) return null;
+
+  const posterGames = games.slice(0, 9); // 固定取 9 个，排版最美
+  const isRental = type === 'rental';
+  const labelText = isRental ? 'RENT' : 'BUY';
+  const unitText = isRental ? '/mo' : '';
+
+  // 代理图片，防止跨域
+  const getSafeImageUrl = (url: string | undefined) => {
+    if (!url) return '/images/logo.png';
+    if (url.startsWith('http')) {
+      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`;
+    }
+    return url;
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 px-4 py-3 flex items-center justify-between">
-        <button 
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors w-32"
-        >
-          <ArrowLeft size={20} />
-          <span className="hidden sm:inline">Back 返回大厅</span>
-        </button>
+    <div className="fixed top-0 z-[-9999] pointer-events-none" style={{ left: '-10000px' }}>
+      
+      {/* 海报主容器 - 红色大背景 */}
+      <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#E60012' }}>
         
-        <div className="flex items-center justify-center gap-2 flex-1">
-          <img src="/images/logo.png" className="w-9 h-9 rounded-full object-cover border-2 border-[#e60012]" alt="Logo" referrerPolicy="no-referrer" />
-          <div className="flex flex-col">
-            <span className="text-2xl font-black italic tracking-tighter text-gray-900 leading-none">
-              S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
-            </span>
+        {/* 1. 恢复白色区间 Header */}
+        <div className="w-full bg-white p-10 flex flex-col justify-center border-b-8 relative" style={{ borderColor: '#111827' }}>
+          
+          <div className="flex items-center justify-between w-full">
+            
+            {/* Header 左侧：Logo 组合 */}
+            <div className="flex items-center gap-4">
+              {/* 2. 恢复你的图片 Logo */}
+              <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" crossOrigin="anonymous" />
+              
+              {/* 红黑文字 Logo */}
+              <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
+                S<span style={{ color: '#E60012' }}>x</span>ítčh D<span style={{ color: '#111827' }}>é</span><span style={{ color: '#E60012' }}>x</span>
+              </div>
+            </div>
+
+            {/* Header 右侧：Slogan 与 Category */}
+            <div className="flex flex-col items-end">
+              {/* 3. 恢复中文 Slogan */}
+              <p className="text-2xl font-black tracking-widest" style={{ color: '#374151' }}>
+                诗和远方，和 Switch 奇
+              </p>
+              {/* 醒目的 Category */}
+              <p className="text-xl font-black mt-1" style={{ color: '#eab308' }}>
+                亲子游戏 系列精选
+              </p>
+            </div>
+          </div>
+
+          {/* 右下角的 RENT/BUY 角标，改为绝对定位使其不干扰基础流 */}
+          <div className="absolute bottom-[-18px] right-10 px-6 py-2 border-4 rounded-full font-black uppercase tracking-widest text-sm z-10" style={{ backgroundColor: '#111827', color: '#ffffff', borderColor: '#E60012' }}>
+            {labelText} SELECTION
           </div>
         </div>
-        
-        <div className="w-32" /> {/* Spacer for centering */}
-      </header>
 
-      {/* Animated Segmented Control */}
-      <div className="relative flex w-full max-w-md mx-auto bg-gray-100/80 backdrop-blur-md rounded-full p-1.5 shadow-inner mt-6 mb-8">
-        <div 
-          className={`absolute top-1.5 bottom-1.5 w-[calc(50%-0.375rem)] bg-white rounded-full shadow-md transition-transform duration-300 ease-out ${rentalMode === 'console' ? 'translate-x-full' : 'translate-x-0'}`} 
-        />
-        <button 
-          onClick={() => setRentalMode('games')}
-          className={`relative z-10 flex-1 flex items-center justify-center py-3 text-base md:text-lg font-bold transition-colors duration-300 ${rentalMode === 'games' ? 'text-gray-900' : 'text-gray-500'}`}
-        >
-          🎮 租游戏
-        </button>
-        <button 
-          onClick={() => setRentalMode('console')}
-          className={`relative z-10 flex-1 flex items-center justify-center py-3 text-base md:text-lg font-bold transition-colors duration-300 ${rentalMode === 'console' ? 'text-gray-900' : 'text-gray-500'}`}
-        >
-          🚀 租主机
-        </button>
-      </div>
-
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={rentalMode}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -30 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="flex-1"
-        >
-          {rentalMode === 'console' && (
-            <div className="max-w-7xl mx-auto px-4 py-8 pb-32">
-              <div className="text-center mb-10">
-                <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-6 tracking-tight">Choose Your Console</h1>
-                
-                {/* Toggles */}
-                <div className="flex flex-col items-center gap-4">
-                  {/* Console Type Toggle */}
-                  <div className="bg-gray-100 p-1 rounded-full inline-flex">
-                    <button 
-                      onClick={() => setConsoleType('switch1')}
-                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${consoleType === 'switch1' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                    >
-                      Nintendo Switch
-                    </button>
-                    <button 
-                      onClick={() => setConsoleType('switch2')}
-                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${consoleType === 'switch2' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                    >
-                      Switch 2 (Next Gen)
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Grid */}
-              {consoleType === 'switch1' ? (
-                <div className="w-full">
-                  <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-6xl mx-auto px-4 md:px-0 items-stretch">
-                  {/* Left Card - Option 1 */}
-                  <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <img src="/images/switch1_basic.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
-                    <div className="mb-6 flex-1">
-                      <h3 className="text-xl font-black text-gray-900 mb-2">
-                        📅 尝试一下
-                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
-                      </h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black text-gray-900">RM 50</span>
-                        <span className="text-gray-500 font-medium">/ 1天</span>
-                      </div>
-                    </div>
-                    
-                    <button 
-                      onClick={() => handleConsoleRent('Switch 1 - 1 Day', 50)}
-                      className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
-                    >
-                      📱 Book 1 Day - RM 50
-                    </button>
-                  </div>
-
-                  {/* Center Card - Option 2 */}
-                  <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <img src="/images/switch1_party.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
-                    <div className="mb-6 flex-1">
-                      <h3 className="text-xl font-black text-gray-900 mb-2">
-                        📅 周末之王
-                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
-                      </h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black text-gray-900">RM 88</span>
-                        <span className="text-gray-500 font-medium">/ 3天</span>
-                      </div>
-                      <div className="mt-3 bg-red-50 border border-red-100 text-red-600 text-sm font-black p-2 rounded-lg text-center flex items-center justify-center gap-1 shadow-inner">
-                        <span className="text-lg">🔥</span> 4人同玩，人均低至 RM 7.33 /天！
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => handleConsoleRent('Switch 1 - 3 Days', 88)}
-                      className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
-                    >
-                      📱 Book 3 Days - RM 88
-                    </button>
-                  </div>
-
-                  {/* Right Card - Option 3 (Highlighted!) */}
-                  <div className="flex-1 border-2 border-red-500 bg-red-50/30 rounded-2xl p-6 relative shadow-md transform md:-translate-y-2 flex flex-col">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-xs font-black tracking-widest shadow-sm whitespace-nowrap">
-                      最推荐 / 性价比之王
-                    </div>
-                    
-                    <img src="/images/switch1_pro.png" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
-                    
-                    <div className="mb-6 flex-1">
-                      <h3 className="text-2xl font-black text-gray-900 mb-2">
-                        📅 深度畅玩
-                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
-                      </h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-5xl font-black text-red-600">RM 128</span>
-                        <span className="text-gray-600 font-medium tracking-tight">/ 7天</span>
-                      </div>
-                      <div className="mt-3 bg-red-50 border border-red-100 text-red-600 text-sm font-black p-2 rounded-lg text-center flex items-center justify-center gap-1 shadow-inner">
-                        <span className="text-lg">🔥</span> 4人同玩，人均低至 RM 4.5 /天！
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => handleConsoleRent('Switch 1 - 7 Days', 128)}
-                      className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                    >
-                      📱 Book 7 Days - RM 128
-                    </button>
-                  </div>
-                </div>
-
-                {/* Monthly/Custom Banner */}
-                <div className="mt-12 max-w-6xl mx-auto">
-                    <div className="bg-gray-50 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between shadow-sm border border-gray-200 hover:border-gray-300 transition-colors">
-                      <div className="flex items-center gap-4 mb-4 md:mb-0">
-                        <div className="text-4xl bg-white p-3 rounded-full shadow-sm">🏆</div>
-                        <div>
-                          <p className="text-lg md:text-xl font-black text-gray-900 tracking-tight">Hardcore Gamer? Rent for 1 Month for only <span className="text-[#e60012]">RM 288</span>!</p>
-                          <p className="text-gray-500 font-medium mt-1">Need custom dates? Chat with us ➔</p>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => handleConsoleRent('Switch 1 - 1 Month Custom', 288)}
-                        className="w-full md:w-auto bg-white border-2 border-gray-900 text-gray-900 px-8 py-3 rounded-xl font-black shadow-sm hover:bg-gray-900 hover:text-white transition-all whitespace-nowrap"
-                      >
-                        📱 Contact Us
-                      </button>
-                    </div>
-                </div>
-
-              </div>
-              ) : (
-                <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-5xl mx-auto px-4 md:px-0 items-stretch">
-                  {/* Left Card */}
-                  <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <img src="/images/switch2_basic.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
-                    <div className="mb-6 flex-1">
-                      <h3 className="text-xl font-black text-gray-900 mb-2">
-                        1 Day 尝鲜体验
-                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
-                      </h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black text-gray-900">RM 60</span>
-                        <span className="text-gray-500 font-medium">/ 1天</span>
-                      </div>
-                      <p className="text-xs font-bold text-gray-500 mt-2">Next Gen Experience</p>
-                    </div>
-
-                    <button 
-                      onClick={() => handleConsoleRent('Switch 2 - 1 Day', 60)}
-                      className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
-                    >
-                      📱 Book 1 Day - RM 60
-                    </button>
-                  </div>
-
-                  {/* Right Card (Highlighted!) */}
-                  <div className="flex-1 border-2 border-red-500 bg-red-50/30 rounded-2xl p-6 relative shadow-md transform md:-translate-y-2 flex flex-col">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white px-4 py-1 rounded-full text-xs font-black tracking-widest shadow-sm whitespace-nowrap">
-                      🔥 PRE-ORDER / 限量体验
-                    </div>
-                    
-                    <img src="/images/switch2_party.png" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
-                    
-                    <div className="mb-6 flex-1">
-                      <h3 className="text-2xl font-black text-gray-900 mb-2">
-                        3-4 Days 深度体验
-                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
-                      </h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-5xl font-black text-red-600">RM 150</span>
-                        <span className="text-gray-600 font-medium tracking-tight">/ 3-4天</span>
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => handleConsoleRent('Switch 2 - 3-4 Days Pre-order', 150)}
-                      className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                    >
-                      📱 Pre-Order - RM 150
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {rentalMode === 'games' && (
-            <div className="max-w-7xl mx-auto px-4 py-8 pb-24">
-              {/* Video Header */}
-              <div className="mb-10 rounded-3xl overflow-hidden shadow-lg border border-gray-100 bg-black aspect-video relative max-w-4xl mx-auto">
-                <video 
-                  className="w-full h-full object-cover opacity-80"
-                  controls
-                  poster="/images/rentalgames.png"
-                >
-                  <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
-                </video>
-                <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white px-3 py-1.5 rounded-full text-sm font-bold flex items-center gap-2">
-                  <span>📺 How to Rent / 租借教程</span>
-                </div>
-              </div>
-
-              {/* Restructured Header */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
-                <div>
-                  <h1 className="text-3xl font-black text-gray-900 mb-2">单租精选游戏</h1>
-                  <p className="text-gray-500 font-medium">海量大作，随租随玩</p>
-                </div>
-                {/* Poster Gen Button Relocated here */}
-                {!isLoading && games.length > 0 && (
-                  <button 
-                    onClick={handleFeaturedExport}
-                    disabled={isGenerating}
-                    className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
-                  >
-                    View All Games
-                  </button>
-                )}
-              </div>
-
-              {/* Added Search & Filter UI Bar */}
-              <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
-                <div className="relative w-full md:w-64 flex-shrink-0">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                  <input 
-                    type="text" 
-                    placeholder="Search games..." 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all shadow-sm"
-                  />
-                </div>
-                <div className="flex gap-2 w-full overflow-x-auto no-scrollbar pb-2 md:pb-0 hide-scrollbar-mobile">
-                  {allCategories.map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap flex-shrink-0 ${
-                        selectedCategory === cat 
-                          ? 'bg-gray-900 text-white' 
-                          : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-                      } shadow-sm`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {isLoading ? (
-                <div className="flex justify-center py-20">
-                  <div className="w-10 h-10 border-4 border-gray-200 border-t-[#e60012] rounded-full animate-spin"></div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                  {filteredGames.length === 0 ? (
-                    <div className="col-span-full py-10 text-center text-gray-400 font-bold">
-                      No games found.
-                    </div>
-                  ) : (
-                    filteredGames.map(game => (
-                      <div 
-                        key={game.id} 
-                        onClick={() => {
-                          setSelectedGame(game);
-                          setRentalMode('gameDetail');
-                        }}
-                      className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col h-full"
-                    >
-                      <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
-                        <img 
-                          src={game.imageUrl} 
-                          alt={game.title} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div className="absolute top-2 left-2 bg-[#25D366] text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md">
-                          🟢 RENT 租
-                        </div>
-                      </div>
-                      
-                      <div className="p-4 flex flex-col flex-1">
-                        <h3 className="font-bold text-gray-900 text-sm md:text-base line-clamp-2 mb-2 group-hover:text-[#e60012] transition-colors">
-                          {game.title}
-                        </h3>
-                        <div className="mt-auto pt-2 flex flex-col gap-1.5">
-                          <div className="flex items-baseline gap-1.5">
-                            <p className="text-green-600 font-black text-sm leading-none">
-                              RM {Math.floor(game.price * 0.06)} - {Math.floor(game.price * 0.10)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
-                            </p>
-                          </div>
-                          
-                          <div className="flex items-center gap-3 text-[10px] text-gray-500 font-medium mt-1">
-                            <span className="flex items-center gap-1"><ThumbsUp size={10} /> {game.votes}</span>
-                            <span className="flex items-center gap-1"><MessageCircle size={10} /> 99+</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-        )}
-        {rentalMode === 'gameDetail' && selectedGame && (() => {
-            const min = Math.floor(selectedGame.price * 0.06);
-            const max = Math.floor(selectedGame.price * 0.10);
-            const discountedPrice = selectedGame.price;
-            
+        {/* 游戏网格区域 */}
+        <div className="p-10 flex flex-wrap gap-6 justify-between flex-grow">
+          {posterGames.map((game) => {
+            const price = isRental ? Math.floor(game.price * 0.06) : game.price;
             return (
-              <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
-                <button 
-                  onClick={() => setRentalMode('games')}
-                  className="mb-6 flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors"
-                >
-                  <ArrowLeft size={20} />
-                  <span>Back to Games</span>
-                </button>
-
-                <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100">
-                  <div className="aspect-video w-full bg-black relative">
-                    <video 
-                      src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" 
-                      controls 
-                      poster={selectedGame.imageUrl} 
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+              <div key={game.id} className="w-[calc(33.333%-16px)] rounded-xl p-4 flex flex-col shadow-xl" style={{ backgroundColor: '#ffffff' }}>
+                
+                {/* 图片与浮动标签容器 */}
+                <div className="relative w-full aspect-[3/4] mb-4">
+                  <img src={getSafeImageUrl(game.imageUrl)} className="w-full h-full object-cover rounded-lg border" style={{ borderColor: '#f3f4f6' }} crossOrigin="anonymous" />
                   
-                  <div className="p-6 md:p-8">
-                    <h1 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight">
-                      {selectedGame.title}
-                    </h1>
-
-                    {/* Metadata */}
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                        <Users size={12} /> {selectedGame.players || '1-4'} 人
-                      </span>
-                      <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                        <Globe size={12} /> {selectedGame.language || '中/英'}
-                      </span>
-                      {selectedGame.category?.split(',').map((cat, idx) => (
-                        <span key={idx} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">
-                          {cat.trim()}
-                        </span>
-                      ))}
+                  {/* 4. 恢复 Floating 悬浮标签 */}
+                  {isRental && (
+                    <div className="absolute top-2 right-2 px-3 py-1.5 rounded-full text-xs font-black shadow-md border" style={{ backgroundColor: 'rgba(0,0,0,0.85)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }}>
+                      30/5% - 10%
                     </div>
-                    
-                    {selectedGame.description && (
-                      <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                        {selectedGame.description}
-                      </p>
-                    )}
-                    
-                    {/* 1. Headline Price Strategy */}
-                    <div className="mb-2">
-                      <p className="text-green-600 font-black text-3xl md:text-4xl flex items-center gap-2">
-                        RM {min} - {max} <span className="text-lg font-bold text-gray-500">/ month</span>
-                      </p>
-                    </div>
-
-                    {/* 2. Refined T&C Box (Scannable Visual Hierarchy) */}
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
-                      <div className="mb-4">
-                        <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租换价目表</h3>
-                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. The costs below are deducted based on playtime! (支付全款作押金，换租/退回时按以下租凭费扣除)</p>
-                      </div>
-                      
-                      <div className="flex flex-col space-y-3 mt-4 mb-5">
-                        {/* 30 Days */}
-                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🔥</span>
-                            <div className="text-base font-bold text-gray-800">30天内</div>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.1).toFixed(2)}</span>
-                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 90% (RM {(discountedPrice * 0.9).toFixed(2)})</span>
-                          </div>
-                        </div>
-
-                        {/* 60 Days */}
-                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🔥</span>
-                            <div className="text-base font-bold text-gray-800">60天内</div>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.15).toFixed(2)}</span>
-                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 85% (RM {(discountedPrice * 0.85).toFixed(2)})</span>
-                          </div>
-                        </div>
-
-                        {/* 90 Days */}
-                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🔥</span>
-                            <div className="text-base font-bold text-gray-800">90天内</div>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.25).toFixed(2)}</span>
-                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 75% (RM {(discountedPrice * 0.75).toFixed(2)})</span>
-                          </div>
-                        </div>
-
-                        {/* 120 Days */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-base font-bold text-gray-600 pl-7">120天内</span>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-gray-500 font-medium text-base">租凭费 RM {(discountedPrice * 0.30).toFixed(2)}</span>
-                            <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 70% (RM {(discountedPrice * 0.7).toFixed(2)})</span>
-                          </div>
-                        </div>
-
-                        {/* 150 Days */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-base font-bold text-gray-600 pl-7">150天内</span>
-                          </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-gray-500 font-medium text-base">租凭费 RM {(discountedPrice * 0.35).toFixed(2)}</span>
-                            <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 65% (RM {(discountedPrice * 0.65).toFixed(2)})</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-6 pt-5 border-t border-gray-100">
-                        <ul className="space-y-2 text-xs text-gray-500 font-normal">
-                          <li className="flex items-start gap-1.5">
-                            <span>1.</span>
-                            <div className="flex flex-col leading-tight">
-                              <span>Deposit: Full game price + RM 5 activation fee upon order.</span>
-                              <span>押金: 付原价作为押金 + RM5 开启服务费，下单时确认。</span>
-                            </div>
-                          </li>
-                          <li className="flex items-start gap-1.5">
-                            <span>2.</span>
-                            <div className="flex flex-col leading-tight">
-                              <span>Shipping: Buyer bears return shipping costs.</span>
-                              <span>物流: 卡带需自行寄回，邮费由买家承担。</span>
-                            </div>
-                          </li>
-                          <li className="flex items-start gap-1.5">
-                            <span>3.</span>
-                            <div className="flex flex-col leading-tight">
-                              <span>Condition: Cartridge must be in good working condition. Penalties apply for damage.</span>
-                              <span>卡况: 卡带必须完好、正常使用；如有损坏将视情况扣除。</span>
-                            </div>
-                          </li>
-                          <li className="flex items-start gap-1.5">
-                            <span>4.</span>
-                            <div className="flex flex-col leading-tight">
-                              <span>Timeframe: Refund rate depends on the postmark date of return.</span>
-                              <span>时效: 退款金额取决于寄出时间。</span>
-                            </div>
-                          </li>
-                          <li className="flex items-start gap-1.5">
-                            <span>5.</span>
-                            <div className="flex flex-col leading-tight">
-                              <span>Refund: Choose Game Swap (Full rate) or Cash Refund. *Note: Cash refund deducts an extra 5%.</span>
-                              <span>退款: 退款方式二选一（换游戏享全额比例，选现金转账额外扣除 5%）。</span>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
 
-                {/* 3. CTA Button */}
-                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 pb-safe z-40 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-                  <div className="max-w-2xl mx-auto">
-                    <button 
-                      onClick={() => {
-                        const text = `Hi, I want to rent ${selectedGame.title} for (RM ${min}-${max}/month range). Please let me know the total upfront payment.`;
-                        window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
-                      }}
-                      className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-green-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
-                    >
-                      📱 Rent for RM {min}-{max} / mo - Chat Now
-                    </button>
-                  </div>
+                <h3 className="text-lg font-bold truncate mb-2" style={{ color: '#111827' }}>{game.title}</h3>
+                
+                <div className="mt-auto">
+                  <p className="font-black text-2xl" style={{ color: '#E60012' }}>
+                    RM {price}<span className="text-sm font-normal ml-1" style={{ color: '#6b7280' }}>{unitText}</span>
+                  </p>
                 </div>
               </div>
             );
-          })()}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Poster Modal */}
-      <AnimatePresence>
-        {showPosterModal && posterImage && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-start overflow-y-auto p-4 md:p-8"
-          >
-            {/* Close Button */}
-            <div className="w-full max-w-[800px] flex justify-end mb-4 flex-shrink-0 mt-4 md:mt-0">
-              <button 
-                onClick={() => setShowPosterModal(false)}
-                className="text-white font-black tracking-widest text-xs md:text-sm bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center gap-2"
-              >
-                ✕ CLOSE
-              </button>
-            </div>
-
-            {/* Poster Image */}
-            <div className="w-full max-w-[400px] md:max-w-[500px] flex flex-col relative flex-shrink-0 mb-4">
-              <img src={posterImage} alt="Generated Poster" className="w-full h-auto rounded-xl shadow-2xl object-contain" />
-              <p className="text-white/60 text-center mt-4 text-sm font-medium">Long press image to save and share!</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Hidden Capture Area */}
-      <PosterGenerator 
-        games={filteredGames} 
-        type="rental" 
-        triggerId={generatingPosterDesign} 
-        onGenerated={handlePosterGenerated}
-        onError={handlePosterError}
-      />
-
-      {isGenerating && (
-        <div className="fixed inset-0 z-[200] bg-[#FFFFFF] flex flex-col items-center justify-center">
-          <div className="w-12 h-12 bg-[#E60012] rounded-full flex items-center justify-center shadow-lg animate-bounce mb-4">
-            <img 
-              src="/images/logo.png" 
-              alt="Loading" 
-              className="h-6 w-auto brightness-0 invert" 
-              onError={(e) => e.currentTarget.style.display = 'none'} 
-              referrerPolicy="no-referrer" 
-            />
-          </div>
-          <p className="text-xl font-black tracking-widest text-gray-800 animate-pulse uppercase">
-            Generating Poster...
-          </p>
+          })}
         </div>
-      )}
+
+        {/* Footer */}
+        <div className="w-full pb-8 text-center text-sm tracking-[0.3em] font-bold uppercase" style={{ color: 'rgba(255,255,255,0.9)' }}>
+          Generated by Switch Dex Studio
+        </div>
+      </div>
     </div>
   );
 }
