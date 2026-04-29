@@ -192,7 +192,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-6xl mx-auto px-4 md:px-0 items-stretch">
                   {/* Left Card - Option 1 */}
                   <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <img src="/images/switch1_basic.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
+                    <img src="/images/plan-1-day.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4" />
                     <div className="mb-6 flex-1">
                       <h3 className="text-xl font-black text-gray-900 mb-2">
                         📅 尝试一下
@@ -219,7 +219,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
                   {/* Center Card - Option 2 */}
                   <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <img src="/images/switch1_party.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
+                    <img src="/images/plan-3-day.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4" />
                     <div className="mb-6 flex-1">
                       <h3 className="text-xl font-black text-gray-900 mb-2">
                         📅 周末之王
@@ -254,7 +254,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       最推荐！性价比之王！
                     </div>
                     
-                    <img src="/images/switch1_pro.png" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
+                    <img src="/images/plan-7-day.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
                     
                     <div className="mb-6 flex-1">
                       <h3 className="text-2xl font-black text-gray-900 mb-2">
