@@ -27,7 +27,6 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
   const [consoleType, setConsoleType] = useState<'switch1' | 'switch2'>('switch1');
-  const [timing, setTiming] = useState<'weekday' | 'weekend'>('weekday');
   
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -184,22 +183,6 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       Switch 2 (Next Gen)
                     </button>
                   </div>
-
-                  {/* Timing Toggle */}
-                  <div className="bg-gray-100 p-1 rounded-full inline-flex">
-                    <button 
-                      onClick={() => setTiming('weekday')}
-                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${timing === 'weekday' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                    >
-                      Weekday (Mon-Thu)
-                    </button>
-                    <button 
-                      onClick={() => setTiming('weekend')}
-                      className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${timing === 'weekend' ? 'bg-white text-black shadow-sm' : 'text-gray-500 hover:text-gray-900'}`}
-                    >
-                      Weekend (Fri-Sun)
-                    </button>
-                  </div>
                 </div>
               </div>
 
@@ -209,21 +192,18 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                   <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-6xl mx-auto px-4 md:px-0 items-stretch">
                   {/* Left Card - Option 1 */}
                   <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-black text-gray-900 mb-2">📅 尝试一下</h3>
+                    <img src="/images/switch1_basic.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
+                    <div className="mb-6 flex-1">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">
+                        📅 尝试一下
+                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
+                      </h3>
                       <div className="flex items-baseline gap-1">
                         <span className="text-4xl font-black text-gray-900">RM 50</span>
                         <span className="text-gray-500 font-medium">/ 1天</span>
                       </div>
                     </div>
                     
-                    <ul className="space-y-3 mb-8 flex-1 text-gray-700 font-medium text-sm">
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch Console</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 2x Joy-Cons (1 Pair)</li>
-                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Extra Controllers</li>
-                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Premium Accessories</li>
-                    </ul>
-
                     <button 
                       onClick={() => handleConsoleRent('Switch 1 - 1 Day', 50)}
                       className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
@@ -234,21 +214,20 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
                   {/* Center Card - Option 2 */}
                   <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-black text-gray-900 mb-2">📅 周末之王</h3>
+                    <img src="/images/switch1_party.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
+                    <div className="mb-6 flex-1">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">
+                        📅 周末之王
+                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
+                      </h3>
                       <div className="flex items-baseline gap-1">
                         <span className="text-4xl font-black text-gray-900">RM 88</span>
                         <span className="text-gray-500 font-medium">/ 3天</span>
                       </div>
-                      <p className="text-xs font-bold text-green-600 mt-2 bg-green-50 inline-block px-2 py-1 rounded-md">仅 RM 29.3 /天</p>
+                      <div className="mt-3 bg-red-50 border border-red-100 text-red-600 text-sm font-black p-2 rounded-lg text-center flex items-center justify-center gap-1 shadow-inner">
+                        <span className="text-lg">🔥</span> 4人同玩，人均低至 RM 7.33 /天！
+                      </div>
                     </div>
-
-                    <ul className="space-y-3 mb-8 flex-1 text-gray-700 font-medium text-sm">
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch Console</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 4x Joy-Cons (2 Pairs)</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 2x Game Cases</li>
-                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Premium Accessories</li>
-                    </ul>
 
                     <button 
                       onClick={() => handleConsoleRent('Switch 1 - 3 Days', 88)}
@@ -264,24 +243,21 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       最推荐 / 性价比之王
                     </div>
                     
-                    <div className="mb-6 mt-2">
-                      <h3 className="text-2xl font-black text-gray-900 mb-2">📅 深度畅玩</h3>
+                    <img src="/images/switch1_pro.png" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
+                    
+                    <div className="mb-6 flex-1">
+                      <h3 className="text-2xl font-black text-gray-900 mb-2">
+                        📅 深度畅玩
+                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
+                      </h3>
                       <div className="flex items-baseline gap-1">
                         <span className="text-5xl font-black text-red-600">RM 128</span>
                         <span className="text-gray-600 font-medium tracking-tight">/ 7天</span>
                       </div>
-                      <div className="flex flex-col items-start gap-1 mt-2">
-                        <p className="text-xs font-bold text-green-600 bg-green-50 inline-block px-2 py-1 rounded-md">4人同玩，人均低至 RM 4.5 /天！</p>
-                        <p className="text-xs font-bold text-gray-800 bg-white border border-gray-200 inline-block px-2 py-1 rounded-md shadow-sm">🎓 学生价: <span className="text-red-600">RM 115</span> (Show ID)</p>
+                      <div className="mt-3 bg-red-50 border border-red-100 text-red-600 text-sm font-black p-2 rounded-lg text-center flex items-center justify-center gap-1 shadow-inner">
+                        <span className="text-lg">🔥</span> 4人同玩，人均低至 RM 4.5 /天！
                       </div>
                     </div>
-
-                    <ul className="space-y-3 mb-8 flex-1 text-gray-800 font-bold text-sm">
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch Console</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 4x Joy-Cons (2 Pairs)</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Select any Party Games</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Premium Accessories Bundle</li>
-                    </ul>
 
                     <button 
                       onClick={() => handleConsoleRent('Switch 1 - 7 Days', 128)}
@@ -311,76 +287,29 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     </div>
                 </div>
 
-                {/* Visual Feature Comparison Matrix */}
-                <div className="mt-20 max-w-5xl mx-auto">
-                  <h2 className="text-2xl font-black text-gray-900 mb-8 text-center flex items-center justify-center gap-3">
-                    <span className="text-2xl">📦</span> What's in the Box / 套餐内容对比
-                  </h2>
-                  <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto hide-scrollbar w-full relative">
-                    <div className="min-w-[700px] text-sm text-gray-800">
-                      <div className="grid grid-cols-5 border-b border-gray-100 bg-gray-50/50 font-bold text-center items-center">
-                        <div className="sticky left-0 bg-gray-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] col-span-2 p-4 text-left pl-8 text-gray-400 font-semibold text-xs tracking-wider uppercase md:min-w-auto">Item Info</div>
-                        <div className="p-4 text-gray-600 min-w-[100px]">1 Day</div>
-                        <div className="p-4 bg-green-50/80 text-green-900 h-full flex items-center justify-center min-w-[100px]">3 Days (Party)</div>
-                        <div className="p-4 text-gray-600 min-w-[100px]">7 Days (Pro)</div>
-                      </div>
-                      {/* Rows */}
-                      {[
-                        { img: 'thumb-console.png', text: 'Switch 主机', vals: [true, true, true] },
-                        { img: 'thumb-dock.png', text: 'Dock + HDMI (连接电视)', vals: [true, true, true] },
-                        { img: 'thumb-joycon.png', text: 'Joy-Con 控制器', vals: ['2 个', '4 个', '4 个'] },
-                        { img: 'thumb-game.png', text: '任选 1 款游戏', vals: [true, '升级 20+ 款', '升级 20+ 款'] },
-                        { img: 'thumb-games.png', text: '20+ 热门游戏 (情侣/派对)', vals: [false, true, true] },
-                        { img: 'thumb-miniacc.png', text: '小型游戏配件 (方向盘/握把)', vals: [false, true, true] },
-                        { img: 'thumb-sportsacc.png', text: '运动游戏配件', vals: [false, true, true] },
-                        { img: 'thumb-largeacc.png', text: 'Ringfit / 太鼓 (大型外设)', vals: [false, false, '免费二选一'] },
-                        { img: 'thumb-clean.png', text: '全面消毒 & 满电发出', vals: [true, true, true] },
-                      ].map((row, i) => (
-                        <div key={i} className="group grid grid-cols-5 border-b border-gray-100 last:border-0 items-stretch hover:bg-gray-50 transition-colors">
-                          <div className="sticky left-0 bg-white group-hover:bg-gray-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)] col-span-2 p-4 pl-8 flex items-center gap-4 transition-colors md:min-w-auto">
-                            <img src={`/images/${row.img}`} className="w-10 h-10 object-contain shrink-0" referrerPolicy="no-referrer" />
-                            <span className="font-semibold text-gray-900">{row.text}</span>
-                          </div>
-                          <div className="p-4 flex items-center justify-center text-center">
-                             {row.vals[0] === true ? <Check className="text-gray-900 w-5 h-5" /> : row.vals[0] === false ? <Minus className="text-gray-300 w-5 h-5" /> : <span className="font-semibold text-gray-600">{row.vals[0]}</span>}
-                          </div>
-                          <div className="p-4 flex items-center justify-center text-center bg-green-50/40">
-                             {row.vals[1] === true ? <Check className="text-green-600 w-6 h-6" /> : row.vals[1] === false ? <Minus className="text-green-200 w-5 h-5" /> : <span className="font-bold text-green-700">{row.vals[1]}</span>}
-                          </div>
-                          <div className="p-4 flex items-center justify-center text-center">
-                             {row.vals[2] === true ? <Check className="text-gray-900 w-5 h-5" /> : row.vals[2] === false ? <Minus className="text-gray-300 w-5 h-5" /> : <span className="font-semibold text-gray-600">{row.vals[2]}</span>}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </div>
               ) : (
                 <div className="flex flex-col space-y-6 mt-6 md:flex-row md:space-y-0 md:space-x-6 max-w-5xl mx-auto px-4 md:px-0 items-stretch">
                   {/* Left Card */}
                   <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-black text-gray-900 mb-2">1 Day 尝鲜体验</h3>
+                    <img src="/images/switch2_basic.png" className="w-full h-32 object-cover rounded-t-xl mb-4" />
+                    <div className="mb-6 flex-1">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">
+                        1 Day 尝鲜体验
+                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
+                      </h3>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-black text-gray-900">RM {timing === 'weekday' ? 60 : 80}</span>
+                        <span className="text-4xl font-black text-gray-900">RM 60</span>
                         <span className="text-gray-500 font-medium">/ 1天</span>
                       </div>
                       <p className="text-xs font-bold text-gray-500 mt-2">Next Gen Experience</p>
                     </div>
 
-                    <ul className="space-y-3 mb-8 flex-1 text-gray-700 font-medium text-sm">
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch OLED Console</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 2x Joy-Cons (1 Pair)</li>
-                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Extra Controllers</li>
-                      <li className="flex items-center gap-2 text-gray-400"><span className="text-lg">❌</span> Premium Accessories</li>
-                    </ul>
-
                     <button 
-                      onClick={() => handleConsoleRent('Switch 2 - 1 Day', timing === 'weekday' ? 60 : 80)}
+                      onClick={() => handleConsoleRent('Switch 2 - 1 Day', 60)}
                       className="w-full bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-bold transition-colors shadow-sm"
                     >
-                      📱 Book 1 Day - RM {timing === 'weekday' ? 60 : 80}
+                      📱 Book 1 Day - RM 60
                     </button>
                   </div>
 
@@ -390,29 +319,24 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       🔥 PRE-ORDER / 限量体验
                     </div>
                     
-                    <div className="mb-6 mt-2">
-                      <h3 className="text-2xl font-black text-gray-900 mb-2">3-4 Days 深度体验</h3>
+                    <img src="/images/switch2_party.png" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
+                    
+                    <div className="mb-6 flex-1">
+                      <h3 className="text-2xl font-black text-gray-900 mb-2">
+                        3-4 Days 深度体验
+                        <span className="bg-blue-100 text-blue-600 border border-blue-200 text-[10px] font-black px-2 py-0.5 rounded-md ml-2 tracking-wide align-middle">👨🎓 学生价 - 10%</span>
+                      </h3>
                       <div className="flex items-baseline gap-1">
-                        <span className="text-5xl font-black text-red-600">RM {timing === 'weekday' ? 150 : 199}</span>
+                        <span className="text-5xl font-black text-red-600">RM 150</span>
                         <span className="text-gray-600 font-medium tracking-tight">/ 3-4天</span>
-                      </div>
-                      <div className="flex flex-col items-start gap-1 mt-2">
-                        <p className="text-xs font-bold text-gray-800 bg-white border border-gray-200 inline-block px-2 py-1 rounded-md shadow-sm">🎓 凭学生证优惠: <span className="text-red-600">RM {timing === 'weekday' ? 130 : 170}</span></p>
                       </div>
                     </div>
 
-                    <ul className="space-y-3 mb-8 flex-1 text-gray-800 font-bold text-sm">
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 1x Switch OLED Console</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> 4x Joy-Cons (2 Pairs)</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Select any Games</li>
-                      <li className="flex items-center gap-2"><span className="text-lg">✅</span> Premium Accessories</li>
-                    </ul>
-
                     <button 
-                      onClick={() => handleConsoleRent('Switch 2 - 3-4 Days Pre-order', timing === 'weekday' ? 150 : 199)}
+                      onClick={() => handleConsoleRent('Switch 2 - 3-4 Days Pre-order', 150)}
                       className="w-full bg-[#e60012] hover:bg-red-700 text-white py-4 rounded-xl font-black text-lg shadow-lg shadow-red-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
                     >
-                      📱 Pre-Order - RM {timing === 'weekday' ? 150 : 199}
+                      📱 Pre-Order - RM 150
                     </button>
                   </div>
                 </div>
@@ -601,7 +525,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
                       <div className="mb-4">
                         <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租换价目表</h3>
-                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. The costs below are deducted based on playtime! (支付全款作押金，换租/退回时按以下折旧扣除)</p>
+                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. The costs below are deducted based on playtime! (支付全款作押金，换租/退回时按以下租凭费扣除)</p>
                       </div>
                       
                       <div className="flex flex-col space-y-3 mt-4 mb-5">
@@ -612,7 +536,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                             <div className="text-base font-bold text-gray-800">30天内</div>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">折旧 RM {(discountedPrice * 0.1).toFixed(2)}</span>
+                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.1).toFixed(2)}</span>
                             <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 90% (RM {(discountedPrice * 0.9).toFixed(2)})</span>
                           </div>
                         </div>
@@ -624,7 +548,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                             <div className="text-base font-bold text-gray-800">60天内</div>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">折旧 RM {(discountedPrice * 0.15).toFixed(2)}</span>
+                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.15).toFixed(2)}</span>
                             <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 85% (RM {(discountedPrice * 0.85).toFixed(2)})</span>
                           </div>
                         </div>
@@ -636,7 +560,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                             <div className="text-base font-bold text-gray-800">90天内</div>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">折旧 RM {(discountedPrice * 0.25).toFixed(2)}</span>
+                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.25).toFixed(2)}</span>
                             <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 75% (RM {(discountedPrice * 0.75).toFixed(2)})</span>
                           </div>
                         </div>
@@ -647,7 +571,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                             <span className="text-base font-bold text-gray-600 pl-7">120天内</span>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className="text-gray-500 font-medium text-base">折旧 RM {(discountedPrice * 0.30).toFixed(2)}</span>
+                            <span className="text-gray-500 font-medium text-base">租凭费 RM {(discountedPrice * 0.30).toFixed(2)}</span>
                             <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 70% (RM {(discountedPrice * 0.7).toFixed(2)})</span>
                           </div>
                         </div>
@@ -658,7 +582,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                             <span className="text-base font-bold text-gray-600 pl-7">150天内</span>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className="text-gray-500 font-medium text-base">折旧 RM {(discountedPrice * 0.35).toFixed(2)}</span>
+                            <span className="text-gray-500 font-medium text-base">租凭费 RM {(discountedPrice * 0.35).toFixed(2)}</span>
                             <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 65% (RM {(discountedPrice * 0.65).toFixed(2)})</span>
                           </div>
                         </div>
