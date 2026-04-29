@@ -219,7 +219,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
 
                   {/* Center Card - Option 2 */}
                   <div className="flex-1 bg-white rounded-2xl border border-gray-200 shadow-sm p-6 relative flex flex-col">
-                    <img src="/images/plan-3-day.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4" />
+                    <img src="/images/plan-3-days.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4" />
                     <div className="mb-6 flex-1">
                       <h3 className="text-xl font-black text-gray-900 mb-2">
                         📅 周末之王
@@ -254,7 +254,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       最推荐！性价比之王！
                     </div>
                     
-                    <img src="/images/plan-7-day.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
+                    <img src="/images/plan-7-days.jpg" className="w-full h-32 object-cover rounded-t-xl mb-4 mt-2" />
                     
                     <div className="mb-6 flex-1">
                       <h3 className="text-2xl font-black text-gray-900 mb-2">
