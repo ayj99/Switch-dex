@@ -3,9 +3,9 @@
     "id": 1,
     "title": "It Takes Two (双人成行)",
     "price": 108,
-    "originalPrice": 158,
+    "originalPrice": 142,
     "imageUrl": "/SXitch%20Dex%20photo/it_take_two.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 全新, 二手",
     "category": "Multiplayer多人, 情侣couple",
@@ -22,9 +22,9 @@
     "id": 2,
     "title": "The Legend of Zelda: Breath of the Wild (塞尔达传说 旷野之息)",
     "price": 129,
-    "originalPrice": 172,
+    "originalPrice": 179,
     "imageUrl": "/SXitch%20Dex%20photo/zelda_botw.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "单人Single",
@@ -35,15 +35,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "不玩这款游戏，你的 Switch 体验是不完整的！它重新定义了什么叫“自由”。那种在山顶望向远方，决定随心所欲出发的震撼感，真的会让你觉得人生少了这场冒险就太可惜了。",
-    "votes": 844
+    "votes": 589
   },
   {
     "id": 3,
     "title": "The Legend of Zelda: Tears of the Kingdom (塞尔达传说 王国之泪)",
     "price": 149,
-    "originalPrice": 183,
+    "originalPrice": 193,
     "imageUrl": "/SXitch%20Dex%20photo/Zelda_TOTK.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "单人Single",
@@ -54,15 +54,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "如果说《旷野之息》是探索，那这款就是让你当“造物主”！用究极手拼出各种离谱的机器，在天空和地底之间横冲直撞。这种创造力的快感，真的能让你玩到忘记时间。",
-    "votes": 537
+    "votes": 656
   },
   {
     "id": 4,
     "title": "Mario Kart 8 Deluxe (马力欧卡丁车8 豪华版)",
     "price": 139,
-    "originalPrice": 182,
+    "originalPrice": 171,
     "imageUrl": "/SXitch%20Dex%20photo/MArio_kart.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 家庭Kids, 运动sport",
@@ -73,15 +73,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "Switch 销量第一的神作，真正的“社交破冰之王”！无论男女老少都能上手，最刺激的是最后时刻被蓝壳反杀的绝望和反超的狂喜。聚会没它，气氛直接少一半。",
-    "votes": 457
+    "votes": 312
   },
   {
     "id": 5,
     "title": "Animal Crossing: New Horizons (集合啦！动物森友会)",
     "price": 125,
-    "originalPrice": 168,
+    "originalPrice": 161,
     "imageUrl": "/SXitch%20Dex%20photo/animalcrossing.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手, 无盒",
     "category": "家庭Kids, 情侣couple, Multiplayer多人",
@@ -92,15 +92,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "现代人的电子避风港，人生必玩清单首选！最绝的是你可以联机去全世界玩家的岛上串门，认识超级多有趣的朋友。无论是陪孩子还是陪父母，它都能给你最温柔的治愈感。",
-    "votes": 926
+    "votes": 601
   },
   {
     "id": 6,
     "title": "Overcooked! All You Can Eat (胡闹厨房！全都好吃)",
     "price": 108,
-    "originalPrice": 146,
+    "originalPrice": 149,
     "imageUrl": "/SXitch%20Dex%20photo/overcookAYCE.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 全新, 二手",
     "category": "Multiplayer多人, 情侣couple, 家庭Kids",
@@ -111,15 +111,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "传说中的“友尽”模拟器！原本以为是温馨合作，结果变成了大喊“快把盘子洗了！”的战场。极其适合测试你和死党/伴侣在压力下的协作能力（或者直接吵架），太爆笑了！",
-    "votes": 374
+    "votes": 228
   },
   {
     "id": 7,
     "title": "Super Smash Bros. Ultimate (任天堂明星大乱斗 特别版)",
     "price": 139,
-    "originalPrice": 171,
+    "originalPrice": 186,
     "imageUrl": "/SXitch%20Dex%20photo/SuperSmashBro.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -130,15 +130,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "游戏界的“复仇者联盟”！所有经典角色大乱斗，这种联动规模简直离谱。无论是随便打打还是深度竞技，它都能让你在几分钟内肾上腺素飙升，是绝对的客厅霸主。",
-    "votes": 179
+    "votes": 946
   },
   {
     "id": 8,
     "title": "Super Mario Bros. Wonder (超级马力欧兄弟 惊奇)",
     "price": 139,
-    "originalPrice": 184,
+    "originalPrice": 180,
     "imageUrl": "/SXitch%20Dex%20photo/mario_wonder.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -149,15 +149,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "马力欧系列最离谱的一次进化！每一个关卡都有让你惊掉下巴的变身和反转。那种“居然还能这么玩”的惊喜感，会让所有年龄段的人都像孩子一样兴奋。",
-    "votes": 309
+    "votes": 965
   },
   {
     "id": 9,
     "title": "Ring Fit Adventure (健身环大冒险)",
     "price": 179,
-    "originalPrice": 209,
+    "originalPrice": 225,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "单人Single, 运动sport",
@@ -168,15 +168,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "唯一一个能让你一边大汗淋漓一边骂街，还觉得自己是在升级的游戏。把枯燥的撸铁变成了打怪，是所有懒人开启运动生活的最强推手，真的能让你瘦！",
-    "votes": 799
+    "votes": 941
   },
   {
     "id": 10,
     "title": "Snipperclips Plus (你裁我剪！斯尼帕 Plus)",
     "price": 99,
-    "originalPrice": 138,
+    "originalPrice": 134,
     "imageUrl": "/SXitch%20Dex%20photo/Snipperclips.avif",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "马上涨价",
     "condition": "二手",
     "category": "Multiplayer多人, 情侣couple, 家庭Kids",
@@ -187,15 +187,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "脑洞大到惊人！把彼此“剪”成各种形状来过关，过程中必然伴随大量地笑场和沟通崩溃。如果你想看对方在那儿抓耳挠腮地思考，租这款就对了。",
-    "votes": 445
+    "votes": 244
   },
   {
     "id": 11,
     "title": "PICO PARK 1+2",
     "price": 119,
-    "originalPrice": 160,
+    "originalPrice": 163,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 全新, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -206,15 +206,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "只要有一个人掉链子，全队全部重来！极致的协作和极致的崩溃并存。它是那种能让 8 个人在同一时间陷入疯狂的聚会神器，笑料绝对拉满。",
-    "votes": 664
+    "votes": 393
   },
   {
     "id": 12,
     "title": "Super Mario Party Jamboree (超级马力欧派对 空前盛会)",
     "price": 149,
-    "originalPrice": 198,
+    "originalPrice": 181,
     "imageUrl": "/SXitch%20Dex%20photo/jamboree.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -225,15 +225,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "派对游戏的终极进化版！海量新迷你游戏，纯粹靠运气和一点点操作。在这种游戏面前，没有什么阶级之分，只要运气好，谁都能成为全场之王！",
-    "votes": 788
+    "votes": 123
   },
   {
     "id": 13,
     "title": "Kirby Star Allies (星之卡比 新星同盟)",
     "price": 139,
-    "originalPrice": 188,
+    "originalPrice": 177,
     "imageUrl": "/SXitch%20Dex%20photo/kirby_starallies.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -244,15 +244,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "被可爱暴击！操作极其舒心，完全没有压力。支持 4 人同屏，非常适合带小朋友或者和另一半一起玩，在这种粉嫩的世界里冒险真的太解压了。",
-    "votes": 918
+    "votes": 100
   },
   {
     "id": 14,
     "title": "NieR: Automata (尼尔: 机械纪元)",
     "price": 99,
-    "originalPrice": 148,
+    "originalPrice": 137,
     "imageUrl": "/SXitch%20Dex%20photo/Nier.avif",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "手慢无",
     "condition": "二手, 无盒",
     "category": "单人Single",
@@ -263,15 +263,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "这不仅仅是个游戏，更是一件艺术品。绝美的人造人设计加上极其深刻的哲学探讨，通关后的后劲儿大到让你失眠。喜欢剧情驱动和美学的玩家必冲！",
-    "votes": 777
+    "votes": 410
   },
   {
     "id": 15,
     "title": "Splatoon 3 (斯普拉遁 3)",
     "price": 129,
-    "originalPrice": 165,
+    "originalPrice": 174,
     "imageUrl": "/SXitch%20Dex%20photo/splatton3.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 运动sport",
@@ -282,15 +282,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "打破传统射击游戏的死板！在这里，涂地比杀人更重要。极其鲜明的色彩和快节奏的竞技感，新鲜感十足，是那种玩一次就会彻底爱上的独特体验。",
-    "votes": 304
+    "votes": 195
   },
   {
     "id": 16,
     "title": "Little Nightmares I & II (小小梦魇 I & II)",
     "price": 125,
-    "originalPrice": 155,
+    "originalPrice": 157,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -301,15 +301,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "如果你喜欢那种脊背发凉的压抑美学，这款必玩。它不靠低级的跳杀吓你，而是用那种诡异的氛围让你喘不过气。深夜关灯一个人玩，沉浸感真的绝了。",
-    "votes": 983
+    "votes": 538
   },
   {
     "id": 17,
     "title": "Bayonetta 3 (猎天使魔女 3)",
     "price": 99,
-    "originalPrice": 139,
+    "originalPrice": 134,
     "imageUrl": "/SXitch%20Dex%20photo/bayonetta3.jpeg",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "最后1件",
     "condition": "二手",
     "category": "单人Single",
@@ -320,7 +320,7 @@
     "status": "有货",
     "videoUrl": "",
     "description": "动作游戏的视觉奇观！极其狂暴的连招和遮天蔽日的巨型 BOSS 战，每一秒都在挑战你的视觉极限。追求极致爽感和华丽打击感的玩家请立刻租它！",
-    "votes": 721
+    "votes": 465
   },
   {
     "id": 18,
@@ -328,7 +328,7 @@
     "price": 99,
     "originalPrice": 145,
     "imageUrl": "[Missing Image]",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "仅剩1单了",
     "condition": "可租借, 二手",
     "category": "单人Single",
@@ -339,15 +339,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "像在顶级的油画中穿行。光影效果和音乐简直是神级，带给你一种灵魂被洗涤的纯净感。如果你需要一份宁静且深刻的冒险，选这个绝对没错。",
-    "votes": 753
+    "votes": 316
   },
   {
     "id": 19,
     "title": "Xenoblade Chronicles 2 (异度神剑 2)",
     "price": 119,
-    "originalPrice": 165,
+    "originalPrice": 169,
     "imageUrl": "/SXitch%20Dex%20photo/Xenoblade2.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -358,15 +358,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "日系 RPG 的巅峰之作！宏大到令人战栗的世界观，加上足以让你掉眼泪的剧情。在云海之上的巨神兽之间探索，这种史诗感是其他游戏给不了的。",
-    "votes": 466
+    "votes": 256
   },
   {
     "id": 20,
     "title": "Story of Seasons: Friends of Mineral Town (牧场物语 重聚矿石镇)",
     "price": 119,
-    "originalPrice": 149,
+    "originalPrice": 159,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, 情侣couple",
@@ -377,15 +377,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "慢生活的极致代表。种地、养畜、恋爱、结婚，在宁静的乡村中找回内心的平静。是那种你可以心安理得地在里面虚度光阴的顶级疗愈之作。",
-    "votes": 671
+    "votes": 170
   },
   {
     "id": 21,
     "title": "Naruto x Boruto Connections (火影忍者 终极风暴羁绊)",
     "price": 119,
-    "originalPrice": 167,
+    "originalPrice": 151,
     "imageUrl": "/SXitch%20Dex%20photo/narutostorm4connetion.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人",
@@ -396,15 +396,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "把动漫直接搬进了游戏！华丽的忍术大招特效简直是还原度 100%，那种操作路飞或鸣人横扫全场的快感，是所有动漫迷的终极梦想。",
-    "votes": 843
+    "votes": 409
   },
   {
     "id": 22,
     "title": "ONE PIECE: PIRATE WARRIORS 4 (海贼无双 4)",
     "price": 115,
-    "originalPrice": 146,
+    "originalPrice": 159,
     "imageUrl": "/SXitch%20Dex%20photo/onepiece4.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人",
@@ -415,15 +415,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "极致的割草快感！在万人军队中横扫千军，体验最纯粹的破坏力。不需要复杂的操作，只要疯狂按下攻击键，压力瞬间全部释放。",
-    "votes": 746
+    "votes": 578
   },
   {
     "id": 23,
     "title": "Super Bomberman R 2 (超级炸弹人 R 2)",
     "price": 109,
-    "originalPrice": 155,
+    "originalPrice": 154,
     "imageUrl": "/SXitch%20Dex%20photo/superbomberman2.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -434,15 +434,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "最简单的规则，最激烈的对抗！在方格地图里设陷阱、炸对手，这种心理博弈极其刺激。是那种能迅速让房间里所有人都陷入狂热的纯粹竞技。",
-    "votes": 365
+    "votes": 937
   },
   {
     "id": 24,
     "title": "Nintendo Switch Sports (Nintendo Switch 运动)",
     "price": 135,
-    "originalPrice": 182,
+    "originalPrice": 173,
     "imageUrl": "/SXitch%20Dex%20photo/Sport.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 运动sport, 家庭Kids",
@@ -453,7 +453,7 @@
     "status": "有货",
     "videoUrl": "",
     "description": "直接把客厅变成体育馆！真实的体感操作，无论是网球还是保龄球，都能让你大汗淋漓地竞争。是那种不用出门就能体验运动快感的绝佳选择。",
-    "votes": 855
+    "votes": 656
   },
   {
     "id": 25,
@@ -461,7 +461,7 @@
     "price": 108,
     "originalPrice": 155,
     "imageUrl": "/SXitch%20Dex%20photo/BIgBrain.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "全新, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -472,7 +472,7 @@
     "status": "有货",
     "videoUrl": "",
     "description": "谁才是真正的天才？在紧张的限时对抗中比拼反应力和逻辑力。不仅是游戏，更是一场高端的智力较量，赢了之后的成就感真的爆棚。",
-    "votes": 565
+    "votes": 635
   },
   {
     "id": 26,
@@ -480,7 +480,7 @@
     "price": 118,
     "originalPrice": 164,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids, 单人Single",
@@ -491,15 +491,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "把 DQ 的剧情和极致的建造自由度结合在了一起。从一片荒地开始，亲手建设起一个属于你的梦幻城镇，这种养成感真的让人欲罢不能。",
-    "votes": 923
+    "votes": 539
   },
   {
     "id": 27,
     "title": "LEGO Star Wars: The Skywalker Saga (乐高星战：天行者传奇)",
     "price": 85,
-    "originalPrice": 132,
+    "originalPrice": 124,
     "imageUrl": "/SXitch%20Dex%20photo/LEGO_Starwar.avif",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "即将恢复原价",
     "condition": "二手",
     "category": "家庭Kids, Multiplayer多人",
@@ -510,15 +510,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "想一次性体验所有星战电影？选这个就对了！乐高特有的幽默感让整个过程极其解压，而且操作简单到离谱，非常适合带孩子一起玩。",
-    "votes": 848
+    "votes": 179
   },
   {
     "id": 28,
     "title": "L.O.L. Surprise! Remix (L.O.L. 惊喜拆拆球: 混音)",
     "price": 85,
-    "originalPrice": 131,
+    "originalPrice": 119,
     "imageUrl": "[Missing Image]",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "即将售罄",
     "condition": "二手",
     "category": "家庭Kids, Multiplayer多人",
@@ -529,15 +529,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "给女孩子或者孩子准备的绝佳惊喜！这种拆盲盒的快感加上节奏游戏，简直是快乐碎片收集器。不需要技术，只要会动起来，气氛立刻就到了。",
-    "votes": 298
+    "votes": 337
   },
   {
     "id": 29,
     "title": "Sniper Elite 4 (狙击精英 4)",
     "price": 85,
-    "originalPrice": 133,
+    "originalPrice": 129,
     "imageUrl": "[Missing Image]",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "马上涨价",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人",
@@ -548,15 +548,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "狙击爱好者的纯粹快感！最绝的就是那个 X-Ray 慢动作击杀，能清晰看到子弹撕裂目标的瞬间，那种精准掌控全场的成就感，真的会让人上瘾。",
-    "votes": 894
+    "votes": 122
   },
   {
     "id": 30,
     "title": "Assassin's Creed III Remastered (刺客信条 3 重制版)",
     "price": 85,
-    "originalPrice": 125,
+    "originalPrice": 116,
     "imageUrl": "/SXitch%20Dex%20photo/assassinscreed3.avif",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "手慢无",
     "condition": "二手",
     "category": "单人Single",
@@ -567,15 +567,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "想在 Switch 上体验大作的潜行快感？潜入美国独立战争的漩涡，那种在林间潜行、突然反杀的快感，依然是该系列的精髓，绝对值得一试。",
-    "votes": 569
+    "votes": 904
   },
   {
     "id": 31,
     "title": "MEGA MAN X LEGACY COLLECTION 1+2 (洛克人X 遗产合集 1+2)",
     "price": 85,
-    "originalPrice": 117,
+    "originalPrice": 128,
     "imageUrl": "[Missing Image]",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "最后1件",
     "condition": "二手",
     "category": "单人Single",
@@ -586,15 +586,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "硬核玩家的朝圣之作！不要被 2D 画面骗了，它的关卡设计和打击感即便在今天也是顶级。通过反复尝试最终过关的成就感，是现代快餐游戏给不了的。",
-    "votes": 563
+    "votes": 628
   },
   {
     "id": 32,
     "title": "Samba de Amigo: Party Central (桑巴热舞：派对中心)",
     "price": 85,
-    "originalPrice": 133,
+    "originalPrice": 122,
     "imageUrl": "/SXitch%20Dex%20photo/Samba%20Pe%20Amigo.jpeg",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "仅剩1单了",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport",
@@ -605,15 +605,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "只要你还没放弃社交，就快租它！直接把客厅变成狂欢派对现场，不需要任何专业舞步，只要敢动起来就是赢家，是绝对的气氛之王。",
-    "votes": 720
+    "votes": 528
   },
   {
     "id": 33,
     "title": "Dynasty Warriors 9 Empires (真·三国无双8 帝国)",
     "price": 119,
-    "originalPrice": 152,
+    "originalPrice": 165,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -624,15 +624,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "压力大？来这里割草！一人敌万军的快感太爽了，在宏大的三国版图上横冲直撞，体验最纯粹的权力幻想，解压神器！",
-    "votes": 132
+    "votes": 445
   },
   {
     "id": 34,
     "title": "Clubhouse Games: 51 Worldwide Classics (世界游戏大全51)",
     "price": 119,
-    "originalPrice": 159,
+    "originalPrice": 151,
     "imageUrl": "/SXitch%20Dex%20photo/Clubhouse51games.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "家庭Kids, Multiplayer多人",
@@ -643,15 +643,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "把 51 种世界经典游戏装进 Switch。不管是下棋还是玩牌，它是最完美的家庭聚会破冰神器，无论对方是谁都能找到共同话题。",
-    "votes": 355
+    "votes": 109
   },
   {
     "id": 35,
     "title": "Mario & Sonic at the Olympic Games (马力欧与索尼克在东京奥运会)",
     "price": 119,
-    "originalPrice": 156,
+    "originalPrice": 159,
     "imageUrl": "/SXitch%20Dex%20photo/MArioSonic_Olympic.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport, 家庭Kids",
@@ -662,15 +662,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "两大巨头同台竞技！用最简单的操作体验奥运项目的快感，竞技性与娱乐性兼备，非常适合在家庭聚会时用来比拼。",
-    "votes": 481
+    "votes": 456
   },
   {
     "id": 36,
     "title": "Demon Slayer: Sweep the Board! (鬼灭之刃 成为最强队伍！)",
     "price": 99,
-    "originalPrice": 143,
+    "originalPrice": 132,
     "imageUrl": "/SXitch%20Dex%20photo/demon_slayer_sweepboard.avif",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "即将恢复原价",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -681,15 +681,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "鬼灭粉丝必入！像大富翁一样在地图上争霸，用最轻松的方式与角色共处。不需要硬核操作，只要有原著情怀就能玩得开心。",
-    "votes": 743
+    "votes": 859
   },
   {
     "id": 37,
     "title": "Mario Strikers: Battle League Football (马力欧激战前锋 战斗联赛)",
     "price": 119,
-    "originalPrice": 163,
+    "originalPrice": 152,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport, 家庭Kids",
@@ -700,15 +700,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "这不是传统的足球，而是加入了超能力的“暴力足球”！快节奏对攻，血脉偾张，是那种能让你在沙发上叫得最大声的游戏。",
-    "votes": 171
+    "votes": 244
   },
   {
     "id": 38,
     "title": "Sakuna: Of Rice and Ruin (天穗之咲稻姬)",
     "price": 85,
-    "originalPrice": 117,
+    "originalPrice": 124,
     "imageUrl": "[Missing Image]",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "即将售罄",
     "condition": "二手",
     "category": "单人Single",
@@ -719,15 +719,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "极致的反差体验：白天认真种田模拟农夫，晚上硬核战斗化身武神。这种在劳作与战斗之间切换的节奏，真的有一种奇异的快感。",
-    "votes": 690
+    "votes": 932
   },
   {
     "id": 39,
     "title": "Super Mario Maker 2 (超级马力欧创造家 2)",
     "price": 119,
-    "originalPrice": 155,
+    "originalPrice": 168,
     "imageUrl": "/SXitch%20Dex%20photo/Supermariomaker2.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, 家庭Kids",
@@ -738,15 +738,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "玩腻了现成的关卡？那就自己创造！设计最阴险的陷阱给朋友挑战，或者分享你的神级创意。这不仅是游戏，更是你的个人创意秀场。",
-    "votes": 180
+    "votes": 598
   },
   {
     "id": 40,
     "title": "Game Builder Garage (Game Builder Garage)",
     "price": 85,
-    "originalPrice": 128,
+    "originalPrice": 122,
     "imageUrl": "/SXitch%20Dex%20photo/Gamebuilder.avif",
-    "isSale": "TRUE",
+    "isSale": true,
     "badge": "店长强力推荐",
     "condition": "二手",
     "category": "单人Single, 家庭Kids",
@@ -757,15 +757,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "把游戏开发变成积木搭建。无需编程基础，也能亲手做出自己的第一款电子游戏。是给孩子开启逻辑思维，或者成人解压创造的最佳选择。",
-    "votes": 868
+    "votes": 521
   },
   {
     "id": 41,
     "title": "Ace Angler: Fishing Spirits (王牌钓手 欢钓水族馆)",
     "price": 119,
-    "originalPrice": 153,
+    "originalPrice": 149,
     "imageUrl": "/SXitch%20Dex%20photo/王牌钓手.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -776,15 +776,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "简单纯粹的钓鱼快感！在水族馆中挑战稀有鱼类，是绝佳的碎片化休闲之选。不需要任何压力，只要静静地享受钓鱼的瞬间就好。",
-    "votes": 377
+    "votes": 655
   },
   {
     "id": 42,
     "title": "FIFA 22 (FIFA 22)",
     "price": 50,
-    "originalPrice": 94,
+    "originalPrice": 87,
     "imageUrl": "/SXitch%20Dex%20photo/fifa22.jpg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport",
@@ -795,15 +795,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "足球模拟的工业标准。极其真实的球场氛围与操作感，如果你是球迷，这款游戏是你必须在 Switch 上尝试的终极模拟。",
-    "votes": 225
+    "votes": 180
   },
   {
     "id": 43,
     "title": "Nintendo Labo Toy-Con 01 (任天堂 Labo Toy-Con 01)",
     "price": 80,
-    "originalPrice": 128,
+    "originalPrice": 121,
     "imageUrl": "/SXitch%20photo/labo.webp",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "家庭Kids, 单人Single",
@@ -814,15 +814,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "真正的“硬核”DIY！用纸板搭建真实的交互设备，让孩子在玩乐中理解科技与构造。这不只是游戏，更是一次极具教育意义的创造实验。",
-    "votes": 375
+    "votes": 255
   },
   {
     "id": 44,
     "title": "Pokemon Violet (神奇宝贝 紫)",
     "price": 129,
-    "originalPrice": 163,
+    "originalPrice": 178,
     "imageUrl": "/SXitch%20Dex%20photo/Pokemon_violet.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, 家庭Kids",
@@ -833,15 +833,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "宝可梦粉丝的绝对必玩！第一次真正意义上的开放世界，想抓哪只就去哪只。不管是沉浸式冒险还是在线对战，它都能让你找回小时候第一次拿到图鉴时的心跳感。",
-    "votes": 933
+    "votes": 343
   },
   {
     "id": 45,
     "title": "Pokemon Shield (神奇宝贝 盾)",
     "price": 129,
-    "originalPrice": 178,
+    "originalPrice": 169,
     "imageUrl": "/SXitch%20Dex%20photo/Pokemon_Shield.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, 家庭Kids",
@@ -852,15 +852,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "最纯粹的宝可梦旅程！在伽勒尔地区挑战道馆，那种升级、进化、最后夺冠的成就感太经典了。非常适合带孩子一起入坑，开启第一段冒险。",
-    "votes": 233
+    "votes": 835
   },
   {
     "id": 46,
     "title": "Pokemon Legends: Arceus (神奇宝贝 传说阿尔宙斯)",
     "price": 129,
-    "originalPrice": 170,
+    "originalPrice": 175,
     "imageUrl": "/SXitch%20Dex%20photo/pokemon_arceus.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -871,15 +871,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "它彻底颠覆了宝可梦的玩法！潜行捕捉、即时战斗，这种全新的快感让老玩家都直呼过瘾。如果你厌倦了传统回合制，这款绝对会让你眼前一亮。",
-    "votes": 845
+    "votes": 115
   },
   {
     "id": 47,
     "title": "Pokken Tournament DX (宝可梦 拳击 DX)",
     "price": 125,
-    "originalPrice": 161,
+    "originalPrice": 159,
     "imageUrl": "/SXitch%20Dex%20photo/PokkenTournamentDX.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport",
@@ -890,15 +890,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "宝可梦打架竟然这么爽？快节奏的 3D 格斗，操作流畅且打击感十足。最适合在聚会时来一场 1v1 的巅峰对决，看看谁才是最强的训练家。",
-    "votes": 187
+    "votes": 503
   },
   {
     "id": 48,
     "title": "Onimusha (鬼武者)",
     "price": 119,
-    "originalPrice": 156,
+    "originalPrice": 167,
     "imageUrl": "/SXitch%20Dex%20photo/鬼武者.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -909,15 +909,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "日式暗黑动作游戏的经典之作！刀光剑影之间的肃杀氛围感极强，那种斩妖除魔的快感加上深刻的剧情，是硬核动作玩家不能错过的情怀神作。",
-    "votes": 844
+    "votes": 463
   },
   {
     "id": 49,
     "title": "New Super Mario Bros. U Deluxe (新超级马力欧兄弟 U 豪华版)",
     "price": 125,
-    "originalPrice": 168,
+    "originalPrice": 174,
     "imageUrl": "/SXitch%20Dex%20photo/SupermariobrosUdeluxe.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -928,15 +928,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "入坑马力欧的最稳选择！难度极低，画面清新，支持 4 人同屏大乱斗。无论是带娃还是陪女朋友，这款游戏都能保证所有人都能开心地通关。",
-    "votes": 724
+    "votes": 687
   },
   {
     "id": 50,
     "title": "Luigi's Mansion 3 (路易吉洋馆 3)",
     "price": 135,
-    "originalPrice": 178,
+    "originalPrice": 183,
     "imageUrl": "/SXitch%20Dex%20photo/LuigisM3.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 情侣couple, 家庭Kids",
@@ -947,15 +947,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "任天堂的顶级设计之作！路易吉那种胆小却又不得不前进的反差萌简直太绝了。画质精致得像皮克斯电影，是那种玩起来极其舒心且充满惊喜的神作。",
-    "votes": 169
+    "votes": 836
   },
   {
     "id": 51,
     "title": "1-2-Switch (1-2-Switch)",
     "price": 125,
-    "originalPrice": 163,
+    "originalPrice": 159,
     "imageUrl": "/SXitch%20Dex%20photo/12switch.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -966,15 +966,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "Switch 的“原装”破冰神器！完全不需要任何技巧，只要敢在对方面前做出各种离谱的动作就能赢。是那种能瞬间让陌生人变成好朋友的爆笑游戏。",
-    "votes": 905
+    "votes": 948
   },
   {
     "id": 52,
     "title": "Just Dance (舞力全开)",
     "price": 80,
-    "originalPrice": 126,
+    "originalPrice": 130,
     "imageUrl": "/SXitch%20Dex%20photo/Just_Dance.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport, 情侣couple",
@@ -985,15 +985,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "客厅里的顶级舞池！不管你舞姿如何，只要跟着屏幕摇摆就够了。是减肥健身的绝佳掩护，更是情侣约会、朋友聚会时绝对不能缺少的气氛发动机。",
-    "votes": 554
+    "votes": 927
   },
   {
     "id": 53,
     "title": "Human: Fall Flat (人类一败涂地)",
     "price": 108,
-    "originalPrice": 147,
+    "originalPrice": 142,
     "imageUrl": "/SXitch%20Dex%20photo/Human_fall_flat.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 情侣couple, 家庭Kids",
@@ -1004,15 +1004,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "这就是个“依托答辩”的模拟器，但却好玩到离谱！看着角色像果冻一样乱晃，协作过关却总是变成互相拖累。准备好迎接无数次笑场吧。",
-    "votes": 288
+    "votes": 456
   },
   {
     "id": 54,
     "title": "Everybody 1-2-Switch! (大家一起 1-2-Switch!)",
     "price": 99,
-    "originalPrice": 143,
+    "originalPrice": 149,
     "imageUrl": "/SXitch%20Dex%20photo/Everybody12switch'.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1023,15 +1023,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "如果说第一代是破冰，这一代就是“核爆”！支持人数多到离谱，只要有手机就能加入。绝对的聚会之王，在这种混乱中体验纯粹的快乐。",
-    "votes": 676
+    "votes": 777
   },
   {
     "id": 55,
     "title": "Taiko no Tatsujin: Rhythm Festival (太鼓之达人 咚咚雷音祭)",
     "price": 99,
-    "originalPrice": 142,
+    "originalPrice": 133,
     "imageUrl": "/SXitch%20Dex%20photo/taiko.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "全新, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1042,15 +1042,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "纯粹的敲击快感！跟随节奏疯狂敲鼓，那种大脑放空、只剩下节奏的瞬间极其解压。不管是动漫神曲还是经典民谣，都能让你瞬间嗨起来。",
-    "votes": 467
+    "votes": 615
   },
   {
     "id": 56,
     "title": "Move It (Move It)",
     "price": 139,
-    "originalPrice": 172,
+    "originalPrice": 188,
     "imageUrl": "/SXitch%20Dex%20photo/MoveIT.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 运动sport",
@@ -1061,15 +1061,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "比舞力全开更离谱！它要求你用全身每一个关节去摆姿势。在这种极其滑稽的动作中竞争，真的会让你笑到肚子疼，快租来折磨你的朋友！",
-    "votes": 110
+    "votes": 119
   },
   {
     "id": 57,
     "title": "Mario & Luigi: Brothership (马力欧与路易吉 兄弟之船)",
     "price": 119,
-    "originalPrice": 151,
+    "originalPrice": 166,
     "imageUrl": "/SXitch%20Dex%20photo/marioluigibrotherships.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1080,15 +1080,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "马力欧系列的温情之作！看着两兄弟在这个奇妙的世界里互帮互助，剧情温馨得不行。战斗系统既有策略性又很流畅，是绝佳的慢节奏享受。",
-    "votes": 686
+    "votes": 344
   },
   {
     "id": 58,
     "title": "Monster Hunter Rise (怪物猎人：崛起)",
     "price": 69,
-    "originalPrice": 112,
+    "originalPrice": 115,
     "imageUrl": "/SXitch%20Dex%20photo/Monster_hunter_rise.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人",
@@ -1099,15 +1099,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "狩猎游戏的巅峰！在 Switch 上体验如此流畅的动作打击感简直是奇迹。和死党一起组队围猎巨龙，那种成功击杀后的成就感，真的会上瘾。",
-    "votes": 316
+    "votes": 142
   },
   {
     "id": 59,
     "title": "Mario vs. Donkey Kong (马力欧对决咚奇刚)",
     "price": 119,
-    "originalPrice": 160,
+    "originalPrice": 159,
     "imageUrl": "/SXitch%20Dex%20photo/MarioVS_DONKEY.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1118,15 +1118,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "一个让大脑飞快运转的可爱游戏！设计精巧的关卡需要你精准计算每一步。适合那些喜欢思考、追求完美通关的玩家，非常有成就感。",
-    "votes": 859
+    "votes": 732
   },
   {
     "id": 60,
     "title": "Kirby and the Forgotten Land (星之卡比 探索发现)",
     "price": 135,
-    "originalPrice": 165,
+    "originalPrice": 179,
     "imageUrl": "/SXitch%20Dex%20photo/KirbyForgetherland.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1137,15 +1137,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "卡比第一次进入 3D 世界，简直太惊艳了！场景绝美，玩法极其舒心。不论是独自放松还是带伴侣一起玩，它都能提供 100% 的纯粹快乐。",
-    "votes": 876
+    "votes": 540
   },
   {
     "id": 61,
     "title": "Xenoblade Chronicles 2: Torna (异度神剑 2 托尔纳之国)",
     "price": 119,
-    "originalPrice": 165,
+    "originalPrice": 155,
     "imageUrl": "/SXitch%20Dex%20photo/Xenoblade_2_torna.avif",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1156,15 +1156,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "一个关于宿命与牺牲的极致故事。画质震撼，音乐绝美，尤其是结局带来的情感冲击力极强。如果你追求的是那种能让你思考很久的游戏，必冲！",
-    "votes": 173
+    "votes": 927
   },
   {
     "id": 62,
     "title": "Rabbids Party (疯狂兔子 派对)",
     "price": 99,
-    "originalPrice": 133,
+    "originalPrice": 146,
     "imageUrl": "/SXitch%20Dex%20photo/Rabbids_party.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "全新, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1175,15 +1175,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "不需要任何大脑细胞，只要纯粹的快乐！疯狂兔子系列标志性的混乱风格，让每一局都充满意外。极速上手，是那种能瞬间点燃气氛的快餐神作。",
-    "votes": 824
+    "votes": 948
   },
   {
     "id": 63,
     "title": "Mario Party Superstars (超级马力欧派对 明星盛会)",
     "price": 135,
-    "originalPrice": 173,
+    "originalPrice": 178,
     "imageUrl": "/SXitch%20Dex%20photo/MArio_party_superstar.jpeg",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1194,15 +1194,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "马力欧派对的集大成之作！把历史上最经典的地图全部搬回来了。运气决定一切，在这种“被背叛”和“反杀”的循环中，友谊（或战争）就此升级。",
-    "votes": 863
+    "votes": 777
   },
   {
     "id": 64,
     "title": "Dragon Ball Xenoverse 2 (龙珠 异世界之战 2)",
     "price": 119,
-    "originalPrice": 167,
+    "originalPrice": 161,
     "imageUrl": "/SXitch%20Dex%20photo/dragon_ball_xenoverse_2.webp",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人",
@@ -1213,15 +1213,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "每一个龙珠迷的终极幻想！你可以自定义自己的赛亚人，在宇宙中横扫千军。华丽的变身特效和毁天灭地的招式，让你瞬间化身为超级赛亚人。",
-    "votes": 253
+    "votes": 369
   },
   {
     "id": 65,
     "title": "Super Mario Odyssey (马力欧 奥德赛)",
     "price": 129,
-    "originalPrice": 167,
+    "originalPrice": 177,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "单人Single, 家庭Kids",
@@ -1232,15 +1232,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "Switch 史上最强的创意之作！那个“捕捉”机制彻底改变了玩法，让整个世界都变成了你的玩具。只要你好奇心够强，在这个游戏里能找到无穷无尽的惊喜。",
-    "votes": 842
+    "votes": 419
   },
   {
     "id": 66,
     "title": "Little Nightmares 3 (小小梦魇 3)",
     "price": 99,
-    "originalPrice": 137,
+    "originalPrice": 132,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人, 情侣couple",
@@ -1251,15 +1251,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "恐怖童话的终极进化！这一次终于支持了双人协作，意味着你可以和伴侣一起体验那种脊背发凉的压抑感。在诡异的世界中互相扶持，这种感觉太绝了。",
-    "votes": 140
+    "votes": 438
   },
   {
     "id": 67,
     "title": "Pokemon Legends Z-A (宝可梦传说 Z-A)",
     "price": 139,
-    "originalPrice": 169,
+    "originalPrice": 176,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "单人Single, 家庭Kids",
@@ -1270,15 +1270,15 @@
     "status": "有货",
     "videoUrl": "",
     "description": "宝可梦系列的下一个时代！回归密阿雷市，体验前所未有的城市重塑计划。它是目前最被期待的神作，只要你热爱宝可梦，这绝对是你的年度必玩之选。",
-    "votes": 134
+    "votes": 586
   },
   {
     "id": 68,
     "title": "Cooking Mama: Cookstar (料理妈妈：明星大厨)",
     "price": 119,
-    "originalPrice": 159,
+    "originalPrice": 166,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "家庭Kids, Multiplayer多人",
@@ -1295,9 +1295,9 @@
     "id": 69,
     "title": "Dave the Diver (潜水员戴夫)",
     "price": 119,
-    "originalPrice": 156,
+    "originalPrice": 155,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1314,9 +1314,9 @@
     "id": 70,
     "title": "Digimon Survive (数码宝贝：绝境求生)",
     "price": 99,
-    "originalPrice": 132,
+    "originalPrice": 149,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1327,15 +1327,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "披着数码宝贝外壳的硬核生存剧！剧情沉重且反转极多，每一个决定都可能影响角色生死。给喜欢深度剧情和策略对战玩家的顶级选择。",
-    "votes": 232
+    "votes": 227
   },
   {
     "id": 71,
     "title": "Dragon Ball FighterZ (龙珠斗士Z)",
     "price": 99,
-    "originalPrice": 144,
+    "originalPrice": 145,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 运动sport",
@@ -1346,15 +1346,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "龙珠迷的格斗终极之选！画面直接把动漫搬进了游戏，打击感爽到爆炸。不管是随便搓招还是深度竞技，都能让你体验到赛亚人级别的战斗快感。",
-    "votes": 418
+    "votes": 341
   },
   {
     "id": 72,
     "title": "Dragon Ball Z: Kakarot (龙珠Z：卡卡罗特)",
     "price": 99,
-    "originalPrice": 137,
+    "originalPrice": 146,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1365,15 +1365,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "真正意义上的“龙珠人生模拟器”！完整还原 Z 系列所有经典剧情，让你化身卡卡罗特体验成长之路。只要你爱龙珠，这款绝对是人生必玩。",
-    "votes": 180
+    "votes": 800
   },
   {
     "id": 73,
     "title": "Fire Emblem Warriors: Three Hopes (火炎纹章无双：风花雪月)",
     "price": 99,
-    "originalPrice": 141,
+    "originalPrice": 139,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1384,15 +1384,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "战棋的策略加上无双的割草，爽感加倍！在宏大的战场上指挥军队，体验权力与背叛的史诗故事，适合喜欢大规模战斗和角色养成的人。",
-    "votes": 138
+    "votes": 404
   },
   {
     "id": 74,
     "title": "WarioWare: Get It Together! (分享同乐！瓦力欧制造)",
     "price": 119,
-    "originalPrice": 151,
+    "originalPrice": 154,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "可租借, 二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1409,9 +1409,9 @@
     "id": 75,
     "title": "Harvest Moon: Mad Dash (牧场物语：疯狂冲刺)",
     "price": 99,
-    "originalPrice": 146,
+    "originalPrice": 129,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "Multiplayer多人, 家庭Kids",
@@ -1422,15 +1422,15 @@
     "status": "缺货",
     "videoUrl": "",
     "description": "这不是传统的种田，这是“种田大乱斗”！在疯狂的冲刺中抢资源、盖房子，快节奏的竞技感让牧场物语变得极其刺激，非常适合一家人或死党一起搞破坏。",
-    "votes": 628
+    "votes": 282
   },
   {
     "id": 76,
     "title": "Xenoblade Chronicles 3 (异度神剑 3)",
     "price": 119,
-    "originalPrice": 167,
+    "originalPrice": 156,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single",
@@ -1447,9 +1447,9 @@
     "id": 77,
     "title": "Demon Slayer: The Hinokami Chronicles (鬼灭之刃 火之神血风谭)",
     "price": 119,
-    "originalPrice": 165,
+    "originalPrice": 167,
     "imageUrl": "[Missing Image]",
-    "isSale": "FALSE",
+    "isSale": false,
     "badge": "",
     "condition": "二手",
     "category": "单人Single, Multiplayer多人",
