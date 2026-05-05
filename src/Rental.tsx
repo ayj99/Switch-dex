@@ -467,7 +467,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                           </div>
                         )}
                         {game.condition && game.condition.includes('租借') && (
-                          <div className="absolute top-2 right-2 z-10 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md">
+                          <div className="absolute top-2 right-2 bg-[#25D366] text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-[0_0_10px_rgba(37,211,102,0.8)] border border-white/50 flex items-center gap-1 z-10 animate-pulse">
                             🟢 可租借
                           </div>
                         )}
@@ -545,6 +545,24 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     <h1 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 leading-tight">
                       {selectedGame.title}
                     </h1>
+
+                    {selectedGame.condition && selectedGame.condition.includes('租借') && (
+                      <div className="bg-green-50/80 border-l-4 border-[#25D366] p-4 mb-6 rounded-r-2xl flex items-center justify-between shadow-sm backdrop-blur-sm">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-green-500/30 animate-pulse">
+                            <span className="text-xl">🎮</span>
+                          </div>
+                          <div>
+                            <h4 className="text-green-800 font-black text-lg leading-tight mb-0.5">支持低成本租玩！</h4>
+                            <p className="text-green-600 text-[11px] font-bold">支付押金即可带走，闲置随时退回</p>
+                          </div>
+                        </div>
+                        <div className="bg-white border-2 border-[#25D366] text-[#25D366] px-3 py-1.5 rounded-xl flex flex-col items-center shadow-sm">
+                          <span className="text-[10px] font-black uppercase">低至</span>
+                          <span className="text-sm font-black leading-none">RM {Math.floor(selectedGame.price * 0.06)}<span className="text-[10px]">/月</span></span>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Metadata */}
                     <div className="flex flex-wrap gap-2 mb-6">
