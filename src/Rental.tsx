@@ -82,7 +82,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
       .then(res => res.json())
       .then((data: Game[]) => {
         const rentalGames = data
-          .filter(g => g.category && g.category.includes('租借'))
+          .filter(g => g.condition && g.condition.includes('租借'))
           .sort((a, b) => (b.votes || 0) - (a.votes || 0));
         setGames(rentalGames);
         setIsLoading(false);
@@ -461,15 +461,22 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col h-full"
                     >
                       <div className="relative aspect-[3/4] overflow-hidden bg-gray-100">
+                        {game.badge && (
+                          <div className="absolute top-2 left-2 bg-[#E60012] text-white text-[10px] font-black px-2 py-1 rounded-md z-10 shadow-sm transform -skew-x-6">
+                            {game.badge}
+                          </div>
+                        )}
+                        {game.condition && game.condition.includes('租借') && (
+                          <div className="absolute top-2 right-2 z-10 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md">
+                            🟢 可租借
+                          </div>
+                        )}
                         <img 
                           src={game.imageUrl} 
                           alt={game.title} 
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           referrerPolicy="no-referrer"
                         />
-                        <div className="absolute top-2 left-2 bg-[#25D366] text-white text-[10px] font-black px-2 py-1 rounded-full shadow-md">
-                          🟢 RENT 租
-                        </div>
                       </div>
                       
                       <div className="p-4 flex flex-col flex-1">
@@ -483,10 +490,18 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                         </h3>
                         <div className="mt-auto pt-2 flex flex-col gap-1.5">
                           <div className="flex items-baseline gap-1.5">
-                            <p className="text-green-600 font-black text-sm leading-none">
-                              RM {Math.floor(game.price * 0.06)} - {Math.floor(game.price * 0.10)} <span className="text-[10px] font-bold text-gray-500">/ 月</span>
+                            <p className="text-[#E60012] font-black text-lg leading-none">
+                              RM {game.price}
                             </p>
+                            {game.originalPrice && (
+                              <p className="text-gray-400 text-[10px] line-through font-bold">RM {game.originalPrice}</p>
+                            )}
                           </div>
+                          {game.condition && game.condition.includes('租借') && (
+                            <div className="mt-1 bg-green-50 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md text-center">
+                              ✨ 租玩低至 RM {Math.floor(game.price * 0.06)}/月
+                            </div>
+                          )}
                           
                           <div className="flex items-center gap-3 text-[10px] text-gray-500 font-medium mt-1">
                             <span className="flex items-center gap-1"><ThumbsUp size={10} /> {game.votes}</span>
