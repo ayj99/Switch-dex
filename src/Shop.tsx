@@ -13,7 +13,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Game, PHONE_NUMBER } from './types';
 import PosterGenerator from './components/PosterGenerator';
 
-export default function Shop({ onBackToPortal }: { onBackToPortal: () => void }) {
+export default function Shop({ onBackToPortal, onNavigateToRental }: { onBackToPortal: () => void, onNavigateToRental?: (game: Game) => void }) {
   const [games, setGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentView, setCurrentView] = useState<'home' | 'detail'>('home');
@@ -323,7 +323,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                   )}
                   {/* Players, Language, Votes */}
                   <div className="flex items-center gap-2 mt-1.5 text-[10px] text-gray-500 font-medium flex-wrap">
-                    <span className="flex items-center gap-0.5"><Users size={10} /> {game.players}</span>
+                    <span className="flex items-center gap-0.5"><Users size={10} /> {game.players || '1-4'} 人</span>
                     <span className="flex items-center gap-0.5"><Globe size={10} /> {game.language}</span>
                     <span className="flex items-center gap-0.5 text-[#E60012]"><ThumbsUp size={10} /> {game.votes}</span>
                   </div>
@@ -461,7 +461,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                       
                       {/* Players, Language, Votes */}
                       <div className="flex items-center gap-2 text-[10px] text-gray-500 font-medium flex-wrap">
-                        <span className="flex items-center gap-0.5"><Users size={10} /> {game.players}</span>
+                        <span className="flex items-center gap-0.5"><Users size={10} /> {game.players || '1-4'} 人</span>
                         <span className="flex items-center gap-0.5 truncate"><Globe size={10} /> {game.language}</span>
                         <span className="flex items-center gap-0.5 text-[#E60012]"><ThumbsUp size={10} /> {game.votes}</span>
                       </div>
@@ -642,7 +642,10 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
         </h1>
 
         {game.condition && game.condition.includes('租借') && (
-          <div className="bg-green-50/80 border-l-4 border-[#25D366] p-4 my-4 rounded-r-2xl flex items-center justify-between shadow-sm backdrop-blur-sm">
+          <button 
+            onClick={() => onNavigateToRental && onNavigateToRental(game)}
+            className="w-full text-left bg-green-50/80 border-l-4 border-[#25D366] p-4 my-4 rounded-r-2xl flex items-center justify-between shadow-sm backdrop-blur-sm cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all active:scale-[0.98]"
+          >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-green-500/30 animate-pulse">
                 <span className="text-xl">🎮</span>
@@ -656,7 +659,7 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
               <span className="text-[10px] font-black uppercase">低至</span>
               <span className="text-sm font-black leading-none">RM {Math.floor(game.price * 0.06)}<span className="text-[10px]">/月</span></span>
             </div>
-          </div>
+          </button>
         )}
         
         <div className="flex flex-col gap-3 mt-3">
@@ -689,7 +692,7 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-[#FEE2E2] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-[#FECACA]">
             <Users size={22} className="text-[#B91C1C]" />
-            <span className="text-xs font-bold text-[#B91C1C]">{game.players}</span>
+            <span className="text-xs font-bold text-[#B91C1C]">{game.players || '1-4'} 人</span>
           </div>
           <div className="bg-[#FEE2E2] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-[#FECACA]">
             <Globe size={22} className="text-[#B91C1C]" />
