@@ -11,6 +11,7 @@ import Rental from './Rental';
 
 export default function App() {
   const [view, setView] = useState<'portal' | 'shop' | 'rental'>('portal');
+  const [rentalTargetGame, setRentalTargetGame] = useState<any>(null);
 
   return (
     <div className="min-h-screen bg-[#FFFFFF] font-sans text-gray-900 overflow-x-hidden">
@@ -34,7 +35,13 @@ export default function App() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <Shop onBackToPortal={() => setView('portal')} />
+            <Shop 
+              onBackToPortal={() => setView('portal')} 
+              onNavigateToRental={(game) => {
+                setRentalTargetGame(game);
+                setView('rental');
+              }}
+            />
           </motion.div>
         )}
         {view === 'rental' && (
@@ -45,7 +52,11 @@ export default function App() {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <Rental onBack={() => setView('portal')} />
+            <Rental 
+              onBack={() => setView('portal')} 
+              initialGame={rentalTargetGame}
+              onClearInitialGame={() => setRentalTargetGame(null)}
+            />
           </motion.div>
         )}
       </AnimatePresence>
