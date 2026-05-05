@@ -38,27 +38,19 @@ export default function Rental({ onBack }: { onBack: () => void }) {
   // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedGenre, setSelectedGenre] = useState('All');
 
-  const allCategories = useMemo(() => {
-    const cats = new Set<string>();
-    games.forEach(g => {
-      if (g.category) {
-        g.category.split(',').forEach(c => {
-          const cat = c.trim();
-          if (cat !== '租借') cats.add(cat);
-        });
-      }
-    });
-    return ['All', 'Party', 'Action', 'RPG', ...Array.from(cats)].filter((v, i, a) => a.indexOf(v) === i).slice(0, 8);
-  }, [games]);
+  const CATEGORIES = ['All', 'Multiplayer多人', '单人Single', '运动sport', '情侣couple', '家庭Kids'];
+  const GENRES = ['All', '动作冒险', '角色扮演', '模拟经营', '派对休闲', '运动竞速', '解谜策略', '格斗', '平台跳跃', '射击', '沙盒建造'];
 
   const filteredGames = useMemo(() => {
     return games.filter(game => {
       const matchesSearch = game.title.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || (game.category && game.category.includes(selectedCategory));
-      return matchesSearch && matchesCategory;
+      const matchesGenre = selectedGenre === 'All' || (game.genre === selectedGenre);
+      return matchesSearch && matchesCategory && matchesGenre;
     });
-  }, [games, searchQuery, selectedCategory]);
+  }, [games, searchQuery, selectedCategory, selectedGenre]);
 
   // Poster states
   const [showPosterModal, setShowPosterModal] = useState(false);
@@ -401,7 +393,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
               </div>
 
               {/* Added Search & Filter UI Bar */}
-              <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+              <div className="flex flex-col gap-4 mb-8">
                 <div className="relative w-full md:w-64 flex-shrink-0">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                   <input 
@@ -412,18 +404,37 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                     className="w-full bg-white border border-gray-200 text-gray-900 text-sm rounded-full py-2.5 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all shadow-sm"
                   />
                 </div>
-                <div className="flex gap-2 w-full overflow-x-auto no-scrollbar pb-2 md:pb-0 hide-scrollbar-mobile">
-                  {allCategories.map(cat => (
+                
+                {/* 第一层：优先的 Category (主场景/受众) - 用醒目的药丸按钮 */}
+                <div className="flex gap-2 w-full overflow-x-auto hide-scrollbar pb-2">
+                  {CATEGORIES.map(cat => (
                     <button
                       key={cat}
                       onClick={() => setSelectedCategory(cat)}
-                      className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors whitespace-nowrap flex-shrink-0 ${
+                      className={`px-5 py-2 rounded-full text-sm font-black transition-colors whitespace-nowrap flex-shrink-0 ${
                         selectedCategory === cat 
-                          ? 'bg-gray-900 text-white' 
-                          : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
-                      } shadow-sm`}
+                          ? 'bg-gray-900 text-white shadow-md' 
+                          : 'bg-white border-2 border-gray-100 text-gray-500 hover:border-gray-300'
+                      }`}
                     >
                       {cat}
+                    </button>
+                  ))}
+                </div>
+
+                {/* 第二层：次要的 Genre (核心玩法) - 用小号字体或浅色背景，降低视觉权重 */}
+                <div className="flex gap-2 w-full overflow-x-auto hide-scrollbar pb-2">
+                  {GENRES.map(genre => (
+                    <button
+                      key={genre}
+                      onClick={() => setSelectedGenre(genre)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap flex-shrink-0 ${
+                        selectedGenre === genre 
+                          ? 'bg-[#e60012] text-white' 
+                          : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+                      }`}
+                    >
+                      {genre}
                     </button>
                   ))}
                 </div>
@@ -462,6 +473,11 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                       </div>
                       
                       <div className="p-4 flex flex-col flex-1">
+                        {game.subcategory && (
+                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">
+                            {game.subcategory}
+                          </span>
+                        )}
                         <h3 className="font-bold text-gray-900 text-sm md:text-base line-clamp-2 mb-2 group-hover:text-[#e60012] transition-colors">
                           {game.title}
                         </h3>
