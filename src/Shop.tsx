@@ -109,7 +109,8 @@ export default function Shop({ onBackToPortal }: { onBackToPortal: () => void })
 // ==========================================
 function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGameClick: (g: Game) => void, onBackToPortal: () => void }) {
   const [shopMode, setShopMode] = useState<'games' | 'accessories'>('games');
-  const [filter, setFilter] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedGenre, setSelectedGenre] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   // Poster State
@@ -119,23 +120,16 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
   const [posterSourceGames, setPosterSourceGames] = useState<Game[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // 1. Dynamic Categories
-  const allCategories = useMemo(() => {
-    const cats = new Set<string>();
-    games.forEach(g => {
-      if (g.category) {
-        g.category.split(',').forEach(c => cats.add(c.trim()));
-      }
-    });
-    return ['All', ...Array.from(cats)];
-  }, [games]);
+  const CATEGORIES = ['All', 'Multiplayer多人', '单人Single', '运动sport', '情侣couple', '家庭Kids'];
+  const GENRES = ['All', '动作冒险', '角色扮演', '模拟经营', '派对休闲', '运动竞速', '解谜策略', '格斗', '平台跳跃', '射击', '沙盒建造'];
 
   // 2. Filter & Search Logic
   const filteredGames = useMemo(() => {
     return games.filter(g => {
-      const matchesFilter = filter === 'All' || (g.category && g.category.includes(filter));
+      const matchesCategory = selectedCategory === 'All' || (g.category && g.category.includes(selectedCategory));
+      const matchesGenre = selectedGenre === 'All' || (g.genre === selectedGenre);
       const matchesSearch = !searchQuery || g.title.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesFilter && matchesSearch;
+      return matchesCategory && matchesGenre && matchesSearch;
     }).sort((a, b) => {
       const getDiscountRate = (g: Game) => {
         if (g.originalPrice && g.price && g.originalPrice > g.price) {
@@ -151,7 +145,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       }
       return (b.votes || 0) - (a.votes || 0);
     });
-  }, [games, filter, searchQuery]);
+  }, [games, selectedCategory, selectedGenre, searchQuery]);
 
   // 3. Featured Deals Logic (isSale === true)
   const featuredGames = useMemo(() => {
@@ -349,21 +343,41 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
               />
             </div>
           </div>
-          {/* Dynamic Tabs */}
-          <div className="py-2 px-4 flex gap-2 overflow-x-auto no-scrollbar">
-            {allCategories.map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`whitespace-nowrap px-4 py-1.5 rounded-full text-sm font-bold transition-all ${
-                  filter === f 
-                    ? 'bg-[#E60012] text-white shadow-md shadow-red-500/20' 
-                    : 'bg-[#F8F9FA] text-gray-600 border border-gray-200 hover:border-[#E60012]/50'
-                }`}
-              >
-                {f === 'All' ? '全部 (All)' : f}
-              </button>
-            ))}
+          
+          <div className="flex flex-col gap-2 mt-2 px-4 pb-2">
+            {/* 第一层：优先的 Category (主场景/受众) - 用醒目的药丸按钮 */}
+            <div className="flex gap-2 w-full overflow-x-auto hide-scrollbar pb-1">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-5 py-2 rounded-full text-sm font-black transition-colors whitespace-nowrap flex-shrink-0 ${
+                    selectedCategory === cat 
+                      ? 'bg-gray-900 text-white shadow-md' 
+                      : 'bg-white border-2 border-gray-100 text-gray-500 hover:border-gray-300'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* 第二层：次要的 Genre (核心玩法) - 用小号字体或浅色背景，降低视觉权重 */}
+            <div className="flex gap-2 w-full overflow-x-auto hide-scrollbar pb-1">
+              {GENRES.map(genre => (
+                <button
+                  key={genre}
+                  onClick={() => setSelectedGenre(genre)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap flex-shrink-0 ${
+                    selectedGenre === genre 
+                      ? 'bg-[#e60012] text-white' 
+                      : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+                  }`}
+                >
+                  {genre}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -399,6 +413,11 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                     />
                   </div>
                   <div className="p-3 flex flex-col flex-grow">
+                    {game.subcategory && (
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">
+                        {game.subcategory}
+                      </span>
+                    )}
                     <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight text-gray-900">
                       {game.title}
                     </h3>
@@ -438,7 +457,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
       {/* Admin Export Footer */}
       <footer className="mt-4 py-8 flex justify-center border-t border-gray-100 bg-gray-50">
-        {filter === 'All' ? (
+        {selectedCategory === 'All' ? (
           <button 
             disabled
             className="text-xs font-mono text-gray-400 bg-gray-200 cursor-not-allowed px-4 py-2 rounded flex items-center gap-2"
