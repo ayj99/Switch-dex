@@ -293,9 +293,15 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
               </div>
               
               {/* Condition Tag (Top Right) */}
-              <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
-                {game.condition}
-              </div>
+              {game.condition && game.condition.includes('租借') ? (
+                <div className="absolute top-2 right-2 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full z-10 shadow-md">
+                  🟢 可租借
+                </div>
+              ) : game.condition && (
+                <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
+                  {game.condition}
+                </div>
+              )}
               
               <div className="aspect-[3/4] w-full bg-gray-200">
                 <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
@@ -309,6 +315,11 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                       <p className="text-gray-400 text-[10px] line-through font-bold">RM {game.originalPrice}</p>
                     )}
                   </div>
+                  {game.condition && game.condition.includes('租借') && (
+                    <div className="mt-1 bg-green-50 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md text-center">
+                      ✨ 租玩低至 RM {Math.floor(game.price * 0.06)}/月
+                    </div>
+                  )}
                   {/* Players, Language, Votes */}
                   <div className="flex items-center gap-2 mt-1.5 text-[10px] text-gray-500 font-medium flex-wrap">
                     <span className="flex items-center gap-0.5"><Users size={10} /> {game.players}</span>
@@ -399,9 +410,15 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                   className="bg-[#F8F9FA] rounded-xl overflow-hidden border border-gray-200 shadow-sm flex flex-col cursor-pointer relative"
                 >
                   {/* Condition Tag (Top Right) */}
-                  <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
-                    {game.condition}
-                  </div>
+                  {game.condition && game.condition.includes('租借') ? (
+                    <div className="absolute top-2 right-2 bg-green-500/90 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-1 rounded-full z-10 shadow-md">
+                      🟢 可租借
+                    </div>
+                  ) : game.condition && (
+                    <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm text-gray-800 text-[10px] font-bold px-2 py-1 rounded-md z-10 shadow-sm">
+                      {game.condition}
+                    </div>
+                  )}
 
                   <div className="relative aspect-[3/4] w-full bg-gray-200">
                     <img 
@@ -430,6 +447,11 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                           <p className="text-gray-400 text-[10px] line-through font-bold">RM {game.originalPrice}</p>
                         )}
                       </div>
+                      {game.condition && game.condition.includes('租借') && (
+                        <div className="mt-1 bg-green-50 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md text-center">
+                          ✨ 租玩低至 RM {Math.floor(game.price * 0.06)}/月
+                        </div>
+                      )}
                       
                       {/* Players, Language, Votes */}
                       <div className="flex items-center gap-2 text-[10px] text-gray-500 font-medium flex-wrap">
