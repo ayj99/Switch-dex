@@ -23,6 +23,10 @@ const ADDONS = [
 ];
 
 export default function Rental({ onBack }: { onBack: () => void }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [rentalMode, setRentalMode] = useState<'games' | 'console'>('games');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   
