@@ -22,13 +22,26 @@ const ADDONS = [
   { id: 'bag', name: '旅行收纳包', price: 10 }
 ];
 
-export default function Rental({ onBack }: { onBack: () => void }) {
+export default function Rental({ onBack, initialGame, onClearInitialGame }: { onBack: () => void, initialGame?: Game | null, onClearInitialGame?: () => void }) {
+  const [rentalMode, setRentalMode] = useState<'games' | 'console' | 'gameDetail'>(initialGame ? 'gameDetail' : 'games');
+  const [selectedGame, setSelectedGame] = useState<Game | null>(initialGame || null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [rentalMode, setRentalMode] = useState<'games' | 'console'>('games');
-  const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  // When initialGame changes externally, update state (fallback in case component was already mounted)
+  useEffect(() => {
+    if (initialGame) {
+      setSelectedGame(initialGame);
+      setRentalMode('gameDetail');
+    }
+  }, [initialGame]);
+
+  const handleBackToGames = () => {
+    setRentalMode('games');
+    if (onClearInitialGame) onClearInitialGame();
+  };
   
   const [consoleType, setConsoleType] = useState<'switch1' | 'switch2'>('switch1');
   
@@ -504,6 +517,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
                           )}
                           
                           <div className="flex items-center gap-3 text-[10px] text-gray-500 font-medium mt-1">
+                            <span className="flex items-center gap-1"><Users size={10}/> {game.players || '1-4'}人</span>
                             <span className="flex items-center gap-1"><ThumbsUp size={10} /> {game.votes}</span>
                             <span className="flex items-center gap-1"><MessageCircle size={10} /> 99+</span>
                           </div>
@@ -524,7 +538,7 @@ export default function Rental({ onBack }: { onBack: () => void }) {
             return (
               <div className="max-w-2xl mx-auto px-4 py-6 pb-32">
                 <button 
-                  onClick={() => setRentalMode('games')}
+                  onClick={handleBackToGames}
                   className="mb-6 flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black transition-colors"
                 >
                   <ArrowLeft size={20} />
