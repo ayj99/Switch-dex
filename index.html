@@ -4,9 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My Google AI Studio App</title>
+    <!-- Add WeChat JS-SDK to provide wx.miniProgram in Wechat environments -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script>
+      // Polyfills to prevent "Cannot read properties of undefined (reading 'miniProgram')" 
+      // when opened in various mini program environments that might inject scripts before the SDK is ready.
+      window.wx = window.wx || {};
+      window.wx.miniProgram = window.wx.miniProgram || {};
+      window.my = window.my || {};
+      window.my.miniProgram = window.my.miniProgram || {};
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+
