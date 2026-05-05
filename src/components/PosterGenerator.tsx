@@ -25,7 +25,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
         if (isCancelled || !containerRef.current) return;
 
-        const images = Array.from(containerRef.current.querySelectorAll('img'));
+        const images = Array.from(containerRef.current.querySelectorAll('img')) as HTMLImageElement[];
         await Promise.all(
           images.map((img) => {
             if (img.complete || !img.src) return Promise.resolve();
