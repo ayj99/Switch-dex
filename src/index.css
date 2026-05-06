@@ -1,23 +1,28 @@
-@import "tailwindcss";
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Google AI Studio App</title>
+    <!-- Add WeChat JS-SDK to provide wx.miniProgram in Wechat environments -->
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script>
+      // Polyfills to prevent "Cannot read properties of undefined (reading 'miniProgram')" 
+      // when opened in various mini program environments that might inject scripts before the SDK is ready.
+      try {
+        if (!window.wx) window.wx = {};
+        if (window.wx && !window.wx.miniProgram) window.wx.miniProgram = {};
+      } catch(e) {}
+      
+      try {
+        if (!window.my) window.my = {};
+        if (window.my && !window.my.miniProgram) window.my.miniProgram = {};
+      } catch(e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
 
-@theme {
-  --animate-pulse-shadow: pulse-shadow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  @keyframes pulse-shadow {
-    0%, 100% {
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
-    }
-    50% {
-      box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
-    }
-  }
-}
-
-@layer utilities {
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
