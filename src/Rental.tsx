@@ -62,6 +62,13 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
       const matchesCategory = selectedCategory === 'All' || (game.category && game.category.includes(selectedCategory));
       const matchesGenre = selectedGenre === 'All' || (game.genre === selectedGenre);
       return matchesSearch && matchesCategory && matchesGenre;
+    }).sort((a, b) => {
+      const isOutOfStockA = a.status === 0 || a.status === false || String(a.status) === '0' || String(a.status) === 'false';
+      const isOutOfStockB = b.status === 0 || b.status === false || String(b.status) === '0' || String(b.status) === 'false';
+      
+      if (isOutOfStockA && !isOutOfStockB) return 1;
+      if (!isOutOfStockA && isOutOfStockB) return -1;
+      return (b.votes || 0) - (a.votes || 0);
     });
   }, [games, searchQuery, selectedCategory, selectedGenre]);
 
@@ -398,9 +405,9 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                   <button 
                     onClick={handleFeaturedExport}
                     disabled={isGenerating}
-                    className="bg-gray-900 hover:bg-black disabled:opacity-50 text-white px-6 py-2.5 rounded-full font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2"
+                    className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-black px-5 py-2.5 rounded-full shadow-lg shadow-red-500/30 transition-transform hover:scale-105 active:scale-95 whitespace-nowrap flex items-center gap-2 text-sm"
                   >
-                    View All Games
+                    📸 View All Rental Games
                   </button>
                 )}
               </div>
@@ -464,7 +471,9 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                       No games found.
                     </div>
                   ) : (
-                    filteredGames.map(game => (
+                    filteredGames.map(game => {
+                      const isOutOfStock = game.status === 0 || game.status === false || String(game.status) === '0' || String(game.status) === 'false' || game.status === '缺货';
+                      return (
                       <div 
                         key={game.id} 
                         onClick={() => {
@@ -487,9 +496,21 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                         <img 
                           src={game.imageUrl} 
                           alt={game.title} 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-500 ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
                           referrerPolicy="no-referrer"
                         />
+                        {isOutOfStock && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const text = `Hi, 我看到《${game.title}》疑似缺货，请问还可以预定或什么时候补货？`;
+                              window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+                            }}
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white border border-gray-400 font-bold px-3 py-2 rounded-lg text-sm backdrop-blur-md z-20 whitespace-nowrap"
+                          >
+                            🚨 疑似缺货 - 点击联系店长确认。
+                          </button>
+                        )}
                       </div>
                       
                       <div className="p-4 flex flex-col flex-1">
@@ -524,10 +545,11 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                         </div>
                       </div>
                     </div>
-                  ))
-                )}
-              </div>
-            )}
+                  )
+                })
+              )}
+                </div>
+              )}
           </div>
         )}
         {rentalMode === 'gameDetail' && selectedGame && (() => {
@@ -605,75 +627,123 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                     )}
                     
                     {/* 1. Headline Price Strategy */}
-                    <div className="mb-2">
-                      <p className="text-green-600 font-black text-3xl md:text-4xl flex items-center gap-2">
-                        RM {min} - {max} <span className="text-lg font-bold text-gray-500">/ month</span>
-                      </p>
+                    <div className="mb-4 bg-[#F8F9FA] border border-gray-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div>
+                         <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Pay Deposit / 押金 (100% Secure)</p>
+                         <p className="text-black font-black text-4xl flex items-baseline gap-2">
+                           RM {selectedGame.price}
+                         </p>
+                      </div>
+                      <div className="sm:text-right">
+                         <p className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Guaranteed Refund Up To</p>
+                         <p className="text-green-500 font-black text-2xl flex items-baseline gap-1 sm:justify-end">
+                           90% 
+                           <span className="text-sm font-bold text-gray-500">(RM {(discountedPrice * 0.9).toFixed(2)})</span>
+                         </p>
+                      </div>
                     </div>
 
                     {/* 2. Refined T&C Box (Scannable Visual Hierarchy) */}
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mt-6">
                       <div className="mb-4">
-                        <h3 className="text-lg font-black text-gray-900">📌 Rental Rates / 租换价目表</h3>
-                        <p className="text-gray-800 text-sm font-normal mt-1">Pay the full price as a deposit. The costs below are deducted based on playtime! (支付全款作押金，换租/退回时按以下租凭费扣除)</p>
+                        <h3 className="text-lg font-black text-gray-900 flex items-center gap-2">
+                          <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-sm">💡</span> 
+                          Refund Rates / 退款明细
+                        </h3>
+                        <p className="text-gray-600 text-sm font-medium mt-1">
+                          You pay full price as deposit. Once returned, you receive your refund minus the small rental cost. (支付全款作押金，换租/退回时按以下天数退款)
+                        </p>
                       </div>
                       
-                      <div className="flex flex-col space-y-3 mt-4 mb-5">
+                      <div className="flex flex-col space-y-3 mt-5 mb-5">
                         {/* 30 Days */}
-                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🔥</span>
-                            <div className="text-base font-bold text-gray-800">30天内</div>
+                        <div className="flex items-center justify-between p-4 bg-green-50/70 rounded-xl border border-green-100 hover:border-green-300 hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
+                          <div className="absolute top-0 right-0 bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded-bl-lg uppercase tracking-wider">Most Popular</div>
+                          <div className="flex items-center gap-3">
+                            <div className="bg-white text-green-600 border border-green-200 px-3 py-1.5 rounded-lg shadow-sm text-center min-w-[56px]">
+                               <span className="font-black text-xl leading-none">30</span>
+                               <span className="text-[9px] font-bold text-gray-400 block mt-0.5 tracking-widest uppercase">Days</span>
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-[10px] text-green-700 font-bold tracking-wider uppercase mb-0.5">Refund 90% (退款)</span>
+                               <span className="text-green-600 font-black text-2xl leading-none">RM {(discountedPrice * 0.9).toFixed(2)}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.1).toFixed(2)}</span>
-                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 90% (RM {(discountedPrice * 0.9).toFixed(2)})</span>
+                          <div className="flex flex-col items-end justify-center">
+                            <span className="text-gray-400 text-[10px] font-bold uppercase mb-0.5">Rental Cost</span>
+                            <span className="bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-500 font-bold border border-gray-200">RM {(discountedPrice * 0.1).toFixed(2)}</span>
                           </div>
                         </div>
 
                         {/* 60 Days */}
-                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🔥</span>
-                            <div className="text-base font-bold text-gray-800">60天内</div>
+                        <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 hover:border-green-200 hover:shadow-md transition-all group cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <div className="bg-gray-50 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-lg text-center min-w-[56px]">
+                               <span className="font-black text-xl leading-none">60</span>
+                               <span className="text-[9px] font-bold text-gray-400 block mt-0.5 tracking-widest uppercase">Days</span>
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-[10px] text-gray-500 font-bold tracking-wider uppercase mb-0.5">Refund 85% (退款)</span>
+                               <span className="text-gray-800 font-black text-xl leading-none">RM {(discountedPrice * 0.85).toFixed(2)}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.15).toFixed(2)}</span>
-                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 85% (RM {(discountedPrice * 0.85).toFixed(2)})</span>
+                          <div className="flex flex-col items-end justify-center">
+                            <span className="text-gray-400 text-[10px] font-bold uppercase mb-0.5">Rental Cost</span>
+                            <span className="bg-gray-50 px-2 py-0.5 rounded text-xs text-gray-500 font-bold border border-gray-100">RM {(discountedPrice * 0.15).toFixed(2)}</span>
                           </div>
                         </div>
 
                         {/* 90 Days */}
-                        <div className="flex items-center justify-between p-4 bg-red-50/50 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xl">🔥</span>
-                            <div className="text-base font-bold text-gray-800">90天内</div>
+                        <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 hover:border-green-200 hover:shadow-md transition-all group cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <div className="bg-gray-50 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-lg text-center min-w-[56px]">
+                               <span className="font-black text-xl leading-none">90</span>
+                               <span className="text-[9px] font-bold text-gray-400 block mt-0.5 tracking-widest uppercase">Days</span>
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-[10px] text-gray-500 font-bold tracking-wider uppercase mb-0.5">Refund 75% (退款)</span>
+                               <span className="text-gray-800 font-black text-xl leading-none">RM {(discountedPrice * 0.75).toFixed(2)}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-red-600 font-black text-lg">租凭费 RM {(discountedPrice * 0.25).toFixed(2)}</span>
-                            <span className="text-green-600 text-[13px] font-bold mt-0.5">退回 75% (RM {(discountedPrice * 0.75).toFixed(2)})</span>
+                          <div className="flex flex-col items-end justify-center">
+                            <span className="text-gray-400 text-[10px] font-bold uppercase mb-0.5">Rental Cost</span>
+                            <span className="bg-gray-50 px-2 py-0.5 rounded text-xs text-gray-500 font-bold border border-gray-100">RM {(discountedPrice * 0.25).toFixed(2)}</span>
                           </div>
                         </div>
 
                         {/* 120 Days */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-base font-bold text-gray-600 pl-7">120天内</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100 opacity-80 transition-all cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <div className="bg-transparent text-gray-400 px-3 py-1 rounded min-w-[56px] text-center">
+                               <span className="font-black text-lg leading-none">120</span>
+                               <span className="text-[9px] font-bold block">DAYS</span>
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-[10px] text-gray-400 font-bold tracking-wider uppercase">Refund 70%</span>
+                               <span className="text-gray-500 font-black text-lg leading-none mt-0.5">RM {(discountedPrice * 0.7).toFixed(2)}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-gray-500 font-medium text-base">租凭费 RM {(discountedPrice * 0.30).toFixed(2)}</span>
-                            <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 70% (RM {(discountedPrice * 0.7).toFixed(2)})</span>
+                          <div className="flex flex-col items-end justify-center">
+                            <span className="text-gray-400 text-[9px] font-bold uppercase">Rental Cost</span>
+                            <span className="text-xs text-gray-400 font-bold mt-0.5">RM {(discountedPrice * 0.30).toFixed(2)}</span>
                           </div>
                         </div>
 
                         {/* 150 Days */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 transition-all">
-                          <div className="flex items-center gap-2">
-                            <span className="text-base font-bold text-gray-600 pl-7">150天内</span>
+                        <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100 opacity-80 transition-all cursor-pointer">
+                          <div className="flex items-center gap-3">
+                            <div className="bg-transparent text-gray-400 px-3 py-1 rounded min-w-[56px] text-center">
+                               <span className="font-black text-lg leading-none">150</span>
+                               <span className="text-[9px] font-bold block">DAYS</span>
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-[10px] text-gray-400 font-bold tracking-wider uppercase">Refund 65%</span>
+                               <span className="text-gray-500 font-black text-lg leading-none mt-0.5">RM {(discountedPrice * 0.65).toFixed(2)}</span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-end">
-                            <span className="text-gray-500 font-medium text-base">租凭费 RM {(discountedPrice * 0.35).toFixed(2)}</span>
-                            <span className="text-gray-400 text-[13px] font-medium mt-0.5">退回 65% (RM {(discountedPrice * 0.65).toFixed(2)})</span>
+                          <div className="flex flex-col items-end justify-center">
+                            <span className="text-gray-400 text-[9px] font-bold uppercase">Rental Cost</span>
+                            <span className="text-xs text-gray-400 font-bold mt-0.5">RM {(discountedPrice * 0.35).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
