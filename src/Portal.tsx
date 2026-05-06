@@ -4,7 +4,7 @@ import { Gamepad2, Package } from 'lucide-react';
 
 export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 'rental') => void }) {
   return (
-    <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center justify-center p-6">
+    <div className="min-h-[85vh] bg-[#F8F9FA] flex flex-col items-center justify-center p-6">
       {/* Brand VI */}
       <div className="flex flex-col items-center mb-12 text-center">
         <img src="/images/logo.png" className="w-20 h-20 rounded-full object-cover border-4 border-[#e60012] mb-4 shadow-lg" alt="Logo" referrerPolicy="no-referrer" />
@@ -12,7 +12,7 @@ export default function Portal({ onNavigate }: { onNavigate: (view: 'shop' | 're
           S<span className="text-[#e60012]">✘</span>ítčh Dé<span className="text-[#e60012]">✘</span>
         </h1>
         <p className="text-gray-500 text-sm md:text-base font-bold tracking-widest mt-2">
-          诗和远方与Switch奇
+          诗和远方与Switch奇妙
         </p>
         
         {/* Pikachu Greeting */}
