@@ -494,7 +494,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                       
                       <div className="p-4 flex flex-col flex-1">
                         {game.subcategory && (
-                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">
+                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block line-clamp-1">
                             {game.subcategory}
                           </span>
                         )}
@@ -586,6 +586,11 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                       <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                         <Globe size={12} /> {selectedGame.language || '中/英'}
                       </span>
+                      {selectedGame.subcategory && (
+                        <span className="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">
+                          {selectedGame.subcategory}
+                        </span>
+                      )}
                       {selectedGame.category?.split(',').map((cat, idx) => (
                         <span key={idx} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">
                           {cat.trim()}
