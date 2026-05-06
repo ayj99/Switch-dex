@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 
 export interface PosterGeneratorProps {
   games: any[];
@@ -21,7 +21,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     const capture = async () => {
       try {
         await new Promise(resolve => requestAnimationFrame(resolve));
-        await new Promise(resolve => setTimeout(resolve, 100)); // 稍微多等一下字体加载
+        await new Promise(resolve => setTimeout(resolve, 500)); // 稍微多等一下图片/字体加载
 
         if (isCancelled || !containerRef.current) return;
 
@@ -44,13 +44,18 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
         if (isCancelled || !containerRef.current) return;
 
-        const imgData = await toPng(containerRef.current, {
-          pixelRatio: 2,
+        const canvas = await html2canvas(containerRef.current, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: false,
           backgroundColor: '#E60012', // 整体底色保持任天堂红
-          style: { transform: 'none' },
+          logging: false,
         });
 
-        if (!isCancelled) onGenerated(imgData);
+        if (isCancelled) return;
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.9);
+        onGenerated(imgData);
 
       } catch (err) {
         console.error('Failed to generate poster:', err);
@@ -73,6 +78,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   // 代理图片，防止跨域
   const getSafeImageUrl = (url: string | undefined) => {
     if (!url) return '/images/logo.png';
+    if (url.startsWith('blob:') || url.startsWith('data:')) return url;
     if (url.startsWith('http')) {
       return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`;
     }
@@ -80,7 +86,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   };
 
   return (
-    <div className="fixed top-0 z-[-9999] pointer-events-none" style={{ left: '-10000px' }}>
+    <div className="fixed top-0 left-0 z-[-9999] opacity-0 pointer-events-none" style={{ position: 'fixed', left: '-10000px' }}>
       
       {/* 海报主容器 - 红色大背景 */}
       <div ref={containerRef} className="w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#E60012' }}>
@@ -93,7 +99,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
             {/* Header 左侧：Logo 组合 */}
             <div className="flex items-center gap-4">
               {/* 2. 恢复你的图片 Logo */}
-              <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" crossOrigin="anonymous" />
+              <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               
               {/* 红黑文字 Logo */}
               <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
@@ -129,7 +135,14 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 
                 {/* 图片与浮动标签容器 */}
                 <div className="relative w-full aspect-[3/4] mb-4">
-                  <img src={getSafeImageUrl(game.imageUrl)} className="w-full h-full object-cover rounded-lg border" style={{ borderColor: '#f3f4f6' }} crossOrigin="anonymous" />
+                  <img 
+                    src={getSafeImageUrl(game.imageUrl)} 
+                    alt={game.title}
+                    className="w-full h-full object-cover rounded-lg border" 
+                    style={{ borderColor: '#f3f4f6' }} 
+                    crossOrigin="anonymous" 
+                    onError={(e) => { e.currentTarget.src = '/images/logo.png'; }}
+                  />
                   
                   {/* 4. 恢复 Floating 悬浮标签 */}
                   {isRental && (
