@@ -89,7 +89,7 @@ export default function Shop({ onBackToPortal, onNavigateToRental }: { onBackToP
             transition={{ duration: 0.2 }}
             className="pb-24 bg-[#FFFFFF] min-h-screen"
           >
-            {selectedGame && <DetailView game={selectedGame} games={games} onBack={handleBack} onGameClick={handleGameClick} />}
+            {selectedGame && <DetailView game={selectedGame} games={games} onBack={handleBack} onGameClick={handleGameClick} onNavigateToRental={onNavigateToRental} />}
           </motion.div>
         )}
       </AnimatePresence>
@@ -171,6 +171,12 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
     console.error('Failed to generate poster:', err);
     setGeneratingPosterDesign(null);
     alert('海报生成失败，请重试！(Error: ' + (err?.message || 'Unknown Error') + ')');
+  };
+
+  const handleFeaturedExport = () => {
+    setIsGenerating(true);
+    setPosterSourceGames(featuredGames);
+    setGeneratingPosterDesign(1);
   };
 
   return (
@@ -266,16 +272,10 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
             <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
           </div>
           <button 
-            onClick={() => {
-              const el = document.getElementById('all-games-section');
-              if (el) {
-                const top = el.getBoundingClientRect().top + window.scrollY - 80;
-                window.scrollTo({ top, behavior: 'smooth' });
-              }
-            }}
-            className="text-[10px] font-bold bg-gray-100 text-gray-800 px-2 py-1 rounded shadow-sm hover:bg-gray-200 transition-colors"
+            onClick={handleFeaturedExport}
+            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-black px-4 py-1.5 rounded-full shadow-lg shadow-red-500/30 transition-transform hover:scale-105 active:scale-95 text-xs md:text-sm flex items-center gap-1"
           >
-            [ View All ]
+            View All Featured Deals
           </button>
         </div>
         
@@ -308,6 +308,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                 <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
               </div>
               <div className="p-3 flex flex-col flex-grow">
+                {game.subcategory && <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block line-clamp-1">{game.subcategory}</span>}
                 <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight mb-1">{game.title}</h3>
                 <div className="mt-auto">
                   <div className="flex items-baseline gap-1.5">
@@ -437,7 +438,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                   </div>
                   <div className="p-3 flex flex-col flex-grow">
                     {game.subcategory && (
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block line-clamp-1">
                         {game.subcategory}
                       </span>
                     )}
@@ -564,7 +565,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 // ==========================================
 // VIEW 2: DETAIL VIEW
 // ==========================================
-function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: Game[], onBack: () => void, onGameClick: (g: Game) => void }) {
+function DetailView({ game, games, onBack, onGameClick, onNavigateToRental }: { game: Game, games: Game[], onBack: () => void, onGameClick: (g: Game) => void, onNavigateToRental?: (g: Game) => void }) {
   const [likes, setLikes] = useState(game.votes || 0);
   const [liked, setLiked] = useState(false);
 
@@ -745,6 +746,7 @@ function DetailView({ game, games, onBack, onGameClick }: { game: Game, games: G
                 referrerPolicy="no-referrer"
               />
               <div className="p-2">
+                {similarGame.subcategory && <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-0.5 block line-clamp-1">{similarGame.subcategory}</span>}
                 <h3 className="text-[10px] font-bold line-clamp-2 h-7 leading-tight">{similarGame.title}</h3>
                 <p className="text-[#E60012] font-black text-xs mt-1">RM {similarGame.price}</p>
               </div>
