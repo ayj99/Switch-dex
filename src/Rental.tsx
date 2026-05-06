@@ -598,7 +598,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                         </div>
                         <div className="bg-white border-2 border-[#25D366] text-[#25D366] px-3 py-1.5 rounded-xl flex flex-col items-center shadow-sm">
                           <span className="text-[10px] font-black uppercase">低至</span>
-                          <span className="text-sm font-black leading-none">RM {Math.floor(selectedGame.price * 0.06)}<span className="text-[10px]">/月</span></span>
+                          <span className="text-sm font-black leading-none">RM {((selectedGame.price * 0.35) / 5).toFixed(2)}<span className="text-[10px]">/月</span></span>
                         </div>
                       </div>
                     )}
@@ -633,9 +633,13 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                     <div className="mb-4 bg-[#F8F9FA] border border-gray-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                          <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Pay Deposit / 押金 (100% Secure)</p>
-                         <p className="text-black font-black text-4xl flex items-baseline gap-2">
-                           RM {selectedGame.price}
-                         </p>
+                         <div className="flex items-baseline gap-2 mt-1">
+                           <span className="text-3xl md:text-5xl font-black">RM {selectedGame.price}</span>
+                           <span className="text-sm md:text-base font-bold text-gray-600 flex items-center gap-1.5">
+                             + <span className="line-through text-gray-400 font-normal">RM 10</span> 
+                             <span className="text-red-500">RM 5</span> 开启服务费
+                           </span>
+                         </div>
                       </div>
                       <div className="sm:text-right">
                          <p className="text-xs font-bold text-green-600 uppercase tracking-widest mb-1">Guaranteed Refund Up To</p>
@@ -661,7 +665,6 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                       <div className="flex flex-col space-y-3 mt-5 mb-5">
                         {/* 30 Days */}
                         <div className="flex items-center justify-between p-4 bg-green-50/70 rounded-xl border border-green-100 hover:border-green-300 hover:shadow-md transition-all group cursor-pointer relative overflow-hidden">
-                          <div className="absolute top-0 right-0 bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded-bl-lg uppercase tracking-wider">Most Popular</div>
                           <div className="flex items-center gap-3">
                             <div className="bg-white text-green-600 border border-green-200 px-3 py-1.5 rounded-lg shadow-sm text-center min-w-[56px]">
                                <span className="font-black text-xl leading-none">30</span>
@@ -672,9 +675,11 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                                <span className="text-green-600 font-black text-2xl leading-none">RM {(discountedPrice * 0.9).toFixed(2)}</span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end justify-center">
-                            <span className="text-gray-400 text-[10px] font-bold uppercase mb-0.5">Rental Cost</span>
-                            <span className="bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-500 font-bold border border-gray-200">RM {(discountedPrice * 0.1).toFixed(2)}</span>
+                          <div className="text-right">
+                            <div className="text-[10px] md:text-xs text-gray-500 font-medium">月均租金</div>
+                            <div className="text-sm md:text-base font-bold text-gray-700">
+                              RM {((discountedPrice * 0.1) / 1).toFixed(2)} /月
+                            </div>
                           </div>
                         </div>
 
@@ -690,9 +695,11 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                                <span className="text-gray-800 font-black text-xl leading-none">RM {(discountedPrice * 0.85).toFixed(2)}</span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end justify-center">
-                            <span className="text-gray-400 text-[10px] font-bold uppercase mb-0.5">Rental Cost</span>
-                            <span className="bg-gray-50 px-2 py-0.5 rounded text-xs text-gray-500 font-bold border border-gray-100">RM {(discountedPrice * 0.15).toFixed(2)}</span>
+                          <div className="text-right">
+                            <div className="text-[10px] md:text-xs text-gray-500 font-medium">月均租金</div>
+                            <div className="text-sm md:text-base font-bold text-gray-700">
+                              RM {((discountedPrice * 0.15) / 2).toFixed(2)} /月
+                            </div>
                           </div>
                         </div>
 
@@ -708,14 +715,16 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                                <span className="text-gray-800 font-black text-xl leading-none">RM {(discountedPrice * 0.75).toFixed(2)}</span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end justify-center">
-                            <span className="text-gray-400 text-[10px] font-bold uppercase mb-0.5">Rental Cost</span>
-                            <span className="bg-gray-50 px-2 py-0.5 rounded text-xs text-gray-500 font-bold border border-gray-100">RM {(discountedPrice * 0.25).toFixed(2)}</span>
+                          <div className="text-right">
+                            <div className="text-[10px] md:text-xs text-gray-500 font-medium">月均租金</div>
+                            <div className="text-sm md:text-base font-bold text-gray-700">
+                              RM {((discountedPrice * 0.25) / 3).toFixed(2)} /月
+                            </div>
                           </div>
                         </div>
 
                         {/* 120 Days */}
-                        <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100 opacity-80 transition-all cursor-pointer">
+                        <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100 opacity-60 transition-all cursor-pointer">
                           <div className="flex items-center gap-3">
                             <div className="bg-transparent text-gray-400 px-3 py-1 rounded min-w-[56px] text-center">
                                <span className="font-black text-lg leading-none">120</span>
@@ -726,14 +735,16 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                                <span className="text-gray-500 font-black text-lg leading-none mt-0.5">RM {(discountedPrice * 0.7).toFixed(2)}</span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end justify-center">
-                            <span className="text-gray-400 text-[9px] font-bold uppercase">Rental Cost</span>
-                            <span className="text-xs text-gray-400 font-bold mt-0.5">RM {(discountedPrice * 0.30).toFixed(2)}</span>
+                          <div className="text-right">
+                            <div className="text-[10px] md:text-xs text-gray-500 font-medium">月均租金</div>
+                            <div className="text-sm md:text-base font-bold text-gray-700">
+                              RM {((discountedPrice * 0.30) / 4).toFixed(2)} /月
+                            </div>
                           </div>
                         </div>
 
                         {/* 150 Days */}
-                        <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100 opacity-80 transition-all cursor-pointer">
+                        <div className="flex items-center justify-between p-3 bg-gray-50/50 rounded-xl border border-gray-100 opacity-60 transition-all cursor-pointer">
                           <div className="flex items-center gap-3">
                             <div className="bg-transparent text-gray-400 px-3 py-1 rounded min-w-[56px] text-center">
                                <span className="font-black text-lg leading-none">150</span>
@@ -744,9 +755,11 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                                <span className="text-gray-500 font-black text-lg leading-none mt-0.5">RM {(discountedPrice * 0.65).toFixed(2)}</span>
                             </div>
                           </div>
-                          <div className="flex flex-col items-end justify-center">
-                            <span className="text-gray-400 text-[9px] font-bold uppercase">Rental Cost</span>
-                            <span className="text-xs text-gray-400 font-bold mt-0.5">RM {(discountedPrice * 0.35).toFixed(2)}</span>
+                          <div className="text-right">
+                            <div className="text-[10px] md:text-xs text-gray-500 font-medium">月均租金</div>
+                            <div className="text-sm md:text-base font-bold text-gray-700">
+                              RM {((discountedPrice * 0.35) / 5).toFixed(2)} /月
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -804,7 +817,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                       }}
                       className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-4 rounded-2xl font-black text-lg shadow-lg shadow-green-500/30 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
                     >
-                      📱 Rent for RM {min}-{max} / mo - Chat Now
+                      ☎️ Rent for RM {min} - RM {max} / month - Chat Now
                     </button>
                   </div>
                 </div>
