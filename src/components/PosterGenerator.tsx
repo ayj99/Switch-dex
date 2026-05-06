@@ -55,6 +55,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
             allowTaint: false,
             backgroundColor: '#E60012', // 整体底色保持任天堂红
             logging: false,
+            imageTimeout: 10000,
           });
           generatedImages.push(canvas.toDataURL('image/jpeg', 0.9));
         }
@@ -92,7 +93,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     if (!url) return '/images/logo.png';
     if (url.startsWith('blob:') || url.startsWith('data:')) return url;
     if (url.startsWith('http')) {
-      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp`;
+      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp&w=400&h=400&fit=cover`;
     }
     return url;
   };
@@ -113,7 +114,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                 {/* Header 左侧：Logo 组合 */}
                 <div className="flex items-center gap-4">
                   {/* 2. 恢复你的图片 Logo */}
-                  <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" crossOrigin="anonymous" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                  <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                   
                   {/* 红黑文字 Logo */}
                   <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
