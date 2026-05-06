@@ -123,6 +123,46 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
   const CATEGORIES = ['All', 'Multiplayer多人', '单人Single', '运动sport', '情侣couple', '家庭Kids'];
   const GENRES = ['All', '动作冒险', '角色扮演', '模拟经营', '派对休闲', '运动竞速', '解谜策略', '格斗', '平台跳跃', '射击', '沙盒建造'];
 
+  // FOMO Timer State
+  const [timeLeft, setTimeLeft] = useState<string>('00:00:00');
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date();
+      const day = now.getDay();
+      
+      let targetHour = 23;
+      let targetMinute = 59;
+      
+      if (day === 1) { targetHour = 20; targetMinute = 0; }
+      else if (day === 2) { targetHour = 23; targetMinute = 59; }
+      else if (day === 3) { targetHour = 21; targetMinute = 0; }
+      else if (day === 4) { targetHour = 22; targetMinute = 0; }
+      else { targetHour = 23; targetMinute = 59; }
+      
+      const targetTime = new Date(now);
+      targetTime.setHours(targetHour, targetMinute, 59, 999);
+      
+      const diff = targetTime.getTime() - now.getTime();
+      if (diff <= 0) {
+        setTimeLeft('00:00:00');
+        return;
+      }
+      
+      const h = Math.floor(diff / (1000 * 60 * 60));
+      const m = Math.floor((diff / 1000 / 60) % 60);
+      const s = Math.floor((diff / 1000) % 60);
+      
+      setTimeLeft(
+        `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+      );
+    };
+
+    calculateTimeLeft();
+    const interval = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   // 2. Filter & Search Logic
   const filteredGames = useMemo(() => {
     return games.filter(g => {
@@ -131,6 +171,12 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
       const matchesSearch = !searchQuery || g.title.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesGenre && matchesSearch;
     }).sort((a, b) => {
+      const isOutOfStockA = String(a.status) === '0' || String(a.status) === 'false' || a.status === '缺货';
+      const isOutOfStockB = String(b.status) === '0' || String(b.status) === 'false' || b.status === '缺货';
+      
+      if (isOutOfStockA && !isOutOfStockB) return 1;
+      if (!isOutOfStockA && isOutOfStockB) return -1;
+      
       const getDiscountRate = (g: Game) => {
         if (g.originalPrice && g.price && g.originalPrice > g.price) {
           return (g.originalPrice - g.price) / g.originalPrice;
@@ -149,7 +195,14 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
   // 3. Featured Deals Logic (isSale === true)
   const featuredGames = useMemo(() => {
-    return games.filter(g => g.isSale === true || g.isSale === 'true' || String(g.isSale) === '1');
+    return games.filter(g => String(g.isSale) === 'true' || String(g.isSale) === '1').sort((a, b) => {
+      const isOutOfStockA = String(a.status) === '0' || String(a.status) === 'false' || a.status === '缺货';
+      const isOutOfStockB = String(b.status) === '0' || String(b.status) === 'false' || b.status === '缺货';
+      
+      if (isOutOfStockA && !isOutOfStockB) return 1;
+      if (!isOutOfStockA && isOutOfStockB) return -1;
+      return (b.votes || 0) - (a.votes || 0);
+    });
   }, [games]);
 
   // 4. Poster Modal Logic
@@ -269,18 +322,21 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-5 bg-[#E60012] rounded-full"></div>
             <h2 className="text-lg font-black italic text-black tracking-tight">🌟 Featured Deals (特价精选)</h2>
-            <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in 03:45:12</span>
+            <span className="text-red-500 font-mono text-sm bg-red-50 px-2 py-1 rounded animate-pulse ml-2">Ends in {timeLeft}</span>
           </div>
           <button 
             onClick={handleFeaturedExport}
-            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-black px-4 py-1.5 rounded-full shadow-lg shadow-red-500/30 transition-transform hover:scale-105 active:scale-95 text-xs md:text-sm flex items-center gap-1"
+            disabled={isGenerating}
+            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-black px-4 py-1.5 rounded-full shadow-lg shadow-red-500/30 transition-transform hover:scale-105 active:scale-95 text-xs md:text-sm flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
           >
-            View All Featured Deals
+            📸 View All Featured Deals
           </button>
         </div>
         
         <div className="px-4 flex overflow-x-auto gap-4 no-scrollbar snap-x pb-4">
-          {featuredGames.map((game) => (
+          {featuredGames.map((game) => {
+            const isOutOfStock = String(game.status) === '0' || String(game.status) === 'false' || game.status === '缺货';
+            return (
             <motion.div 
               key={`sale-${game.id}`}
               whileTap={{ scale: 0.95 }}
@@ -304,11 +360,27 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                 </div>
               )}
               
-              <div className="aspect-[3/4] w-full bg-gray-200">
-                <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" loading="lazy" referrerPolicy="no-referrer" />
+              <div className="aspect-[3/4] w-full bg-gray-200 relative">
+                <img src={game.imageUrl} alt={game.title} className={`w-full h-full object-cover transition-all ${isOutOfStock ? 'grayscale opacity-60' : ''}`} loading="lazy" referrerPolicy="no-referrer" />
+                {isOutOfStock && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const text = `Hi, 我看到《${game.title}》疑似缺货，请问还可以预定或什么时候补货？`;
+                      window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+                    }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white border border-gray-400 font-bold px-3 py-2 rounded-lg text-sm backdrop-blur-md z-20 whitespace-nowrap"
+                  >
+                    🚨 疑似缺货 - 点击联系店长确认。
+                  </button>
+                )}
               </div>
               <div className="p-3 flex flex-col flex-grow">
-                {game.subcategory && <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block line-clamp-1">{game.subcategory}</span>}
+                {game.subcategory && (
+                  <span className="text-[10.5px] font-black text-gray-500 uppercase tracking-wider mb-1 block truncate border border-gray-200 bg-gray-50 px-1.5 py-0.5 rounded w-fit">
+                    {game.subcategory}
+                  </span>
+                )}
                 <h3 className="text-xs font-bold line-clamp-2 h-8 leading-tight mb-1">{game.title}</h3>
                 <div className="mt-auto">
                   <div className="flex items-baseline gap-1.5">
@@ -331,7 +403,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                 </div>
               </div>
             </motion.div>
-          ))}
+          )})}
         </div>
       </section>
 
@@ -403,6 +475,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
           ) : (
             filteredGames.map((game) => {
               const categoryTags = game.category ? game.category.split(',').map(c => c.trim()) : [];
+              const isOutOfStock = String(game.status) === '0' || String(game.status) === 'false' || game.status === '缺货';
               
               return (
                 <motion.div 
@@ -431,14 +504,26 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                     <img 
                       src={game.imageUrl} 
                       alt={game.title}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover transition-all ${isOutOfStock ? 'grayscale opacity-60' : ''}`}
                       loading="lazy"
                       referrerPolicy="no-referrer"
                     />
+                    {isOutOfStock && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const text = `Hi, 我看到《${game.title}》疑似缺货，请问还可以预定或什么时候补货？`;
+                          window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
+                        }}
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white border border-gray-400 font-bold px-3 py-2 rounded-lg text-sm backdrop-blur-md z-20 whitespace-nowrap"
+                      >
+                        🚨 疑似缺货 - 点击联系店长确认。
+                      </button>
+                    )}
                   </div>
                   <div className="p-3 flex flex-col flex-grow">
                     {game.subcategory && (
-                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block line-clamp-1">
+                      <span className="text-[10.5px] font-black text-gray-500 uppercase tracking-wider mb-1 block truncate border border-gray-200 bg-gray-50 px-1.5 py-0.5 rounded w-fit">
                         {game.subcategory}
                       </span>
                     )}
@@ -486,22 +571,13 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
 
       {/* Admin Export Footer */}
       <footer className="mt-4 py-8 flex justify-center border-t border-gray-100 bg-gray-50">
-        {selectedCategory === 'All' ? (
-          <button 
-            disabled
-            className="text-xs font-mono text-gray-400 bg-gray-200 cursor-not-allowed px-4 py-2 rounded flex items-center gap-2"
-          >
-            [ 请先选择上方分类以生成海报 ]
-          </button>
-        ) : (
-          <button 
-            onClick={handleCategoryExport}
-            disabled={isGenerating}
-            className="text-xs font-mono text-gray-500 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 flex items-center gap-2 transition-colors rounded disabled:opacity-50"
-          >
-            [ System Dump: Generate Poster ]
-          </button>
-        )}
+        <button 
+          onClick={handleCategoryExport}
+          disabled={isGenerating}
+          className="bg-gradient-to-r from-gray-800 to-black hover:from-black hover:to-gray-900 text-white shadow-lg font-black px-6 py-2.5 rounded-full transition-transform hover:scale-105 active:scale-95 text-xs md:text-sm flex items-center gap-2"
+        >
+          📸 Generate Grid Poster
+        </button>
       </footer>
       </>
       )}
