@@ -382,7 +382,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                   </div>
                   {game.condition && game.condition.includes('租借') && (
                     <div className="mt-1 bg-green-50 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md text-center">
-                      ✨ 租玩低至 RM {Math.floor(game.price * 0.06)}/月
+                      ✨ 租玩低至 RM {((game.price * 0.35) / 5).toFixed(2)}/月
                     </div>
                   )}
                   {/* Players, Language, Votes */}
@@ -532,7 +532,7 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
                       </div>
                       {game.condition && game.condition.includes('租借') && (
                         <div className="mt-1 bg-green-50 text-green-700 text-[10px] font-bold px-2 py-1 rounded-md text-center">
-                          ✨ 租玩低至 RM {Math.floor(game.price * 0.06)}/月
+                          ✨ 租玩低至 RM {((game.price * 0.35) / 5).toFixed(2)}/月
                         </div>
                       )}
                       
@@ -749,7 +749,7 @@ function DetailView({ game, games, onBack, onGameClick, onNavigateToRental }: { 
             </div>
             <div className="bg-white border-2 border-[#25D366] text-[#25D366] px-3 py-1.5 rounded-xl flex flex-col items-center shadow-sm">
               <span className="text-[10px] font-black uppercase">低至</span>
-              <span className="text-sm font-black leading-none">RM {Math.floor(game.price * 0.06)}<span className="text-[10px]">/月</span></span>
+              <span className="text-sm font-black leading-none">RM {((game.price * 0.35) / 5).toFixed(2)}<span className="text-[10px]">/月</span></span>
             </div>
           </button>
         )}
