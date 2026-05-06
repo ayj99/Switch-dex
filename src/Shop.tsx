@@ -805,7 +805,15 @@ function DetailView({ game, games, onBack, onGameClick, onNavigateToRental }: { 
         </div>
         
         <div className="flex overflow-x-auto gap-3 px-5 no-scrollbar pb-2 snap-x">
-          {games.filter(g => g.id !== game.id).slice(0, 4).map((similarGame) => (
+          {games.filter(g => {
+            return g.id !== game.id && 
+                   g.genre && 
+                   game.genre && 
+                   g.genre === game.genre;
+          })
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 4)
+          .map((similarGame) => (
             <div 
               key={similarGame.id}
               onClick={() => onGameClick(similarGame)}
@@ -822,7 +830,11 @@ function DetailView({ game, games, onBack, onGameClick, onNavigateToRental }: { 
                 referrerPolicy="no-referrer"
               />
               <div className="p-2">
-                {similarGame.subcategory && <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-0.5 block line-clamp-1">{similarGame.subcategory}</span>}
+                {similarGame.subcategory && (
+                  <span className="text-[10.5px] font-black text-gray-500 uppercase tracking-wider mb-1 block truncate border border-gray-200 bg-gray-50 px-1.5 py-0.5 rounded w-fit">
+                    {similarGame.subcategory}
+                  </span>
+                )}
                 <h3 className="text-[10px] font-bold line-clamp-2 h-7 leading-tight">{similarGame.title}</h3>
                 <p className="text-[#E60012] font-black text-xs mt-1">RM {similarGame.price}</p>
               </div>
