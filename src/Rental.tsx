@@ -63,11 +63,12 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
       const matchesGenre = selectedGenre === 'All' || (game.genre === selectedGenre);
       return matchesSearch && matchesCategory && matchesGenre;
     }).sort((a, b) => {
-      const isOutOfStockA = a.status === 0 || a.status === false || String(a.status) === '0' || String(a.status) === 'false';
-      const isOutOfStockB = b.status === 0 || b.status === false || String(b.status) === '0' || String(b.status) === 'false';
+      const statusA = (String(a.status) === '1' || String(a.status) === 'true') ? 1 : 0;
+      const statusB = (String(b.status) === '1' || String(b.status) === 'true') ? 1 : 0;
       
-      if (isOutOfStockA && !isOutOfStockB) return 1;
-      if (!isOutOfStockA && isOutOfStockB) return -1;
+      if (statusA !== statusB) {
+        return statusB - statusA;
+      }
       return (b.votes || 0) - (a.votes || 0);
     });
   }, [games, searchQuery, selectedCategory, selectedGenre]);
@@ -75,7 +76,8 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
   // Poster states
   const [showPosterModal, setShowPosterModal] = useState(false);
   const [generatingPosterDesign, setGeneratingPosterDesign] = useState<number | null>(null);
-  const [posterImage, setPosterImage] = useState<string | null>(null);
+  const [posterImages, setPosterImages] = useState<string[]>([]);
+  const [currentPosterIndex, setCurrentPosterIndex] = useState(0);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleFeaturedExport = () => {
@@ -83,9 +85,10 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
     setGeneratingPosterDesign(1);
   };
 
-  const handlePosterGenerated = (imgUrl: string) => {
+  const handlePosterGenerated = (imgUrls: string[]) => {
     setIsGenerating(false);
-    setPosterImage(imgUrl);
+    setPosterImages(imgUrls);
+    setCurrentPosterIndex(0);
     setGeneratingPosterDesign(null);
     setShowPosterModal(true);
   };
@@ -94,7 +97,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
     setIsGenerating(false);
     console.error('Failed to generate poster:', err);
     setGeneratingPosterDesign(null);
-    alert('海报生成失败，请重试！(Error: ' + (err?.message || 'Unknown Error') + ')');
+    alert('海报生成失败，请检查游戏图片是否有效或稍后再试');
   };
 
   useEffect(() => {
@@ -489,7 +492,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                           </div>
                         )}
                         {game.condition && game.condition.includes('租借') && (
-                          <div className="absolute top-2 right-2 bg-[#25D366] text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-[0_0_10px_rgba(37,211,102,0.8)] border border-white/50 flex items-center gap-1 z-10 animate-pulse">
+                          <div className="absolute top-2 right-2 bg-[#25D366] text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-[0_0_10px_rgba(37,211,102,0.8)] border border-white/50 flex items-center gap-1 z-30 animate-pulse">
                             🟢 可租借
                           </div>
                         )}
@@ -506,7 +509,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                               const text = `Hi, 我看到《${game.title}》疑似缺货，请问还可以预定或什么时候补货？`;
                               window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(text)}`, '_blank');
                             }}
-                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/80 text-white border border-gray-400 font-bold px-3 py-2 rounded-lg text-sm backdrop-blur-md z-20 whitespace-nowrap"
+                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#25D366] hover:bg-green-600 text-white font-black px-4 py-2.5 rounded-full text-xs shadow-lg shadow-green-500/40 transition-transform duration-300 hover:scale-105 active:scale-95 flex items-center justify-center gap-1.5 z-20"
                           >
                             🚨 疑似缺货 - 点击联系店长确认。
                           </button>
@@ -515,7 +518,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                       
                       <div className="p-4 flex flex-col flex-1">
                         {game.subcategory && (
-                          <span className="text-[10.5px] font-black text-gray-500 uppercase tracking-wider mb-1 block truncate border border-gray-200 bg-gray-50 px-1.5 py-0.5 rounded w-fit">
+                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block truncate">
                             {game.subcategory}
                           </span>
                         )}
@@ -609,8 +612,8 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
                         <Globe size={12} /> {selectedGame.language || '中/英'}
                       </span>
                       {selectedGame.subcategory && (
-                        <span className="flex items-center gap-1 bg-gray-100 text-gray-600 px-2 py-1 rounded-md text-xs font-bold">
-                          🏷️ {selectedGame.subcategory}
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1 block truncate">
+                          {selectedGame.subcategory}
                         </span>
                       )}
                       {selectedGame.category?.split(',').map((cat, idx) => (
@@ -813,7 +816,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
 
       {/* Poster Modal */}
       <AnimatePresence>
-        {showPosterModal && posterImage && (
+        {showPosterModal && posterImages.length > 0 && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -821,7 +824,7 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
             className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-md flex flex-col items-center justify-start overflow-y-auto p-4 md:p-8"
           >
             {/* Close Button */}
-            <div className="w-full max-w-[800px] flex justify-end mb-4 flex-shrink-0 mt-4 md:mt-0">
+            <div className="w-full max-w-[800px] flex justify-end mb-2 flex-shrink-0 mt-2 md:mt-0">
               <button 
                 onClick={() => setShowPosterModal(false)}
                 className="text-white font-black tracking-widest text-xs md:text-sm bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-full backdrop-blur-md transition-all flex items-center gap-2"
@@ -831,8 +834,32 @@ export default function Rental({ onBack, initialGame, onClearInitialGame }: { on
             </div>
 
             {/* Poster Image */}
-            <div className="w-full max-w-[400px] md:max-w-[500px] flex flex-col relative flex-shrink-0 mb-4">
-              <img src={posterImage} alt="Generated Poster" className="w-full h-auto rounded-xl shadow-2xl object-contain" />
+            <div className="w-full max-w-[400px] md:max-w-[500px] flex flex-col relative flex-shrink-0 mb-4 items-center">
+              <img src={posterImages[currentPosterIndex]} alt={`Generated Poster Page ${currentPosterIndex + 1}`} className="w-full h-auto rounded-xl shadow-2xl object-contain" />
+              
+              {/* Pagination Controls */}
+              {posterImages.length > 1 && (
+                <div className="flex items-center gap-4 mt-6">
+                  <button 
+                    onClick={() => setCurrentPosterIndex(prev => Math.max(0, prev - 1))}
+                    disabled={currentPosterIndex === 0}
+                    className="p-2 bg-white text-black rounded-full disabled:opacity-50"
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+                  <span className="text-white font-bold tracking-widest">
+                    {currentPosterIndex + 1} / {posterImages.length}
+                  </span>
+                  <button 
+                    onClick={() => setCurrentPosterIndex(prev => Math.min(posterImages.length - 1, prev + 1))}
+                    disabled={currentPosterIndex === posterImages.length - 1}
+                    className="p-2 bg-white text-black rounded-full disabled:opacity-50"
+                  >
+                    <ArrowLeft size={20} className="rotate-180" />
+                  </button>
+                </div>
+              )}
+              
               <p className="text-white/60 text-center mt-4 text-sm font-medium">Long press image to save and share!</p>
             </div>
           </motion.div>
