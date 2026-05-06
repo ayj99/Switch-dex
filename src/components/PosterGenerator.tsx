@@ -50,7 +50,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
         for (const page of pages) {
           if (isCancelled) return;
           const canvas = await html2canvas(page, {
-            scale: 2,
+            scale: 1.5,
             useCORS: true,
             allowTaint: false,
             backgroundColor: '#E60012', // 整体底色保持任天堂红
@@ -76,9 +76,11 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
   if (triggerId === null || !games || games.length === 0) return null;
 
+  const hasMore = games.length > 36;
   const chunkedGames = [];
-  for (let i = 0; i < games.length; i += 12) {
-    chunkedGames.push(games.slice(i, i + 12));
+  const safeGames = games.slice(0, 36);
+  for (let i = 0; i < safeGames.length; i += 12) {
+    chunkedGames.push(safeGames.slice(i, i + 12));
   }
 
   const isRental = type === 'rental';
@@ -141,7 +143,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
             {/* 游戏网格区域 (改为 4x3) */}
             <div className="p-8 flex flex-wrap gap-4 justify-start flex-grow">
               {pageGames.map((game, index) => {
-                const price = isRental ? Math.floor(game.price * 0.06) : game.price;
+                const price = isRental ? ((game.price * 0.35) / 5).toFixed(2) : game.price;
                 return (
                   <div key={game.id} className="w-[calc(25%-12px)] rounded-xl p-3 flex flex-col shadow-xl" style={{ backgroundColor: '#ffffff' }}>
                     
