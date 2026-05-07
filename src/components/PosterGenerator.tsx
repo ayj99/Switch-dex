@@ -21,7 +21,8 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     const capture = async () => {
       try {
         await new Promise(resolve => requestAnimationFrame(resolve));
-        await new Promise(resolve => setTimeout(resolve, 1500)); // 稍微多等一下图片/字体加载
+        // 留出 1.5 秒让浏览器在屏幕外把 36 张图渲染透彻
+        await new Promise(resolve => setTimeout(resolve, 1500)); 
 
         if (isCancelled || !containerRef.current) return;
 
@@ -50,10 +51,10 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
         for (const page of pages) {
           if (isCancelled) return;
           const canvas = await html2canvas(page, {
-            scale: 1.5,
+            scale: 1.5, // 内存降级优化
             useCORS: true,
             allowTaint: false,
-            backgroundColor: '#E60012', // 整体底色保持任天堂红
+            backgroundColor: '#E60012', 
             logging: false,
             imageTimeout: 10000,
           });
@@ -77,6 +78,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
   if (triggerId === null || !games || games.length === 0) return null;
 
+  // 截取前 36 个游戏，防止内存爆炸
   const hasMore = games.length > 36;
   const chunkedGames = [];
   const safeGames = games.slice(0, 36);
@@ -87,6 +89,9 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const isRental = type === 'rental';
   const labelText = isRental ? 'RENT' : 'BUY';
   const unitText = isRental ? '/mo' : '';
+  
+  // 动态获取第一个游戏的分类作为海报标题
+  const posterCategory = games?.genre ? `${games.genre} 系列精选` : '热门推荐 系列精选';
 
   // 代理图片，防止跨域
   const getSafeImageUrl = (url: string | undefined) => {
@@ -99,6 +104,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   };
 
   return (
+    {/* 终极物理隐藏法：放到两万像素外，但保持 opacity: 1 强迫浏览器渲染 */}
     <div className="fixed top-0 pointer-events-none" style={{ left: '-20000px', opacity: 1, zIndex: -9999 }}>
       
       {/* 海报主容器 */}
@@ -106,17 +112,13 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
         {chunkedGames.map((pageGames, pageIndex) => (
           <div key={`page-${pageIndex}`} className="poster-page w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#E60012' }}>
             
-            {/* 1. 恢复白色区间 Header */}
+            {/* Header */}
             <div className="w-full bg-white p-10 flex flex-col justify-center border-b-8 relative" style={{ borderColor: '#111827' }}>
-              
               <div className="flex items-center justify-between w-full">
                 
                 {/* Header 左侧：Logo 组合 */}
                 <div className="flex items-center gap-4">
-                  {/* 2. 恢复你的图片 Logo */}
                   <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                  
-                  {/* 红黑文字 Logo */}
                   <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
                     S<span style={{ color: '#E60012' }}>x</span>ítčh D<span style={{ color: '#111827' }}>é</span><span style={{ color: '#E60012' }}>x</span>
                   </div>
@@ -124,31 +126,29 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
                 {/* Header 右侧：Slogan 与 Category */}
                 <div className="flex flex-col items-end">
-                  {/* 3. 恢复中文 Slogan */}
                   <p className="text-2xl font-black tracking-widest" style={{ color: '#374151' }}>
                     诗和远方，和 Switch 奇
                   </p>
-                  {/* 醒目的 Category */}
-                  <p className="text-xl font-black mt-1" style={{ color: '#eab308' }}>
-                    亲子游戏 系列精选
+                  {/* 营销修复 1：动态海报标题 */}
+                  <p className="text-xl font-black mt-1 uppercase" style={{ color: '#eab308' }}>
+                    {posterCategory}
                   </p>
                 </div>
               </div>
 
-              {/* 右下角的 RENT/BUY 角标，改为绝对定位使其不干扰基础流 */}
+              {/* RENT/BUY 角标 */}
               <div className="absolute bottom-[-18px] right-10 px-6 py-2 border-4 rounded-full font-black uppercase tracking-widest text-sm z-10" style={{ backgroundColor: '#111827', color: '#ffffff', borderColor: '#E60012' }}>
                 {labelText} SELECTION
               </div>
             </div>
 
-            {/* 游戏网格区域 (改为 4x3) */}
+            {/* 游戏网格区域 (4x3) */}
             <div className="p-8 flex flex-wrap gap-4 justify-start flex-grow">
               {pageGames.map((game, index) => {
                 const price = isRental ? ((game.price * 0.35) / 5).toFixed(2) : game.price;
                 return (
                   <div key={game.id} className="w-[calc(25%-12px)] rounded-xl p-3 flex flex-col shadow-xl" style={{ backgroundColor: '#ffffff' }}>
                     
-                    {/* 图片与浮动标签容器 */}
                     <div className="relative w-full aspect-[3/4] mb-3">
                       <img 
                         src={getSafeImageUrl(game.imageUrl)} 
@@ -159,10 +159,10 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                         onError={(e) => { e.currentTarget.src = '/images/logo.png'; }}
                       />
                       
-                      {/* 4. 恢复 Floating 悬浮标签 */}
+                      {/* 营销修复 2：随时退换营销标签 */}
                       {isRental && (
-                        <div className="absolute top-2 right-2 px-2 py-1 rounded-full text-[10px] font-black shadow-md border" style={{ backgroundColor: 'rgba(0,0,0,0.85)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.2)' }}>
-                          30/5% - 10%
+                        <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md border tracking-wider" style={{ backgroundColor: '#25D366', color: '#ffffff', borderColor: 'rgba(255,255,255,0.4)' }}>
+                          随时退换
                         </div>
                       )}
                     </div>
@@ -170,7 +170,9 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                     <h3 className="text-sm font-bold truncate mb-1" style={{ color: '#111827' }}>{game.title}</h3>
                     
                     <div className="mt-auto">
-                      <p className="font-black text-xl" style={{ color: '#E60012' }}>
+                      {/* 营销修复 3：加入 From 前缀 */}
+                      <p className="font-black text-xl flex items-baseline" style={{ color: '#E60012' }}>
+                        {isRental && <span className="text-xs font-bold mr-1" style={{ color: '#E60012' }}>From</span>}
                         RM {price}<span className="text-xs font-normal ml-1" style={{ color: '#6b7280' }}>{unitText}</span>
                       </p>
                     </div>
@@ -182,7 +184,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
             {/* Footer */}
             <div className="w-full pb-8 flex justify-between px-10 text-sm tracking-[0.2em] font-bold uppercase" style={{ color: 'rgba(255,255,255,0.9)' }}>
               <span>Generated by Switch Dex Studio</span>
-              <span>{pageIndex + 1} / {chunkedGames.length}</span>
+              <span>{pageIndex + 1} / {chunkedGames.length} {hasMore && '+'}</span>
             </div>
           </div>
         ))}
