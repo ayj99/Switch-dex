@@ -104,8 +104,11 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   };
 
   return (
-    {/* 终极物理隐藏法：放到两万像素外，但保持 opacity: 1 强迫浏览器渲染 */}
     <div className="fixed top-0 pointer-events-none" style={{ left: '-20000px', opacity: 1, zIndex: -9999 }}>
+      {/* 终极物理隐藏法：放到两万像素外，但保持 opacity: 1 强迫浏览器渲染 */}
+      
+      {/* 海报主容器 */}
+      <div ref={containerRef} className="flex flex-col gap-10">
       
       {/* 海报主容器 */}
       <div ref={containerRef} className="flex flex-col gap-10">
