@@ -19,11 +19,9 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     let isCancelled = false;
 
     const capture = async () => {
-      // FOR DEBUGGING: Short-circuit the capture to just inspect the DOM
-      return;
       try {
         await new Promise(resolve => requestAnimationFrame(resolve));
-        await new Promise(resolve => setTimeout(resolve, 500)); // 稍微多等一下图片/字体加载
+        await new Promise(resolve => setTimeout(resolve, 1500)); // 稍微多等一下图片/字体加载
 
         if (isCancelled || !containerRef.current) return;
 
@@ -101,7 +99,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full z-[9999] overflow-auto bg-black/80 flex justify-center items-start pt-10" style={{ pointerEvents: 'auto' }}>
+    <div className="fixed top-0 pointer-events-none" style={{ left: '-20000px', opacity: 1, zIndex: -9999 }}>
       
       {/* 海报主容器 */}
       <div ref={containerRef} className="flex flex-col gap-10">
