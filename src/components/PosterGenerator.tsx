@@ -103,12 +103,17 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     return url;
   };
 
-return (
-    <div className="fixed top-0 pointer-events-none" style={{ left: '-20000px', opacity: 1, zIndex: -9999 }}>
-      {/* 终极物理隐藏法：放到两万像素外，但保持 opacity: 1 强迫浏览器渲染 */}
+// 修复了这里的小 Bug：必须加
+  const posterCategory = games?.genre ? `${games.genre} 系列精选` : '热门推荐 系列精选';
+
+  // ... (保留你原来的 getSafeImageUrl)
+
+  return (
+    {/* 放弃 -20000px！把它拉回屏幕左上角，但用 z-index: -9999 压在网站最底下 */}
+    <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none" style={{ zIndex: -9999 }}>
       
-      {/* 海报主容器 */}
-      <div ref={containerRef} className="flex flex-col gap-10">
+      {/* 海报主容器：为了防止它撑破屏幕产生滚动条，我们在外层加了 overflow-hidden，但它自己保持完整尺寸 */}
+      <div ref={containerRef} className="flex flex-col gap-10 absolute top-0 left-0">
         {chunkedGames.map((pageGames, pageIndex) => (
           <div key={`page-${pageIndex}`} className="poster-page w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#E60012' }}>
             
@@ -129,7 +134,6 @@ return (
                   <p className="text-2xl font-black tracking-widest" style={{ color: '#374151' }}>
                     诗和远方，和 Switch 奇
                   </p>
-                  {/* 营销修复 1：动态海报标题 */}
                   <p className="text-xl font-black mt-1 uppercase" style={{ color: '#eab308' }}>
                     {posterCategory}
                   </p>
@@ -159,7 +163,6 @@ return (
                         onError={(e) => { e.currentTarget.src = '/images/logo.png'; }}
                       />
                       
-                      {/* 营销修复 2：随时退换营销标签 */}
                       {isRental && (
                         <div className="absolute top-2 right-2 px-2.5 py-1 rounded-full text-[10px] font-black shadow-md border tracking-wider" style={{ backgroundColor: '#25D366', color: '#ffffff', borderColor: 'rgba(255,255,255,0.4)' }}>
                           随时退换
@@ -170,7 +173,6 @@ return (
                     <h3 className="text-sm font-bold truncate mb-1" style={{ color: '#111827' }}>{game.title}</h3>
                     
                     <div className="mt-auto">
-                      {/* 营销修复 3：加入 From 前缀 */}
                       <p className="font-black text-xl flex items-baseline" style={{ color: '#E60012' }}>
                         {isRental && <span className="text-xs font-bold mr-1" style={{ color: '#E60012' }}>From</span>}
                         RM {price}<span className="text-xs font-normal ml-1" style={{ color: '#6b7280' }}>{unitText}</span>
