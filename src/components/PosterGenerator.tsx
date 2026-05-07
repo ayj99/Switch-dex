@@ -100,9 +100,9 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
   if (triggerId === null || !games || games.length === 0) return null;
 
-  const hasMore = games.length > 36;
+  const hasMore = games.length > 48;
   const chunkedGames = [];
-  const safeGames = games.slice(0, 36);
+  const safeGames = games.slice(0, 48);
   for (let i = 0; i < safeGames.length; i += 12) {
     chunkedGames.push(safeGames.slice(i, i + 12));
   }
@@ -110,6 +110,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const isRental = type === 'rental';
   const labelText = isRental ? 'RENT' : 'BUY';
   const unitText = isRental ? '/mo' : '';
+  const posterCategory = games && games.length > 0 && games[0].category ? games[0].category : `${labelText} SELECTION`;
 
   // 代理图片，防止跨域 (🚨 苹果设备保命修改：强制输出 jpg)
   const getSafeImageUrl = (url: string | undefined) => {
@@ -132,37 +133,27 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
           <div key={`page-${pageIndex}`} className="poster-page w-[800px] flex flex-col min-h-[800px]" style={{ backgroundColor: '#E60012' }}>
             
             {/* 1. 恢复白色区间 Header */}
-            <div className="w-full bg-white p-10 flex flex-col justify-center border-b-8 relative" style={{ borderColor: '#111827' }}>
-              
-              <div className="flex items-center justify-between w-full">
+            <div className="w-full bg-white p-8 flex items-center justify-between border-b-8" style={{ borderColor: '#111827' }}>
+              <div className="flex items-center gap-5">
+                {/* 圆形 Logo */}
+                <img src="/images/logo.png" alt="Logo" className="h-16 w-16 object-cover rounded-full shadow-sm border border-gray-100" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 
-                {/* Header 左侧：Logo 组合 */}
-                <div className="flex items-center gap-4">
-                  {/* 2. 恢复你的图片 Logo */}
-                  <img src="/images/logo.png" alt="Logo" className="h-14 w-auto object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                  
-                  {/* 红黑文字 Logo */}
+                {/* Logo 文字与 Slogan */}
+                <div className="flex flex-col justify-center">
                   <div className="text-5xl font-black italic tracking-tighter font-sans select-none" style={{ color: '#111827' }}>
                     S<span style={{ color: '#E60012' }}>x</span>ítčh D<span style={{ color: '#111827' }}>é</span><span style={{ color: '#E60012' }}>x</span>
                   </div>
-                </div>
-
-                {/* Header 右侧：Slogan 与 Category */}
-                <div className="flex flex-col items-end">
-                  {/* 3. 恢复中文 Slogan */}
-                  <p className="text-2xl font-black tracking-widest" style={{ color: '#374151' }}>
+                  <p className="text-sm font-bold tracking-widest mt-1" style={{ color: '#6b7280' }}>
                     诗和远方，和 Switch 奇
-                  </p>
-                  {/* 醒目的 Category */}
-                  <p className="text-xl font-black mt-1" style={{ color: '#eab308' }}>
-                    亲子游戏 系列精选
                   </p>
                 </div>
               </div>
 
-              {/* 右下角的 RENT/BUY 角标，改为绝对定位使其不干扰基础流 */}
-              <div className="absolute bottom-[-18px] right-10 px-6 py-2 border-4 rounded-full font-black uppercase tracking-widest text-sm z-10" style={{ backgroundColor: '#111827', color: '#ffffff', borderColor: '#E60012' }}>
-                {labelText} SELECTION
+              {/* 右侧：放大的动态 Category */}
+              <div className="text-right pr-4">
+                <p className="text-3xl font-black uppercase tracking-wider" style={{ color: '#eab308' }}>
+                  {posterCategory}
+                </p>
               </div>
             </div>
 
@@ -192,7 +183,9 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
                       )}
                     </div>
 
-                    <h3 className="text-sm font-bold overflow-hidden h-[40px] leading-tight mb-1" style={{ color: '#111827' }}>{game.title}</h3>
+                    <h3 className="text-[11px] font-bold overflow-hidden h-[34px] leading-tight mb-1" style={{ color: '#111827' }}>
+                      {game.title}
+                    </h3>
                     
                     <div className="mt-auto">
                       <p className="font-black text-xl" style={{ color: '#E60012' }}>
