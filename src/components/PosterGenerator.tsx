@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import html2canvas from 'html2canvas';
+import React, { useEffect, useRef, useState } from 'react';
+import { toJpeg } from 'html-to-image';
 
 export interface PosterGeneratorProps {
   games: any[];
@@ -11,37 +11,19 @@ export interface PosterGeneratorProps {
 
 export default function PosterGenerator({ games, type, triggerId, onGenerated, onError }: PosterGeneratorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     // 终极防御 1：如果没有任何游戏数据，直接拦截，防止 Shop 报错！
-    if (triggerId === null || !containerRef.current || !games || games.length === 0) return;
+    if (triggerId === null || !containerRef.current || !games || games.length === 0 || isGenerating) return;
 
+    setIsGenerating(true);
     let isCancelled = false;
 
     const capture = async () => {
       try {
-        await new Promise(resolve => requestAnimationFrame(resolve));
-        await new Promise(resolve => setTimeout(resolve, 1500)); // 稍微多等一下图片/字体加载
-
-        if (isCancelled || !containerRef.current) return;
-
-        const images = Array.from(containerRef.current.querySelectorAll('img')) as HTMLImageElement[];
-        await Promise.all(
-          images.map((img) => {
-            if (img.complete || !img.src) return Promise.resolve();
-            return new Promise((resolve) => {
-              const timeout = setTimeout(resolve, 3000); 
-              img.onload = () => { clearTimeout(timeout); resolve(null); };
-              // 终极防御 2：图片坏了直接替换为 Logo，绝不让截图引擎自爆
-              img.onerror = () => { 
-                clearTimeout(timeout); 
-                img.src = '/images/logo.png'; 
-                resolve(null); 
-              }; 
-            });
-          })
-        );
-
+        // 强制等 1 秒钟，确保所有 DOM 和图片完全就绪
+        await new Promise(resolve => setTimeout(resolve, 1000));
         if (isCancelled || !containerRef.current) return;
 
         const pages = Array.from(containerRef.current.querySelectorAll('.poster-page')) as HTMLElement[];
@@ -49,36 +31,30 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
         for (const page of pages) {
           if (isCancelled) return;
-          const canvas = await Promise.race([
-            html2canvas(page, {
-              scale: 1.5,
-              useCORS: true,
-              allowTaint: false,
-              backgroundColor: '#E60012',
-              logging: false,
-              imageTimeout: 5000,
-            }),
-            new Promise((_, reject) => 
-              setTimeout(() => reject(new Error('Canvas 渲染超时，强制阻断')), 10000)
-            )
-          ]) as HTMLCanvasElement;
-          generatedImages.push(canvas.toDataURL('image/jpeg', 0.9));
+          // 使用新库，语法更简单，性能更强
+          const dataUrl = await toJpeg(page, { 
+            quality: 0.9,
+            backgroundColor: '#E60012',
+            pixelRatio: 1.5 
+          });
+          generatedImages.push(dataUrl);
         }
 
-        if (isCancelled) return;
-
-        onGenerated(generatedImages);
-
+        if (!isCancelled) {
+          onGenerated(generatedImages);
+        }
       } catch (err) {
-        console.error('Failed to generate poster:', err);
+        console.error('Failed to generate with html-to-image:', err);
         if (!isCancelled && onError) onError(err);
+      } finally {
+        if (!isCancelled) setIsGenerating(false);
       }
     };
 
     capture();
 
     return () => { isCancelled = true; };
-  }, [triggerId, games, type, onGenerated, onError]);
+  }, [triggerId, games, type]);
 
   if (triggerId === null || !games || games.length === 0) return null;
 
