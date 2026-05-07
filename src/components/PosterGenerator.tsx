@@ -32,11 +32,11 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
 
             // 否则，为每张图加上 onload 和 onerror 的监听
             return new Promise((resolve) => {
-              // 这一张图最多等 5 秒，超过就当坏了处理，不能卡死整个海报
+              // 这一张图最多等 10 秒，超过就当坏了处理，不能卡死整个海报
               const timeout = setTimeout(() => {
                 console.warn(`Image timed out: ${img.src}`);
                 resolve(false); 
-              }, 5000);
+              }, 10000);
 
               img.onload = () => {
                 clearTimeout(timeout);
@@ -92,7 +92,9 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
       setIsGenerating(false); // 取消时必须解锁，防止 Shop 报错
     };
   }, [triggerId, games, type]);
-  
+
+  if (triggerId === null || !games || games.length === 0) return null;
+
   const hasMore = games.length > 36;
   const chunkedGames = [];
   const safeGames = games.slice(0, 36);
@@ -109,7 +111,7 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
     if (!url) return '/images/logo.png';
     if (url.startsWith('blob:') || url.startsWith('data:')) return url;
     if (url.startsWith('http')) {
-      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp&w=400&h=400&fit=cover`;
+      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp&w=250&h=333&fit=cover&q=60`;
     }
     return url;
   };
