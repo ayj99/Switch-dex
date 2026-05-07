@@ -44,9 +44,14 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
               };
               img.onerror = () => {
                 clearTimeout(timeout);
-                // 营销防御：加载失败就换上Logo，绝不能在海报上留破图空白
-                img.src = '/images/logo.png'; 
-                resolve(false); 
+                // 如果已经换成 Logo 还是报错，那就彻底放弃
+                if (img.src.includes('logo.png')) {
+                  resolve(false);
+                } else {
+                  // 换上 Logo，并且等 Logo 加载完了再放行！
+                  img.onload = () => resolve(true);
+                  img.src = '/images/logo.png'; 
+                }
               };
             });
           })
@@ -106,12 +111,14 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const labelText = isRental ? 'RENT' : 'BUY';
   const unitText = isRental ? '/mo' : '';
 
-  // 代理图片，防止跨域
+  // 代理图片，防止跨域 (🚨 苹果设备保命修改：强制输出 jpg)
   const getSafeImageUrl = (url: string | undefined) => {
     if (!url) return '/images/logo.png';
     if (url.startsWith('blob:') || url.startsWith('data:')) return url;
     if (url.startsWith('http')) {
-      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=webp&w=250&h=333&fit=cover&q=60`;
+      // 致命修改点：把 output=webp 换成了 output=jpg
+      // q=70 保证 jpg 压缩后的画质依然清晰
+      return `https://wsrv.nl/?url=${encodeURIComponent(url)}&output=jpg&w=250&h=333&fit=cover&q=70`;
     }
     return url;
   };
