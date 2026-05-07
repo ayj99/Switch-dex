@@ -14,28 +14,58 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    // 终极防御 1：如果没有任何游戏数据，直接拦截，防止 Shop 报错！
     if (triggerId === null || !containerRef.current || !games || games.length === 0 || isGenerating) return;
-
+    
     setIsGenerating(true);
     let isCancelled = false;
 
     const capture = async () => {
       try {
-        // 强制等 1 秒钟，确保所有 DOM 和图片完全就绪
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // --- 强制“聪明等”逻辑 (Mandatory Preloading) ---
+        // 我们不靠 setTimeout 瞎等，我们强制监测 DOM 里每一张图片的onload状态！
+        const imageElements = Array.from(containerRef.current.querySelectorAll('img')) as HTMLImageElement[];
+        
+        await Promise.all(
+          imageElements.map((img) => {
+            // 如果图片已经加载完了，直接通过
+            if (img.complete) return Promise.resolve(true);
+
+            // 否则，为每张图加上 onload 和 onerror 的监听
+            return new Promise((resolve) => {
+              // 这一张图最多等 5 秒，超过就当坏了处理，不能卡死整个海报
+              const timeout = setTimeout(() => {
+                console.warn(`Image timed out: ${img.src}`);
+                resolve(false); 
+              }, 5000);
+
+              img.onload = () => {
+                clearTimeout(timeout);
+                resolve(true); // 加载成功
+              };
+              img.onerror = () => {
+                clearTimeout(timeout);
+                // 营销防御：加载失败就换上Logo，绝不能在海报上留破图空白
+                img.src = '/images/logo.png'; 
+                resolve(false); 
+              };
+            });
+          })
+        );
+
+        // 此时，DOM 里这 36 张图全部就绪了！
         if (isCancelled || !containerRef.current) return;
 
         const pages = Array.from(containerRef.current.querySelectorAll('.poster-page')) as HTMLElement[];
         const generatedImages: string[] = [];
 
+        // 逐页高速截图
         for (const page of pages) {
           if (isCancelled) return;
-          // 使用新库，语法更简单，性能更强
+          // 新核心虽然强，但我们还是把 pixelRatio 降到 1.5 (内存减半)，保证兼容性
           const dataUrl = await toJpeg(page, { 
             quality: 0.9,
             backgroundColor: '#E60012',
-            pixelRatio: 1.5 
+            pixelRatio: 1.5 // 高清且安全的像素比
           });
           generatedImages.push(dataUrl);
         }
@@ -47,17 +77,22 @@ export default function PosterGenerator({ games, type, triggerId, onGenerated, o
         console.error('Failed to generate with html-to-image:', err);
         if (!isCancelled && onError) onError(err);
       } finally {
+        // 截图结束（无论成功失败），解锁
         if (!isCancelled) setIsGenerating(false);
       }
     };
 
-    capture();
+    // 延迟 500ms 触发，给 DOM 一个喘息时间，然后开始聪明等
+    setTimeout(() => {
+      if (!isCancelled) capture();
+    }, 500);
 
-    return () => { isCancelled = true; };
+    return () => {
+      isCancelled = true;
+      setIsGenerating(false); // 取消时必须解锁，防止 Shop 报错
+    };
   }, [triggerId, games, type]);
-
-  if (triggerId === null || !games || games.length === 0) return null;
-
+  
   const hasMore = games.length > 36;
   const chunkedGames = [];
   const safeGames = games.slice(0, 36);
