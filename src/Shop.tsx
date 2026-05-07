@@ -277,24 +277,26 @@ function HomeView({ games, onGameClick, onBackToPortal }: { games: Game[], onGam
         </div>
       ) : (
         <>
-          {/* 2. Video Hero (Bilingual Text) */}
-          <section className="relative h-[35vh] w-full overflow-hidden bg-black">
+      {/* 2. Video Hero (Bilingual Text) */}
+      <section className="relative h-[35vh] sm:h-[40vh] w-full overflow-hidden bg-black">
         <video 
           autoPlay 
           loop 
           muted 
           playsInline 
-          className="h-full w-full object-cover opacity-60"
-          poster="https://picsum.photos/seed/nintendo-hero/1920/1080"
+          className="absolute inset-0 h-full w-full object-cover opacity-60 z-0"
+          poster="https://images.unsplash.com/photo-1612404730960-5c71577fca11?q=80&w=1920&auto=format&fit=crop"
           onError={(e) => {
-            (e.target as HTMLVideoElement).style.display = 'none';
+            console.error("Video failed to load", e);
           }}
         >
+          {/* A reliable stock video of playing games */}
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-hands-holding-a-game-controller-4165-large.mp4" type="video/mp4" />
           <source src="https://assets.mixkit.co/videos/preview/mixkit-playing-video-games-on-a-console-43034-large.mp4" type="video/mp4" />
         </video>
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-40" 
-          style={{ backgroundImage: 'url(https://picsum.photos/seed/nintendo-hero/1920/1080)', zIndex: -1 }}
+          className="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none" 
+          style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1612404730960-5c71577fca11?q=80&w=1920&auto=format&fit=crop)', zIndex: -1 }}
         ></div>
         
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-10 pointer-events-none px-4 text-center">
